@@ -43,7 +43,7 @@ export default function Header() {
           <li>
             <a
               href="#"
-              className="bg-green-400 text-white text-md font-medium py-[12px] px-[20px] rounded-3xl hover:bg-green-500"
+              className="bg-green-400 text-white text-md font-medium py-[12px] px-[20px] rounded-3xl hover:bg-green-300 shadow-green-400 shadow-2xl shadow-[5px_3px_60px_-8px]"
             >
               Inscrição
             </a>

@@ -1,3 +1,6 @@
+"use client";
+import { motion } from "framer-motion";
+
 const TESTIMONIALS_DATA = [
   {
     name: "Daniella Martins",
@@ -48,13 +51,23 @@ export default function TestimonialsSection() {
     <div className="w-full py-32" id="testimonials">
       <div className={"max-w-[1300px] mx-auto"}>
         <div className="mb-20 space-y-4 px-6 md:px-0">
-          <h2 className="text-center text-2xl font-bold text-gray-800 md:text-4xl">O que dizem os nossos clientes?</h2>
+          <motion.h2
+            className="text-center text-2xl font-bold text-gray-800 md:text-4xl"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1 }}
+          >
+            O que dizem os nossos clientes?
+          </motion.h2>
         </div>
         <div className="md:columns-2 lg:columns-3 gap-8 space-y-8">
           {TESTIMONIALS_DATA.map((testimonial, index) => (
-            <div
+            <motion.div
               key={index}
               className="aspect-auto p-8 border border-gray-100 rounded-3xl bg-white shadow-2xl shadow-gray-600/10"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: index * 0.1 }}
             >
               <div className="flex gap-4">
                 <img
@@ -71,7 +84,7 @@ export default function TestimonialsSection() {
                 </div>
               </div>
               <p className="mt-8">{testimonial.testimonial}</p>
-            </div>
+            </motion.div>
           ))}
         </div>
       </div>

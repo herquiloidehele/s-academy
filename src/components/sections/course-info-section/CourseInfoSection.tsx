@@ -17,7 +17,6 @@ export default function CourseInfoSection() {
 
         <div className="grid grid-cols-[1fr_1fr] gap-x-20 text-gray-600">
           <div className="">
-            {/*Fade in top*/}
             <motion.h2
               className="text-5xl font-bold text-blue-950 md:text-4xl"
               initial={{ y: 100, opacity: 0 }}

@@ -1,5 +1,8 @@
+"use client";
+
 import { Button } from "@headlessui/react";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
+import { motion } from "framer-motion";
 
 export default function PriceSection() {
   const itemsIncluded = [
@@ -13,16 +16,26 @@ export default function PriceSection() {
   return (
     <div className="w-full py-32 px-20 relative bg-white overflow-visible">
       <div className={"max-w-[1300px] flex flex-col gap-10 mx-auto  justify-center items-center "}>
-        <h1 className={"text-blue-950 text-4xl font-bold text-center max-w-[55%] leading-snug"}>
+        <motion.h1
+          className={"text-blue-950 text-4xl font-bold text-center max-w-[55%] leading-snug"}
+          initial={{ opacity: 0, y: 50 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1 }}
+        >
           Aprenda a criar uma loja Shopify do zero.
-        </h1>
+        </motion.h1>
 
         <div
           className={
             "shadow-2xl shadow-gray-200 border border-gray-100 rounded-3xl p-16 w-full grid grid-cols-2 gap-10 divide-x-2 z-10 bg-white"
           }
         >
-          <div className={"flex flex-col gap-12 items-center justify-center"}>
+          <motion.div
+            className={"flex flex-col gap-12 items-center justify-center"}
+            initial={{ opacity: 0, x: -50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4 }}
+          >
             <div className={"flex flex-col justify-center gap-1"}>
               <h2 className={"text-blue-950 text-2xl font-bold"}>Curso Shopify</h2>
               <p className={"text-center text-md text-gray-500"}>Aprenda a criar uma loja Shopify do zero.</p>
@@ -42,9 +55,14 @@ export default function PriceSection() {
             <p className={"text-center text-gray-400 text-sm max-w-80"}>
               Acesso vitalício ao curso, incluindo atualizações e novos conteúdos. Pagamento único.
             </p>
-          </div>
+          </motion.div>
 
-          <div className={"h-full flex flex-col pl-16 gap-5"}>
+          <motion.div
+            className={"h-full flex flex-col pl-16 gap-5"}
+            initial={{ opacity: 0, x: 50 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.4 }}
+          >
             <h2 className={"text-blue-950 font-bold text-2xl"}>O que está incluído?</h2>
             <ul className={"flex flex-col gap-3"}>
               {itemsIncluded.map((item, index) => (
@@ -56,10 +74,10 @@ export default function PriceSection() {
             </ul>
 
             <p className={"text-sm text-gray-500"}>
-              <span className={"text-blue-950 font-bold"}>Garantia de 30 dias:</span> Se você não gostar do curso,
-              devolvemos o seu dinheiro.
+              <span className={"text-blue-950 font-bold"}>Garantia:</span> Até o final do curso conseguirá fazer a sua
+              própria loja Shopify, caso contrário, comprometemo-nos a ajudar com o desenvolcimento.
             </p>
-          </div>
+          </motion.div>
         </div>
       </div>
 

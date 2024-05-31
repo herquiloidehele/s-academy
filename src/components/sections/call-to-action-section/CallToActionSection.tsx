@@ -1,4 +1,6 @@
+"use client";
 import { Button } from "@headlessui/react";
+import { motion } from "framer-motion";
 
 const TESTIMONIALS_AVATARS_DATA = [
   {
@@ -30,7 +32,12 @@ export default function CallToActionSection() {
       </div>
       <div className={"max-w-7xl mx-auto px-6 md:px-12 xl:px-6"}>
         <div className="relative">
-          <div className="flex items-center justify-center -space-x-2">
+          <motion.div
+            className="flex items-center justify-center -space-x-2"
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+          >
             <img
               loading="lazy"
               width="400"
@@ -71,12 +78,24 @@ export default function CallToActionSection() {
               alt="member photo"
               className="h-8 w-8 rounded-full object-cover filter grayscale"
             />
-          </div>
+          </motion.div>
           <div className="mt-6 m-auto space-y-6 md:w-8/12 lg:w-7/12">
-            <h1 className="text-center text-4xl font-bold text-gray-800 md:text-4xl">Começe agora</h1>
-            <p className="text-center text-xl text-gray-600">
+            <motion.h1
+              className="text-center text-4xl font-bold text-gray-800 md:text-4xl"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
+              Começe agora
+            </motion.h1>
+            <motion.p
+              className="text-center text-xl text-gray-600"
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+            >
               Faça parte da nossa comunidade e comece a criar a sua loja online hoje mesmo.
-            </p>
+            </motion.p>
             <div className="flex flex-wrap justify-center gap-5">
               <a href="#">
                 <Button

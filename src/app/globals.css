@@ -13,6 +13,14 @@ body {
   color: var(--foreground-color);
 }
 
+html {
+  scrollbar-gutter: both-edges;
+  ::-webkit-scrollbar {
+    width: 0;
+  }
+}
+
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

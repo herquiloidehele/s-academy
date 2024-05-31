@@ -3,6 +3,7 @@ import HeroSection from "@/components/sections/hero-section/HeroSection";
 import PriceSection from "@/components/sections/price-section/PriceSection";
 import CourseInfoSection from "@/components/sections/course-info-section/CourseInfoSection";
 import TestimonialsSection from "@/components/sections/testimonials-section/TestimonialsSection";
+import CallToActionSection from "@/components/sections/call-to-action-section/CallToActionSection";
 
 export default function HomePageContent() {
   return (
@@ -12,6 +13,7 @@ export default function HomePageContent() {
       <CourseInfoSection />
       <PriceSection />
       <TestimonialsSection />
+      <CallToActionSection />
     </div>
   );
 }

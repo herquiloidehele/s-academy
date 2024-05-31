@@ -22,23 +22,23 @@ export default function CourseInfoSection() {
 
         <div className="grid grid-cols-[1fr_1fr] gap-x-20 text-gray-600">
           <div className="">
-            <h2 className="text-5xl font-bold text-gray-900 md:text-4xl dark:text-white">
+            <h2 className="text-5xl font-bold text-blue-950 md:text-4xl">
               Ensinamos desde o zero até ao lançamento da sua loja
             </h2>
-            <p className="my-8 text-gray-600 dark:text-gray-300">
+            <p className="my-8 text-gray-500">
               O curso é composto por 5 módulos, com mais de 50 aulas práticas, apresentadas por um especialista na área
               de e-commerce e marketing digital. A cada módulo, você terá acesso a um material de apoio em PDF.
               <br /> <br /> Vamos guiá-lo passo a passo com exemplos práticos para que tú possas criar sua loja em
               poucos dias.
             </p>
-            <div className="divide-y space-y-4 divide-gray-100 dark:divide-gray-800">
+            <div className="divide-y space-y-4 divide-gray-100">
               <div className="mt-8 flex gap-4 md:items-center">
-                <div className="w-12 h-12 flex gap-4 rounded-full bg-indigo-100 dark:bg-indigo-900/20">
+                <div className="w-12 h-12 flex gap-4 rounded-full bg-indigo-1000">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     fill="currentColor"
-                    className="w-6 h-6 m-auto text-indigo-500 dark:text-indigo-400"
+                    className="w-6 h-6 m-auto text-indigo-500"
                   >
                     <path
                       fill-rule="evenodd"
@@ -48,19 +48,17 @@ export default function CourseInfoSection() {
                   </svg>
                 </div>
                 <div className="w-5/6">
-                  <h4 className="font-semibold text-lg text-gray-700 dark:text-indigo-300">Suporte Dsiponível</h4>
-                  <p className="text-gray-500 dark:text-gray-400">
-                    Temos uma equipa de suporte pronta para ajudar a qualquer momento.
-                  </p>
+                  <h4 className="font-semibold text-lg text-blue-950">Suporte Dsiponível</h4>
+                  <p className="text-gray-500">Temos uma equipa de suporte pronta para ajudar a qualquer momento.</p>
                 </div>
               </div>
               <div className="pt-4 flex gap-4 md:items-center">
-                <div className="w-12 h-12 flex gap-4 rounded-full bg-teal-100 dark:bg-teal-900/20">
+                <div className="w-12 h-12 flex gap-4 rounded-full bg-teal-100">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 24 24"
                     fill="currentColor"
-                    className="w-6 h-6 m-auto text-teal-600 dark:text-teal-400"
+                    className="w-6 h-6 m-auto text-teal-600"
                   >
                     <path
                       fill-rule="evenodd"
@@ -70,10 +68,8 @@ export default function CourseInfoSection() {
                   </svg>
                 </div>
                 <div className="w-5/6">
-                  <h4 className="font-semibold text-lg text-gray-700 dark:text-teal-300">Aulas online</h4>
-                  <p className="text-gray-500 dark:text-gray-400">
-                    Aulas disponíveis 24/7, você pode assistir quando e onde quiser.
-                  </p>
+                  <h4 className="font-semibold text-lg text-blue-950">Aulas online</h4>
+                  <p className="text-gray-500">Aulas disponíveis 24/7, você pode assistir quando e onde quiser.</p>
                 </div>
               </div>
             </div>

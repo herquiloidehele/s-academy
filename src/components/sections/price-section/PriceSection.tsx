@@ -13,7 +13,7 @@ export default function PriceSection() {
   return (
     <div className="w-full py-32 px-20 relative bg-white overflow-visible">
       <div className={"max-w-[1300px] flex flex-col gap-10 mx-auto  justify-center items-center "}>
-        <h1 className={"text-blue-950 text-5xl font-bold text-center max-w-[60%] leading-snug"}>
+        <h1 className={"text-blue-950 text-4xl font-bold text-center max-w-[55%] leading-snug"}>
           Aprenda a criar uma loja Shopify do zero.
         </h1>
 
@@ -24,12 +24,12 @@ export default function PriceSection() {
         >
           <div className={"flex flex-col gap-12 items-center justify-center"}>
             <div className={"flex flex-col justify-center gap-1"}>
-              <h2 className={"text-blue-950 text-3xl font-bold"}>Curso Shopify</h2>
+              <h2 className={"text-blue-950 text-2xl font-bold"}>Curso Shopify</h2>
               <p className={"text-center text-md text-gray-500"}>Aprenda a criar uma loja Shopify do zero.</p>
             </div>
 
             <div className={"flex flex-col justify-center gap-5 items-center"}>
-              <h3 className={"font-bold text-blue-950 text-4xl"}>3.000 MZN</h3>
+              <h3 className={"font-bold text-blue-950 text-3xl"}>3.000 MZN</h3>
               <Button
                 className={
                   "bg-green-400 px-5 py-3 rounded-3xl text-white font-bold shadow-2xl shadow-green-400  shadow-[5px_3px_60px_-8px] hover:bg-green-300"
@@ -45,12 +45,12 @@ export default function PriceSection() {
           </div>
 
           <div className={"h-full flex flex-col pl-16 gap-5"}>
-            <h2 className={"text-blue-950 font-bold text-3xl"}>O que está incluído?</h2>
+            <h2 className={"text-blue-950 font-bold text-2xl"}>O que está incluído?</h2>
             <ul className={"flex flex-col gap-3"}>
               {itemsIncluded.map((item, index) => (
                 <li key={index} className={"flex items-center gap-2"}>
                   <CheckCircleIcon className={"text-green-400 w-6 h-6"} />
-                  <span className={"text-lg text-gray-600"}>{item}</span>
+                  <span className={"text-md text-gray-600"}>{item}</span>
                 </li>
               ))}
             </ul>

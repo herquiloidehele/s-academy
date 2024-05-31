@@ -35,7 +35,13 @@ export default function Header() {
 
         <ul className="flex items-center gap-6">
           <li>
-            <a href="#" className="text-stale-950 font-medium text-white">
+            <a
+              href="#"
+              className={clsx("text-stale-950 font-medium", {
+                "text-green-400": isSticky,
+                "text-white": !isSticky,
+              })}
+            >
               Entrar
             </a>
           </li>

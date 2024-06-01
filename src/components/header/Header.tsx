@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 import AppLogo from "@/assets/icons/logo.svg";
 import { useScrollPosition } from "@/utils/customHooks";
 import { clsx } from "clsx";
+import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
@@ -26,18 +27,18 @@ export default function Header() {
 
   return (
     <header
-      className={clsx(`fixed top-0 left-0 w-full z-[200] flex justify-center px-8 py-6`, {
+      className={clsx(`fixed top-0 left-0 w-full z-[200] flex justify-center px-4 py-4 lg:px-8 lg:py-6`, {
         "shadow-lg bg-white": isSticky,
       })}
     >
       <div className="max-w-[1300px] mx-auto flex items-center justify-between w-full">
-        <AppLogo className="h-8 w-auto" />
+        <AppLogo className="h-5 md:6 lg:h-8 w-auto" />
 
         <ul className="flex items-center gap-6">
           <li>
             <a
               href="#"
-              className={clsx("text-stale-950 font-medium", {
+              className={clsx("text-stale-950 font-medium text-sm lg:text-md", {
                 "text-green-400": isSticky,
                 "text-white": !isSticky,
               })}
@@ -47,12 +48,15 @@ export default function Header() {
           </li>
 
           <li>
-            <a
-              href="#"
-              className="bg-green-400 text-white text-md font-medium py-[12px] px-[20px] rounded-3xl hover:bg-green-300 shadow-green-400 shadow-2xl shadow-[5px_3px_60px_-8px]"
+            <ButtonElement
+              type={ButtonType.PRIMARY}
+              fillType={FillType.FILLED}
+              size={ButtonSize.SMALL}
+              shape={ButtonShape.ROUNDED}
+              shadow
             >
               Inscrição
-            </a>
+            </ButtonElement>
           </li>
         </ul>
       </div>

@@ -48,9 +48,9 @@ const TESTIMONIALS_DATA = [
 
 export default function TestimonialsSection() {
   return (
-    <div className="w-full py-32" id="testimonials">
+    <div className="w-full py-14 px-6 lg:py-32" id="testimonials">
       <div className={"max-w-[1300px] mx-auto"}>
-        <div className="mb-20 space-y-4 px-6 md:px-0">
+        <div className="my-4 mb-10 lg:mb-20 space-y-4 px-6 md:px-0">
           <motion.h2
             className="text-center text-2xl font-bold text-gray-800 md:text-4xl"
             initial={{ opacity: 0, y: 50 }}

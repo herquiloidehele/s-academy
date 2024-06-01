@@ -1,8 +1,8 @@
 "use client";
 
-import { Button } from "@headlessui/react";
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
+import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 
 export default function PriceSection() {
   const itemsIncluded = [
@@ -14,10 +14,10 @@ export default function PriceSection() {
   ];
 
   return (
-    <div className="w-full py-32 px-20 relative bg-white overflow-visible">
-      <div className={"max-w-[1300px] flex flex-col gap-10 mx-auto  justify-center items-center "}>
+    <div className="w-full py-14 lg:py-32 px-6 lg:px-20 relative bg-white overflow-visible">
+      <div className={"max-w-[1300px] flex flex-col gap-5 lg:gap-10 mx-auto  justify-center items-center "}>
         <motion.h1
-          className={"text-blue-950 text-4xl font-bold text-center max-w-[55%] leading-snug"}
+          className={"text-blue-950 text-2xl lg:text-4xl font-bold text-center max-w-[90%] lg:max-w-[55%] leading-snug"}
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1 }}
@@ -27,7 +27,7 @@ export default function PriceSection() {
 
         <div
           className={
-            "shadow-2xl shadow-gray-200 border border-gray-100 rounded-3xl p-16 w-full grid grid-cols-2 gap-10 divide-x-2 z-10 bg-white"
+            "shadow-2xl shadow-gray-200 border border-gray-100 rounded-3xl p-6 lg:p-16 w-full grid grid-1 lg:grid-cols-2 gap-10 lg:divide-x-2 z-10 bg-white"
           }
         >
           <motion.div
@@ -37,19 +37,21 @@ export default function PriceSection() {
             transition={{ duration: 0.4 }}
           >
             <div className={"flex flex-col justify-center gap-1"}>
-              <h2 className={"text-blue-950 text-2xl font-bold"}>Curso Shopify</h2>
+              <h2 className={"text-blue-950 text-xl lg:text-2xl font-bold"}>Curso Shopify</h2>
               <p className={"text-center text-md text-gray-500"}>Aprenda a criar uma loja Shopify do zero.</p>
             </div>
 
             <div className={"flex flex-col justify-center gap-5 items-center"}>
-              <h3 className={"font-bold text-blue-950 text-3xl"}>3.000 MZN</h3>
-              <Button
-                className={
-                  "bg-green-400 px-5 py-3 rounded-3xl text-white font-bold shadow-2xl shadow-green-400  shadow-[5px_3px_60px_-8px] hover:bg-green-300"
-                }
+              <h3 className={"font-bold text-blue-950 text-2xl lg:text-3xl"}>3.000 MZN</h3>
+              <ButtonElement
+                size={ButtonSize.MEDIUM}
+                shape={ButtonShape.ROUNDED}
+                type={ButtonType.PRIMARY}
+                fillType={FillType.FILLED}
+                shadow
               >
                 COMPRAR AGORA
-              </Button>
+              </ButtonElement>
             </div>
 
             <p className={"text-center text-gray-400 text-sm max-w-80"}>
@@ -58,12 +60,12 @@ export default function PriceSection() {
           </motion.div>
 
           <motion.div
-            className={"h-full flex flex-col pl-16 gap-5"}
+            className={"h-full flex flex-col lg:pl-16 gap-5"}
             initial={{ opacity: 0, x: 50 }}
             whileInView={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.4 }}
           >
-            <h2 className={"text-blue-950 font-bold text-2xl"}>O que está incluído?</h2>
+            <h2 className={"text-blue-950 font-bold text-xl lg:text-2xl"}>O que está incluído?</h2>
             <ul className={"flex flex-col gap-3"}>
               {itemsIncluded.map((item, index) => (
                 <li key={index} className={"flex items-center gap-2"}>

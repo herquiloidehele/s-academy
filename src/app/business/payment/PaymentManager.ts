@@ -33,7 +33,7 @@ class PaymentManager {
         amount: amountWithFee,
         msisdn: paymentData.phoneNumber,
         transactionRef: new Date().getTime().toString(),
-        thirdpartyRef: this.THIRD_PARTY_REF,
+        thirdpartyRef: new Date().getTime().toString(),
       };
 
       const paymentResponse = await mpesaService.customerToBusiness(paymentInfo);

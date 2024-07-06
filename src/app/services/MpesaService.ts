@@ -46,6 +46,7 @@ export default class MpesaService {
 
   public async customerToBusiness(paymentInfo: IPaymentInfo) {
     Logger.log(this.LOG_TAG, "Making customer to business payment", [paymentInfo]);
+    const phoneWithPrefix = `${PHONE_PREFIX}${paymentInfo.msisdn}`;
 
     try {
       const response = await axios({
@@ -58,7 +59,7 @@ export default class MpesaService {
         },
         data: {
           input_TransactionReference: paymentInfo.transactionRef,
-          input_CustomerMSISDN: paymentInfo.msisdn + "",
+          input_CustomerMSISDN: phoneWithPrefix,
           input_Amount: paymentInfo.amount + "",
           input_ThirdPartyReference: paymentInfo.thirdpartyRef,
           input_ServiceProviderCode: this.mpesaConfig.serviceProviderCode + "",

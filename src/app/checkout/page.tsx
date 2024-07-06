@@ -15,7 +15,7 @@ export default async function page() {
           <div className={"flex flex-col gap-8"}>
             <SignupForm />
 
-            <PaymentCard userId={authUser?.id} />
+            <PaymentCard userId={authUser?.email} />
           </div>
 
           <div className={"flex flex-col gap-5"}>

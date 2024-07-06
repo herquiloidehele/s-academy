@@ -5,6 +5,7 @@ import PaymentManager from "@/app/business/payment/PaymentManager";
 import { PaymentMethods } from "@/app/business/payment/PaymentData";
 import FirestoreService from "@/app/services/FirestoreService";
 import { FirebaseCollections } from "@/utils/Constants";
+import { dateInFuture } from "@/lib/utils";
 
 class SubscriptionManager {
   private readonly LOG_TAG = "SubscriptionManager";
@@ -25,7 +26,7 @@ class SubscriptionManager {
       const subscription: ISubscription = {
         courseId: subscriptionData.course.id,
         amountPaid: totalAmount,
-        expiresAt: subscriptionData.expiresAt,
+        expiresAt: subscriptionData.expiresAt || dateInFuture(1),
         userId: subscriptionData.userId,
         createdAt: new Date(),
       };

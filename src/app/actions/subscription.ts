@@ -5,8 +5,10 @@ import CourseManager from "@/app/business/course/CourseManager";
 import { ISubscriptionRequest } from "@/app/business/subscription/SubscriptionData";
 import Logger from "@/utils/Logger";
 
+const LOG_TAG = "SubscriptionActions";
+
 export async function payCourseSubscription(phoneNumber: string, userId?: string) {
-  Logger.info("payCourseSubscription", `Paying course subscription for user: ${userId}`);
+  Logger.info(LOG_TAG, `Paying course subscription for user: ${userId}`);
 
   try {
     if (!userId) {

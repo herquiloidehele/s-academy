@@ -45,6 +45,7 @@ class FirestoreService {
       Logger.info(this.LOG_TAG, `Document saved to collection: ${collection}`);
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error saving document to collection: ${collection}`, error);
+      return Promise.reject(error);
     }
   }
 }

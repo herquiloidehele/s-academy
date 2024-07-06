@@ -20,8 +20,9 @@ export default function PaymentCard(props: IPaymentCardProps) {
 
   const router = useRouter();
 
-  const { mutate: subscribeCourse, isPending } = useMutation({
-    mutationFn: payCourseSubscription,
+  const { mutate, isPending } = useMutation({
+    mutationFn: (data: { phoneNumber: string; userId?: string }) =>
+      payCourseSubscription(data.phoneNumber, data.userId),
     onSuccess: () => {
       router.push(Constants.APP_ROUTES.COURSE);
     },
@@ -66,7 +67,7 @@ export default function PaymentCard(props: IPaymentCardProps) {
         <ButtonElement
           disabled={!isUserAuthenticated}
           className={"bg-green-400 w-3/12"}
-          onClick={() => subscribeCourse(phoneNumber)}
+          onClick={() => mutate({ phoneNumber: phoneNumber, userId: props.userId })}
           isLoading={isPending}
           type={ButtonType.PRIMARY}
           fillType={FillType.FILLED}

@@ -33,6 +33,7 @@ interface ButtonProps {
   shape: ButtonShape;
   animate?: boolean;
   shadow?: boolean;
+  onClick?: () => void;
 }
 
 export default function ButtonElement(props: ButtonProps) {
@@ -73,6 +74,7 @@ export default function ButtonElement(props: ButtonProps) {
 
   return (
     <Button
+      onClick={props.onClick}
       className={clsx(
         `${buttonBaseClasses} ${buttonSizeClass[props.size]} ${buttonShapeClass[props.shape]} ${props.className} font-bold`,
         {

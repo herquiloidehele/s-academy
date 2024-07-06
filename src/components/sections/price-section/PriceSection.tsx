@@ -3,15 +3,19 @@
 import { CheckCircleIcon } from "@heroicons/react/24/outline";
 import { motion } from "framer-motion";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
+import { Constants } from "@/utils/Constants";
+import { useRouter } from "next/navigation";
+
+const itemsIncluded = [
+  "10 módulos de vídeo aulas",
+  "Material de apoio em PDF",
+  "Grupo de suporte no WhatsApp",
+  "Suporte por email",
+  "Atualizações gratuitas",
+];
 
 export default function PriceSection() {
-  const itemsIncluded = [
-    "10 módulos de vídeo aulas",
-    "Material de apoio em PDF",
-    "Grupo de suporte no WhatsApp",
-    "Suporte por email",
-    "Atualizações gratuitas",
-  ];
+  const router = useRouter();
 
   return (
     <div className="w-full py-14 lg:py-32 px-6 lg:px-20 relative bg-white overflow-visible">
@@ -49,6 +53,9 @@ export default function PriceSection() {
                 type={ButtonType.PRIMARY}
                 fillType={FillType.FILLED}
                 shadow
+                onClick={() => {
+                  router.push(Constants.APP_ROUTES.CHECKOUT);
+                }}
               >
                 COMPRAR AGORA
               </ButtonElement>

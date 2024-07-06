@@ -1,6 +1,8 @@
 "use client";
 import { motion } from "framer-motion";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
+import { useRouter } from "next/navigation";
+import { Constants } from "@/utils/Constants";
 
 const TESTIMONIALS_AVATARS_DATA = [
   {
@@ -24,6 +26,8 @@ const TESTIMONIALS_AVATARS_DATA = [
 ];
 
 export default function CallToActionSection() {
+  const router = useRouter();
+
   return (
     <div className="relative py-8 lg:py-16">
       <div aria-hidden="true" className="absolute inset-0 h-max w-full m-auto grid grid-cols-2 -space-x-52 opacity-40">
@@ -104,6 +108,9 @@ export default function CallToActionSection() {
                   type={ButtonType.PRIMARY}
                   fillType={FillType.FILLED}
                   shadow
+                  onClick={() => {
+                    router.push(Constants.APP_ROUTES.CHECKOUT);
+                  }}
                 >
                   Inscreva-se Agora
                 </ButtonElement>

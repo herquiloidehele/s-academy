@@ -1,9 +1,15 @@
+"use client";
+
 import Image from "next/image";
 import HeroDesktop from "@/assets/images/hero-desktop.jpg";
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
+import { useRouter } from "next/navigation";
+import { Constants } from "@/utils/Constants";
 
 export default function HeroSection() {
+  const router = useRouter();
+
   return (
     <div className="relative w-full h-[100vh] flex justify-center">
       <Image src={HeroDesktop} alt={"Hero Desktop"} className="w-full h-full object-cover absolute top-0 left-0" />
@@ -32,6 +38,9 @@ export default function HeroSection() {
               shape={ButtonShape.ROUNDED}
               shadow
               animate
+              onClick={() => {
+                router.push(Constants.APP_ROUTES.CHECKOUT);
+              }}
             >
               Inscreva-se Agora
             </ButtonElement>

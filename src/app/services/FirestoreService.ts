@@ -1,6 +1,7 @@
 import { FirebaseCollections } from "@/utils/Constants";
 import Logger from "@/utils/Logger";
-import { firestoreDB } from "@/utils/firebaseConfig";
+import { IQuery } from "@/app/services/ServiceDaos";
+import FirebaseConfig from "@/app/services/FirebaseConfig";
 
 class FirestoreService {
   private readonly LOG_TAG = "FirestoreService";
@@ -14,7 +15,7 @@ class FirestoreService {
         return null;
       }
 
-      const documentReference = firestoreDB.collection(collection).doc(id);
+      const documentReference = FirebaseConfig.firestoreDB.collection(collection).doc(id);
       const documentSnapshot = await documentReference.get();
 
       if (!documentSnapshot.exists) {
@@ -29,11 +30,30 @@ class FirestoreService {
     }
   }
 
+  public async getDocumentsByQuery(collection: FirebaseCollections, query: IQuery) {
+    Logger.info(this.LOG_TAG, `Getting documents by query: ${query}`);
+
+    try {
+      const collectionReference = FirebaseConfig.firestoreDB.collection(collection);
+      const querySnapshot = await collectionReference.where(query.field, query.operator, query.value).get();
+
+      if (querySnapshot.empty) {
+        Logger.error(this.LOG_TAG, `Documents not found by query`, [query]);
+        return [];
+      }
+
+      return querySnapshot.docs.map((doc) => doc.data());
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error getting documents by query: ${query}`, error);
+      return Promise.reject(error);
+    }
+  }
+
   public async saveDocument<T>(collection: FirebaseCollections, data: T, id?: string) {
     Logger.info(this.LOG_TAG, `Saving document to collection: ${collection}`);
 
     try {
-      const collectionReference = firestoreDB.collection(collection);
+      const collectionReference = FirebaseConfig.firestoreDB.collection(collection);
 
       const documentId = id || collectionReference.doc().id;
 

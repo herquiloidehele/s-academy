@@ -3,9 +3,18 @@ import { SignupForm } from "@/components/signup-form/SignupForm";
 import ProductCard from "@/components/checkout/product-card/ProductCard";
 import PaymentCard from "@/components/checkout/payment-card/PaymentCard";
 import AuthManager from "@/app/business/auth/AuthManager";
+import SubscriptionManager from "@/app/business/subscription/SubscriptionManager";
+import { redirect } from "next/navigation";
+import { Constants } from "@/utils/Constants";
 
 export default async function page() {
   const authUser = await AuthManager.getAuthUser();
+  const hasActiveSubscription = await SubscriptionManager.doesUserHaveActiveSubscription(authUser?.email);
+
+  if (hasActiveSubscription) {
+    return redirect(Constants.APP_ROUTES.COURSE);
+  }
+
   return (
     <div className="max-w-[1300px] pt-32 mx-auto flex flex-col gap-3">
       <Header solidBg />

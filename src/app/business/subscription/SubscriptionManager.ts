@@ -5,7 +5,7 @@ import PaymentManager from "@/app/business/payment/PaymentManager";
 import { PaymentMethods } from "@/app/business/payment/PaymentData";
 import FirestoreService from "@/app/services/FirestoreService";
 import { FirebaseCollections } from "@/utils/Constants";
-import { dateInFuture } from "@/lib/utils";
+import dayjs from "dayjs";
 
 class SubscriptionManager {
   private readonly LOG_TAG = "SubscriptionManager";
@@ -26,7 +26,7 @@ class SubscriptionManager {
       const subscription: ISubscription = {
         courseId: subscriptionData.course.id,
         amountPaid: totalAmount,
-        expiresAt: subscriptionData.expiresAt || dateInFuture(1),
+        expiresAt: new Date(dayjs().add(1, "year").toDate()),
         userId: subscriptionData.userId,
         createdAt: new Date(),
       };
@@ -46,6 +46,51 @@ class SubscriptionManager {
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error subscribing to course`, error);
       return Promise.reject(error);
+    }
+  }
+
+  public async getSubscriptionByUserId(userId: string): Promise<ISubscription | undefined> {
+    Logger.info(this.LOG_TAG, `Getting subscriptions for user: ${userId}`);
+
+    try {
+      const subscriptions = await FirestoreService.getDocumentsByQuery(FirebaseCollections.SUBSCRIPTIONS, {
+        field: "userId",
+        operator: "==",
+        value: userId,
+      });
+
+      Logger.info(this.LOG_TAG, `Subscriptions found`, [subscriptions]);
+
+      if (!subscriptions?.length) {
+        return undefined;
+      }
+
+      return subscriptions.pop() as ISubscription;
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error getting subscriptions`, error);
+      return Promise.reject(error);
+    }
+  }
+
+  public async doesUserHaveActiveSubscription(userId?: string): Promise<boolean> {
+    Logger.info(this.LOG_TAG, `Checking if user has active subscription: ${userId}`);
+
+    try {
+      if (!userId) {
+        Logger.error(this.LOG_TAG, `User not found`);
+        return false;
+      }
+
+      const subscription = await this.getSubscriptionByUserId(userId);
+
+      Logger.debug(this.LOG_TAG, `Subscription expire date`, [subscription]);
+      const isActive = !!subscription;
+
+      Logger.info(this.LOG_TAG, `Active subscription found`, [isActive]);
+      return isActive;
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error checking active subscription`, error);
+      return false;
     }
   }
 }

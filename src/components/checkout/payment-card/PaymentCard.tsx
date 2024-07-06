@@ -4,8 +4,12 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import * as React from "react";
+import AuthManager from "@/app/business/auth/AuthManager";
 
-export default function PaymentCard() {
+export default async function PaymentCard() {
+  const authUser = await AuthManager.getAuthUser();
+  const isUserAuthenticated = !!authUser;
+
   return (
     <Card className="">
       <CardHeader>
@@ -23,13 +27,18 @@ export default function PaymentCard() {
               <Label htmlFor="phone" className={"text-blue-950"}>
                 Nome
               </Label>
-              <Input disabled id="phone" placeholder="Introduza Número M-Pesa" className={"h-12"} />
+              <Input
+                disabled={!isUserAuthenticated}
+                id="phone"
+                placeholder="Introduza Número M-Pesa"
+                className={"h-12"}
+              />
             </div>
           </div>
         </form>
       </CardContent>
       <CardFooter className="flex justify-center">
-        <Button disabled className={"bg-green-400 w-3/12"}>
+        <Button disabled={!isUserAuthenticated} className={"bg-green-400 w-3/12"}>
           PAGAR
         </Button>
       </CardFooter>

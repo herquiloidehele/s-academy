@@ -3,14 +3,13 @@ import Logger from "@/utils/Logger";
 
 import { cert, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
-import serviceAccount from "../config/firebase-service-account.json";
 import Firestore = firestore.Firestore;
 
 const LOG_TAG = "FirebaseConfig";
 
 try {
   initializeApp({
-    credential: cert(serviceAccount as any),
+    credential: cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY as any)),
   });
   Logger.info(LOG_TAG, "Firebase Admin initialized");
 } catch (error) {

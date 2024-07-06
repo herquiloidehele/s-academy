@@ -17,10 +17,14 @@ export default async function page() {
   const storedUser = await FirestoreService.getDocumentById(FirebaseCollections.USERS, user.email);
 
   if (!storedUser) {
-    await FirestoreService.saveDocument(FirebaseCollections.USERS, user.email, {
-      email: user.email,
-      role: UserRole.USER,
-    });
+    await FirestoreService.saveDocument(
+      FirebaseCollections.USERS,
+      {
+        email: user.email,
+        role: UserRole.USER,
+      },
+      user.email,
+    );
 
     redirect(Constants.APP_ROUTES.CHECKOUT);
   } else {

@@ -29,13 +29,15 @@ class FirestoreService {
     }
   }
 
-  public async saveDocument<T>(collection: FirebaseCollections, id: string, data: T) {
+  public async saveDocument<T>(collection: FirebaseCollections, data: T, id?: string) {
     Logger.info(this.LOG_TAG, `Saving document to collection: ${collection}`);
 
     try {
       const collectionReference = firestoreDB.collection(collection);
 
-      await collectionReference.doc(id).set({
+      const documentId = id || collectionReference.doc().id;
+
+      await collectionReference.doc(documentId).set({
         ...data,
         createdAt: new Date().toISOString(),
       });

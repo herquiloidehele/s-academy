@@ -2,13 +2,13 @@ import Logger from "@/utils/Logger";
 import { auth } from "@/auth";
 import FirestoreService from "@/app/services/FirestoreService";
 import { FirebaseCollections } from "@/utils/Constants";
-import { User } from "@/app/business/auth/UsersData";
+import { IUser } from "@/app/business/auth/UsersData";
 
 class AuthManager {
-  private authUser: User | undefined;
+  private authUser: IUser | undefined;
   private readonly LOG_TAG = "AuthManager";
 
-  public async getAuthUser(): Promise<User | undefined> {
+  public async getAuthUser(): Promise<IUser | undefined> {
     Logger.info(this.LOG_TAG, "Getting auth user");
 
     if (this.authUser) {
@@ -28,10 +28,10 @@ class AuthManager {
       Logger.info(this.LOG_TAG, "User found", [user]);
 
       const authUser = await FirestoreService.getDocumentById(FirebaseCollections.USERS, user?.email);
-      this.authUser = authUser as User;
+      this.authUser = authUser as IUser;
 
       Logger.info(this.LOG_TAG, "Auth user found", [authUser]);
-      return authUser as User;
+      return authUser as IUser;
     } catch (error) {
       Logger.error(this.LOG_TAG, "Error getting auth user", [error]);
     }

@@ -21,3 +21,5 @@ export enum FirebaseCollections {
   SUBSCRIPTIONS = "subscriptions",
   COURSES = "courses",
 }
+
+export const PHONE_PREFIX = "258";

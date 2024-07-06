@@ -34,6 +34,8 @@ interface ButtonProps {
   animate?: boolean;
   shadow?: boolean;
   onClick?: () => void;
+  disabled?: boolean;
+  isLoading?: boolean;
 }
 
 export default function ButtonElement(props: ButtonProps) {
@@ -82,8 +84,15 @@ export default function ButtonElement(props: ButtonProps) {
           "shadow-2xl shadow-green-400  shadow-[5px_3px_60px_-8px] hover:bg-green-300": props.shadow,
         },
       )}
+      disabled={props.disabled}
     >
-      {props.children}
+      {props.isLoading ? (
+        <div className="flex items-center justify-center">
+          <div className="w-6 h-6 border-t-2 border-b-2 border-green-400 rounded-full animate-spin" />
+        </div>
+      ) : (
+        props.children
+      )}
     </Button>
   );
 }

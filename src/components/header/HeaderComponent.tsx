@@ -17,7 +17,7 @@ const START_STICKY_POSITION = 10;
 
 interface HeaderProps {
   solidBg?: boolean;
-  user?: any;
+  isAuthenticated?: any;
 }
 export default function HeaderComponent(props: HeaderProps) {
   const { y: scrollPosition } = useScrollPosition();
@@ -43,7 +43,7 @@ export default function HeaderComponent(props: HeaderProps) {
           }}
         />
 
-        {!props.user ? (
+        {!props.isAuthenticated ? (
           <ul className="flex items-center gap-6">
             <li>
               <a

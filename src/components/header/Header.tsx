@@ -7,5 +7,5 @@ interface HeaderProps {
 export default async function Header(props: HeaderProps) {
   const user = await AuthManager.getAuthUser();
 
-  return <HeaderComponent solidBg={props.solidBg} user={user} />;
+  return <HeaderComponent solidBg={props.solidBg} isAuthenticated={!!user} />;
 }

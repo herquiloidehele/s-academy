@@ -2,8 +2,10 @@ import Header from "@/components/header/Header";
 import { SignupForm } from "@/components/signup-form/SignupForm";
 import ProductCard from "@/components/checkout/product-card/ProductCard";
 import PaymentCard from "@/components/checkout/payment-card/PaymentCard";
+import AuthManager from "@/app/business/auth/AuthManager";
 
 export default async function page() {
+  const authUser = await AuthManager.getAuthUser();
   return (
     <div className="max-w-[1300px] pt-32 mx-auto flex flex-col gap-3">
       <Header solidBg />
@@ -13,7 +15,7 @@ export default async function page() {
           <div className={"flex flex-col gap-8"}>
             <SignupForm />
 
-            <PaymentCard />
+            <PaymentCard userId={authUser?.id} />
           </div>
 
           <div className={"flex flex-col gap-5"}>

@@ -1,14 +1,34 @@
+"use client";
+
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { CreditCardIcon } from "@heroicons/react/24/outline";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import * as React from "react";
-import AuthManager from "@/app/business/auth/AuthManager";
+import { useRouter } from "next/navigation";
+import { useMutation } from "@tanstack/react-query";
+import { Constants } from "@/utils/Constants";
+import { payCourseSubscription } from "@/app/actions/subscription";
+import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 
-export default async function PaymentCard() {
-  const authUser = await AuthManager.getAuthUser();
-  const isUserAuthenticated = !!authUser;
+interface IPaymentCardProps {
+  userId?: string;
+}
+export default function PaymentCard(props: IPaymentCardProps) {
+  const isUserAuthenticated = !!props.userId;
+  const [phoneNumber, setPhoneNumber] = React.useState("");
+
+  const router = useRouter();
+
+  const { mutate: subscribeCourse, isPending } = useMutation({
+    mutationFn: payCourseSubscription,
+    onSuccess: () => {
+      router.push(Constants.APP_ROUTES.COURSE);
+    },
+    onError: (error) => {
+      console.error(error);
+    },
+  });
 
   return (
     <Card className="">
@@ -32,15 +52,29 @@ export default async function PaymentCard() {
                 id="phone"
                 placeholder="Introduza Número M-Pesa"
                 className={"h-12"}
+                value={phoneNumber}
+                onChange={(e) => setPhoneNumber(e.target.value)}
+                max={9}
+                type="number"
+                inputMode={"tel"}
               />
             </div>
           </div>
         </form>
       </CardContent>
       <CardFooter className="flex justify-center">
-        <Button disabled={!isUserAuthenticated} className={"bg-green-400 w-3/12"}>
+        <ButtonElement
+          disabled={!isUserAuthenticated}
+          className={"bg-green-400 w-3/12"}
+          onClick={() => subscribeCourse(phoneNumber)}
+          isLoading={isPending}
+          type={ButtonType.PRIMARY}
+          fillType={FillType.FILLED}
+          size={ButtonSize.MEDIUM}
+          shape={ButtonShape.SQUARE}
+        >
           PAGAR
-        </Button>
+        </ButtonElement>
       </CardFooter>
     </Card>
   );

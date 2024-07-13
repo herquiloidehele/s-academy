@@ -16,6 +16,8 @@ export const Constants = {
   },
 };
 
+export const PROTECTED_ROUTES = [Constants.APP_ROUTES.COURSE];
+
 export enum FirebaseCollections {
   USERS = "users",
   SUBSCRIPTIONS = "subscriptions",

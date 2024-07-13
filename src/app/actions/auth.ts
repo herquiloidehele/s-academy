@@ -13,5 +13,5 @@ export async function handleSocialLogin(formData: FormData) {
 }
 
 export async function handleLogout() {
-  await signOut({ redirectTo: Constants.APP_ROUTES.HOME });
+  await signOut({ redirectTo: Constants.APP_ROUTES.HOME, redirect: true });
 }

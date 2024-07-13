@@ -1,21 +1,21 @@
 import VideoPlayer from "@/components/course/video-player/VideoPlayer";
+import { ICourseVideo } from "@/app/business/course/CourseData";
 
-export function VideoPlayerWrapper() {
+interface VideoPlayerWrapperProps {
+  video: ICourseVideo;
+}
+export function VideoPlayerWrapper(props: VideoPlayerWrapperProps) {
   return (
     <div className={"w-full flex flex-col gap-4"}>
       <div className={"h-[60vh]"}>
-        <VideoPlayer videoId={"BKFBxoU9vUk"} />
+        <VideoPlayer videoId={props.video.videoId} />
       </div>
 
       <div className={"flex flex-col gap-2"}>
-        <h1 className={"font-bold text-3xl text-black"}>Introdução a Shopify</h1>
+        <h1 className={"font-bold text-3xl text-black"}>{props.video.title}</h1>
 
         <div className={"bg-gray-200 min-h-20 p-5 rounded-xl"}>
-          <p className={"text-gray-900 text-md"}>
-            Aprenda a criar uma loja virtual com a plataforma de e-commerce mais usada no mundo. Este curso é para quem
-            deseja criar uma loja virtual do zero, sem precisar de conhecimento técnico. <br /> O curso é 100% prático e
-            você vai aprender a criar uma loja virtual do zero, sem precisar de conhecimento
-          </p>
+          <p className={"text-gray-900 text-md"}>{props.video.description || "Sem Descrição"}</p>
         </div>
       </div>
     </div>

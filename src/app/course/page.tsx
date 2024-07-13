@@ -14,7 +14,7 @@ const sections: ICourseSection[] = [
         title: "Introducção ao Curso Shopify",
         videoId: "BKFBxoU9vUk",
         duration: "10:00",
-        description: ` Aprenda a criar uma loja virtual com a plataforma de e-commerce mais usada no mundo. Este curso é para quem
+        description: `Aprenda a criar uma loja virtual com a plataforma de e-commerce mais usada no mundo. Este curso é para quem
             deseja criar uma loja virtual do zero, sem precisar de conhecimento técnico. <br /> O curso é 100% prático e
             você vai aprender a criar uma loja virtual do zero, sem precisar de conhecimento`,
       },
@@ -112,10 +112,10 @@ export default function Page({ searchParams: { w: courseId } }: ISearchParams) {
   const video = sections.flatMap((section) => section.videos).find((video) => video.videoId === courseId);
 
   return (
-    <div className={"pt-16 md:pt-28 px-5 xl:px-0 md:max-w-[1400px] mx-auto"}>
+    <div className={"pt-20 md:pt-28 px-5 xl:px-0 md:max-w-[1300px] mx-auto"}>
       <Header solidBg />
       <div className="w-full">
-        <div className="grid grid-cols-[4fr_1fr] gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-[4fr_1fr] gap-5">
           {video && <VideoPlayerWrapper video={video} />}
           <VideoSideList sections={sections} />
         </div>

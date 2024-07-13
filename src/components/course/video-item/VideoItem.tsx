@@ -22,7 +22,7 @@ export default function VideoItem(props: VideoItemProps) {
 
         <div className={""}>
           <span className="text-sm text-gray-500 mr-1">{props.video.duration}</span>
-          <span className="text-sm font-medium">{props.video.title}</span>
+          <span className="text-sm font-medium truncate text-ellipsis overflow-hidden">{props.video.title}</span>
         </div>
       </div>
     </Link>

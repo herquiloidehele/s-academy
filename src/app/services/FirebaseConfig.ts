@@ -35,7 +35,7 @@ class FirebaseConfig {
         credential: cert(firebaseConfig as any),
       });
 
-      Logger.debug(this.LOG_TAG, "Firebase Admin initialized");
+      Logger.debug(this.LOG_TAG, "Firebase Admin initialized successfully", [this.firebaseApp]);
     } catch (error) {
       Logger.error(this.LOG_TAG, "Error initializing Firebase Admin", [error]);
     }

@@ -30,8 +30,8 @@ class FirestoreService {
     }
   }
 
-  public async getDocumentsByQuery(collection: FirebaseCollections, query: IQuery) {
-    Logger.info(this.LOG_TAG, `Getting documents by query: ${query}`);
+  public async getDocumentsByQuery<T>(collection: FirebaseCollections, query: IQuery): Promise<T[]> {
+    Logger.info(this.LOG_TAG, `Getting documents by query:`, [query]);
 
     try {
       const collectionReference = FirebaseConfig.firestoreDB.collection(collection);
@@ -42,7 +42,7 @@ class FirestoreService {
         return [];
       }
 
-      return querySnapshot.docs.map((doc) => doc.data());
+      return querySnapshot.docs.map((doc) => doc.data()) as T[];
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error getting documents by query: ${query}`, error);
       return Promise.reject(error);

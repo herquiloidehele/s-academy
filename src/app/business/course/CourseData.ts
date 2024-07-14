@@ -18,7 +18,7 @@ export interface ILesson {
   title: string;
   duration: string;
   description?: string;
-  thumbnailUrl?: string;
+  thumbnailUrl: string;
   courseId: DocumentReference<DocumentData, DocumentData> | null;
   section: {
     id: number;

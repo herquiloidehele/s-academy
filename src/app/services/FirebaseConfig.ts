@@ -3,6 +3,7 @@ import Logger from "@/utils/Logger";
 
 import { cert, initializeApp } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
+import { base64ToObject } from "@/lib/utils";
 import Firestore = firestore.Firestore;
 
 class FirebaseConfig {
@@ -26,12 +27,12 @@ class FirebaseConfig {
         return;
       }
 
-      const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY as any);
+      const serviceAccountObject = base64ToObject(process.env.FIREBASE_SERVICE_ACCOUNT_KEY as string);
 
-      Logger.debug(this.LOG_TAG, "Service Account", [serviceAccount]);
+      Logger.debug(this.LOG_TAG, "Service Account Object", [serviceAccountObject]);
 
       this.firebaseApp = initializeApp({
-        credential: cert(serviceAccount),
+        credential: cert(serviceAccountObject),
       });
 
       Logger.debug(this.LOG_TAG, "Firebase Admin initialized");

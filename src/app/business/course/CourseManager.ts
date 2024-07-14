@@ -44,7 +44,7 @@ class CourseManager {
 
       const sections: ICourseSection[] = Object.keys(sectionsDictionary).map((sectionTitle) => ({
         title: sectionTitle,
-        lessons: sectionsDictionary[sectionTitle],
+        lessons: _.sortBy(sectionsDictionary[sectionTitle], "order"),
       }));
 
       Logger.info(this.LOG_TAG, `Section Lessons found for course: ${courseId}`, sections);

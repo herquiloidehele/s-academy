@@ -17,7 +17,7 @@ export default async function page() {
   }
 
   return (
-    <div className="max-w-[1300px] pt-32 mx-auto flex flex-col gap-3">
+    <div className="max-w-[1300px] py-32 mx-auto flex flex-col gap-3 px-4 md:px-0">
       <Header solidBg />
 
       <div className={"flex flex-col gap-3"}>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import AppLogo from "@/assets/icons/logo.svg";
 import { useScrollPosition } from "@/utils/customHooks";
 import { clsx } from "clsx";
@@ -8,6 +8,7 @@ import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/
 import { Constants } from "@/utils/Constants";
 import { useRouter } from "next/navigation";
 import { handleLogout } from "@/app/actions/auth";
+import LoginModal from "@/components/login-modal/LoginModal";
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
@@ -20,6 +21,8 @@ interface HeaderProps {
   isAuthenticated?: any;
 }
 export default function HeaderComponent(props: HeaderProps) {
+  const [modalOpen, setModalOpen] = useState(false);
+
   const { y: scrollPosition } = useScrollPosition();
 
   const router = useRouter();
@@ -52,6 +55,10 @@ export default function HeaderComponent(props: HeaderProps) {
                   "text-green-400": isSticky,
                   "text-white": !isSticky,
                 })}
+                onClick={(e) => {
+                  e.preventDefault();
+                  setModalOpen(true);
+                }}
               >
                 Entrar
               </a>
@@ -84,6 +91,8 @@ export default function HeaderComponent(props: HeaderProps) {
           </form>
         )}
       </div>
+
+      <LoginModal open={modalOpen} onChange={setModalOpen} />
     </header>
   );
 }

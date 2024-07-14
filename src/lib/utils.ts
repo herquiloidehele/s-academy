@@ -24,5 +24,5 @@ export const stringToBase64 = (str: string) => {
 };
 
 export const base64ToObject = (base64: string) => {
-  return JSON.parse(base64ToString(base64));
+  return JSON.parse(base64ToString(base64).replace(/\\n/gm, "\n"));
 };

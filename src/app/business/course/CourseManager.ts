@@ -1,7 +1,7 @@
 import { ICourse } from "@/app/business/course/CourseData";
 
 class CourseManager {
-  private readonly DEFAULT_COURSE_ID = "shopify-course";
+  private readonly DEFAULT_COURSE_ID = "Q0us6qiWzX00sF2IZyQL";
 
   private defaultCourse: ICourse = {
     id: this.DEFAULT_COURSE_ID,

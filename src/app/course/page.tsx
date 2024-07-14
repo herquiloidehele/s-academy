@@ -9,10 +9,10 @@ import { Constants } from "@/utils/Constants";
 const sections: ICourseSection[] = [
   {
     title: "Introdução básica",
-    videos: [
+    lessons: [
       {
         title: "Introducção ao Curso Shopify",
-        videoId: "BKFBxoU9vUk",
+        videoRef: "BKFBxoU9vUk",
         duration: "10:00",
         description: `Aprenda a criar uma loja virtual com a plataforma de e-commerce mais usada no mundo. Este curso é para quem
             deseja criar uma loja virtual do zero, sem precisar de conhecimento técnico. <br /> O curso é 100% prático e
@@ -20,13 +20,13 @@ const sections: ICourseSection[] = [
       },
       {
         title: "Configuração de Conta",
-        videoId: "S_6NWKVhXfs",
+        videoRef: "S_6NWKVhXfs",
         duration: "10:00",
         description: "Neste vídeo você aprenderá a configurar sua conta no Shopify.",
       },
       {
         title: "Adicionando Produtos",
-        videoId: "48-D290lKM0",
+        videoRef: "48-D290lKM0",
         duration: "10:00",
         thumbnailUrl: "https://via.placeholder.com/150",
         description: "Neste vídeo você aprenderá a adicionar produtos ao seu site Shopify.",
@@ -35,21 +35,21 @@ const sections: ICourseSection[] = [
   },
   {
     title: "Configuração de Conta",
-    videos: [
+    lessons: [
       {
         title: "Introducção ao Curso Shopify",
-        videoId: "tlXHPg411zI",
+        videoRef: "tlXHPg411zI",
         duration: "10:00",
       },
       {
         title: "Configuração de Conta",
-        videoId: "BKFBxoU9vUk",
+        videoRef: "BKFBxoU9vUk",
         duration: "10:00",
         description: "Neste vídeo você aprenderá a configurar sua conta no Shopify.",
       },
       {
         title: "Adicionando Produtos",
-        videoId: "BKFBxoU9vUk",
+        videoRef: "BKFBxoU9vUk",
         duration: "10:00",
         thumbnailUrl: "https://via.placeholder.com/150",
         description: "Neste vídeo você aprenderá a adicionar produtos ao seu site Shopify.",
@@ -58,21 +58,21 @@ const sections: ICourseSection[] = [
   },
   {
     title: "Section 2",
-    videos: [
+    lessons: [
       {
         title: "Introducção ao Curso Shopify",
-        videoId: "BKFBxoU9vUk",
+        videoRef: "BKFBxoU9vUk",
         duration: "10:00",
       },
       {
         title: "Configuração de Conta",
-        videoId: "BKFBxoU9vUk",
+        videoRef: "BKFBxoU9vUk",
         duration: "10:00",
         description: "Neste vídeo você aprenderá a configurar sua conta no Shopify.",
       },
       {
         title: "Adicionando Produtos",
-        videoId: "BKFBxoU9vUk",
+        videoRef: "BKFBxoU9vUk",
         duration: "10:00",
         thumbnailUrl: "https://via.placeholder.com/150",
         description: "Neste vídeo você aprenderá a adicionar produtos ao seu site Shopify.",
@@ -81,21 +81,21 @@ const sections: ICourseSection[] = [
   },
   {
     title: "Section 2",
-    videos: [
+    lessons: [
       {
         title: "Introducção ao Curso Shopify",
-        videoId: "BKFBxoU9vUk",
+        videoRef: "BKFBxoU9vUk",
         duration: "10:00",
       },
       {
         title: "Configuração de Conta",
-        videoId: "BKFBxoU9vUk",
+        videoRef: "BKFBxoU9vUk",
         duration: "10:00",
         description: "Neste vídeo você aprenderá a configurar sua conta no Shopify.",
       },
       {
         title: "Adicionando Produtos",
-        videoId: "BKFBxoU9vUk",
+        videoRef: "BKFBxoU9vUk",
         duration: "10:00",
         thumbnailUrl: "https://via.placeholder.com/150",
         description: "Neste vídeo você aprenderá a adicionar produtos ao seu site Shopify.",
@@ -106,10 +106,10 @@ const sections: ICourseSection[] = [
 
 export default function Page({ searchParams: { w: courseId } }: ISearchParams) {
   if (!courseId) {
-    return redirect(`${Constants.APP_ROUTES.COURSE}/?w=${sections[0].videos[0].videoId}`);
+    return redirect(`${Constants.APP_ROUTES.COURSE}/?w=${sections[0].lessons[0].videoRef}`);
   }
 
-  const video = sections.flatMap((section) => section.videos).find((video) => video.videoId === courseId);
+  const video = sections.flatMap((section) => section.lessons).find((video) => video.videoRef === courseId);
 
   return (
     <div className={"pt-20 md:pt-28 px-5 xl:px-0 md:max-w-[1300px] mx-auto"}>

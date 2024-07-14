@@ -1,14 +1,14 @@
 import VideoPlayer from "@/components/course/video-player/VideoPlayer";
-import { ICourseVideo } from "@/app/business/course/CourseData";
+import { ILesson } from "@/app/business/course/CourseData";
 
 interface VideoPlayerWrapperProps {
-  video: ICourseVideo;
+  video: ILesson;
 }
 export function VideoPlayerWrapper(props: VideoPlayerWrapperProps) {
   return (
     <div className={"w-full flex flex-col gap-2 md:gap-4"}>
       <div className={"h-[40vh] md:h-[60vh]"}>
-        <VideoPlayer videoId={props.video.videoId} />
+        <VideoPlayer videoId={props.video.videoRef} />
       </div>
 
       <div className={"flex flex-col gap-2"}>

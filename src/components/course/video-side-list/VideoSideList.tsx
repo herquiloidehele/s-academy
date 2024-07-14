@@ -14,7 +14,7 @@ export default function VideoSideList(props: VideoSideListProps) {
             <AccordionTrigger>{section.title}</AccordionTrigger>
             <AccordionContent>
               <ul className="space-y-4 md:space-y-1">
-                {section.videos.map((video, index) => (
+                {section.lessons.map((video, index) => (
                   <li key={index} className="">
                     <VideoItem video={video} />
                   </li>

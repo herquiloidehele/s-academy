@@ -68,6 +68,22 @@ class FirestoreService {
       return Promise.reject(error);
     }
   }
+
+  public async getDocumentRefById(collection: FirebaseCollections, id: string | null) {
+    Logger.info(this.LOG_TAG, `Getting document reference by id: ${id}`);
+
+    try {
+      if (!id) {
+        Logger.error(this.LOG_TAG, "Document id is required");
+        return null;
+      }
+
+      return FirebaseConfig.firestoreDB.collection(collection).doc(id);
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error getting document reference by id: ${id}`, error);
+      return null;
+    }
+  }
 }
 
 export default new FirestoreService();

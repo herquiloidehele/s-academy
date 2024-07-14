@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { CurrencyCode, Locales } from "@/utils/Constants";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -11,18 +12,12 @@ export function dateInFuture(years: number) {
   return date;
 }
 
-export const base64ToString = (base64: string) => {
-  return Buffer.from(base64, "base64").toString("utf-8");
-};
-
-/**
- * Convert string to base64
- * @param str
- */
-export const stringToBase64 = (str: string) => {
-  return Buffer.from(str, "utf-8").toString("base64");
-};
-
-export const base64ToObject = (base64: string) => {
-  return JSON.parse(base64ToString(base64).replace(/\\n/gm, "\n"));
+export const formatCurrency = (price: number) => {
+  return Intl.NumberFormat([Locales.PT, Locales.EN], {
+    currency: CurrencyCode.MZN,
+    style: "currency",
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 2,
+    useGrouping: true,
+  }).format(price);
 };

@@ -3,7 +3,6 @@
 import { Constants } from "@/utils/Constants";
 
 import { signIn, signOut } from "@/auth";
-import AuthManager from "@/app/business/auth/AuthManager";
 
 export async function handleSocialLogin(formData: FormData) {
   const provider = formData.get(Constants.ACTIONS.LOGIN);
@@ -14,6 +13,5 @@ export async function handleSocialLogin(formData: FormData) {
 }
 
 export async function handleLogout() {
-  await AuthManager.signOut();
   await signOut({ redirectTo: Constants.APP_ROUTES.HOME });
 }

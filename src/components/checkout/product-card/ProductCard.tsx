@@ -1,8 +1,14 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookmarkIcon } from "@heroicons/react/24/outline";
 import * as React from "react";
+import CourseManager from "@/app/business/course/CourseManager";
+import { formatCurrency } from "@/lib/utils";
+import PaymentManager from "@/app/business/payment/PaymentManager";
+import { PaymentMethods } from "@/app/business/payment/PaymentData";
 
 export default function ProductCard() {
+  const course = CourseManager.getDefaultCourse();
+
   return (
     <Card className="">
       <CardHeader>
@@ -16,23 +22,29 @@ export default function ProductCard() {
       <CardContent>
         <div className={"flex flex-col gap-3"}>
           <div className={"flex justify-between gap-5"}>
-            <span>Shopify curso completo</span>
-            <span className={"font-normal"}>3.500 MZN</span>
-          </div>
-
-          <div className={"flex justify-between gap-5"}>
-            <span>Taxa Mpesa</span>
-            <span className={"font-normal"}>200 MZN</span>
+            <span>{course.title}</span>
+            <span className={"font-normal"}>{formatCurrency(course.price)}</span>
           </div>
 
           <div className={"flex justify-between gap-5"}>
             <span>Desconto</span>
-            <span className={"font-normal"}>-100 MZN</span>
+            <span className={"font-normal"}>{formatCurrency(-course.discount)}</span>
+          </div>
+
+          <div className={"flex justify-between gap-5"}>
+            <span>Taxa Mpesa (3%)</span>
+            <span className={"font-normal"}>
+              {formatCurrency(PaymentManager.getFeeAmount(CourseManager.getTotalPrice(course), PaymentMethods.MPESA))}
+            </span>
           </div>
 
           <div className={"flex justify-between gap-5"}>
             <span className={"font-bold text-lg text-green-400"}>Total</span>
-            <span className={"font-bold text-lg text-green-400"}>3.700 MZN</span>
+            <span className={"font-bold text-lg text-green-400"}>
+              {formatCurrency(
+                PaymentManager.getAmountWithFee(CourseManager.getTotalPrice(course), PaymentMethods.MPESA),
+              )}
+            </span>
           </div>
         </div>
       </CardContent>

@@ -33,4 +33,15 @@ export enum FirebaseCollections {
   LESSONS = "lessons",
 }
 
+export enum CurrencyCode {
+  MZN = "MZN",
+  EUR = "EUR",
+  USD = "USD",
+}
+
+export enum Locales {
+  PT = "pt-PT",
+  EN = "en",
+}
+
 export const PHONE_PREFIX = "258";

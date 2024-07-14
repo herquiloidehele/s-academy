@@ -20,6 +20,14 @@ class PaymentManager {
     }
   }
 
+  public getAmountWithFee(amount: number, paymentMethod: PaymentMethods) {
+    return amount + this.getFeeAmount(amount, paymentMethod);
+  }
+
+  public getFeeAmount(amount: number, paymentMethod: PaymentMethods) {
+    return amount * this.paymentFee[paymentMethod];
+  }
+
   private async processMpesaPayment(paymentData: IPaymentRequest) {
     Logger.info(this.LOG_TAG, `Paying course`, [paymentData]);
 
@@ -43,10 +51,6 @@ class PaymentManager {
       Logger.error(this.LOG_TAG, `Error paying course`, error);
       return Promise.reject(error);
     }
-  }
-
-  private getAmountWithFee(amount: number, paymentMethod: PaymentMethods) {
-    return amount + amount * this.paymentFee[paymentMethod];
   }
 }
 

@@ -26,8 +26,12 @@ class FirebaseConfig {
         return;
       }
 
+      const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY as any);
+
+      Logger.debug(this.LOG_TAG, "Service Account", [serviceAccount]);
+
       this.firebaseApp = initializeApp({
-        credential: cert(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY as any)),
+        credential: cert(serviceAccount),
       });
 
       Logger.debug(this.LOG_TAG, "Firebase Admin initialized");

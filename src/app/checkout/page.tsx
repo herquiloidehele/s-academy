@@ -9,6 +9,11 @@ import { Constants } from "@/utils/Constants";
 
 export default async function page() {
   const authUser = await AuthManager.getAuthUser();
+
+  if (!authUser?.email) {
+    return redirect(Constants.APP_ROUTES.HOME);
+  }
+
   const hasActiveSubscription = await SubscriptionManager.doesUserHaveActiveSubscription(authUser?.email);
 
   if (hasActiveSubscription) {

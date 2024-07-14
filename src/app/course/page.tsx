@@ -10,11 +10,18 @@ import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import SubscriptionManager from "@/app/business/subscription/SubscriptionManager";
 import Logger from "@/utils/Logger";
+import AuthManager from "@/app/business/auth/AuthManager";
 
 const LOG_TAG = "CoursePage";
 
 export default async function Page({ searchParams: { w: lessonId } }: ISearchParams) {
-  const hasSubscription = await SubscriptionManager.doesUserHaveActiveSubscription();
+  const authUser = await AuthManager.getAuthUser();
+
+  if (!authUser?.email) {
+    return redirect(Constants.APP_ROUTES.HOME);
+  }
+
+  const hasSubscription = await SubscriptionManager.doesUserHaveActiveSubscription(authUser?.email);
 
   if (!hasSubscription) {
     Logger.debug(LOG_TAG, `User does not have active subscription`);

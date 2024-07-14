@@ -1,6 +1,7 @@
 import { Button } from "@headlessui/react";
 import React, { useMemo } from "react";
 import { clsx } from "clsx";
+import SpinnerIcon from "@/assets/icons/spinner-icon.svg";
 
 export enum ButtonType {
   PRIMARY = "primary",
@@ -88,7 +89,9 @@ export default function ButtonElement(props: ButtonProps) {
     >
       {props.isLoading ? (
         <div className="flex items-center justify-center">
-          <div className="w-6 h-6 border-t-2 border-b-2 border-green-400 rounded-full animate-spin" />
+          <div className="w-7 h-7 border-t-2 border-b-2 border-green-400 rounded-full animate-spin">
+            <SpinnerIcon className="w-full h-full text-green-400" />
+          </div>
         </div>
       ) : (
         props.children

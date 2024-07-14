@@ -71,7 +71,7 @@ export default function PaymentCard(props: IPaymentCardProps) {
           isLoading={isPending}
           type={ButtonType.PRIMARY}
           fillType={FillType.FILLED}
-          size={ButtonSize.MEDIUM}
+          size={ButtonSize.SMALL}
           shape={ButtonShape.SQUARE}
         >
           PAGAR

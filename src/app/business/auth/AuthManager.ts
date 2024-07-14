@@ -11,11 +11,6 @@ class AuthManager {
   public async getAuthUser(): Promise<IUser | undefined> {
     Logger.info(this.LOG_TAG, "Getting auth user");
 
-    if (this.authUser) {
-      Logger.info(this.LOG_TAG, "Get user from local data", [this.authUser]);
-      return this.authUser;
-    }
-
     try {
       const session = await auth();
       const user = session?.user;
@@ -23,6 +18,11 @@ class AuthManager {
       if (!user) {
         Logger.error(this.LOG_TAG, "User not found");
         return;
+      }
+
+      if (this.authUser) {
+        Logger.info(this.LOG_TAG, "Get user from local data", [this.authUser]);
+        return this.authUser;
       }
 
       Logger.info(this.LOG_TAG, "User found", [user]);
@@ -34,6 +34,18 @@ class AuthManager {
       return authUser as IUser;
     } catch (error) {
       Logger.error(this.LOG_TAG, "Error getting auth user", [error]);
+    }
+  }
+
+  public async signOut(): Promise<void> {
+    Logger.debug(this.LOG_TAG, "Signing out");
+
+    try {
+      this.authUser = undefined;
+
+      Logger.debug(this.LOG_TAG, "Signed out successfully");
+    } catch (error) {
+      Logger.error(this.LOG_TAG, "Error signing out", [error]);
     }
   }
 }

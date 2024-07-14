@@ -4,10 +4,14 @@ import ChartIcon from "@/assets/icons/chart-icon.svg";
 import ChatIcon from "@/assets/icons/chat-icon.svg";
 import LocationIcon from "@/assets/icons/location-icon.svg";
 import { motion } from "framer-motion";
+import { Constants } from "@/utils/Constants";
 
 export default function CourseInfoSection() {
   return (
-    <div className={"w-full py-14 px-4 lg:px-6 lg:py-32 bg-[rgba(217,255,229,34%)] relative"}>
+    <div
+      className={"w-full py-14 px-4 lg:px-6 lg:py-32 bg-[rgba(217,255,229,34%)] relative scroll-mt-20"}
+      id={Constants.UI.SECTIONS.COURSE}
+    >
       <div className={"max-w-[1300px] mx-auto "}>
         <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>
           <motion.span initial={{ x: -1000 }} whileInView={{ x: 0 }}>

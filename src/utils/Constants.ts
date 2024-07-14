@@ -1,6 +1,14 @@
 export const Constants = {
   UI: {
     HEADER_HEIGHT: "80px",
+    SECTIONS: {
+      HERO: "heroSection",
+      COURSE: "courseSection",
+      PRICE: "priceSection",
+      TESTEMONIALS: "testemonialsSection",
+      CALL_TO_ACTION: "callToActionSection",
+      FOOTER: "footerSection",
+    },
   },
   AUTH_PROVIDER: {
     GOOGLE: "google",

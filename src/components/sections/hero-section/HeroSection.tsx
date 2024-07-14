@@ -6,6 +6,7 @@ import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 import { useRouter } from "next/navigation";
 import { Constants } from "@/utils/Constants";
+import Link from "next/link";
 
 export default function HeroSection() {
   const router = useRouter();
@@ -44,20 +45,24 @@ export default function HeroSection() {
             >
               Inscreva-se Agora
             </ButtonElement>
-            <ButtonElement
-              type={ButtonType.PRIMARY}
-              fillType={FillType.OUTLINE}
-              shape={ButtonShape.ROUNDED}
-              size={ButtonSize.MEDIUM}
-              animate
-            >
-              Saber Mais
-            </ButtonElement>
+            <Link href={`#${Constants.UI.SECTIONS.COURSE}`}>
+              <ButtonElement
+                type={ButtonType.PRIMARY}
+                fillType={FillType.OUTLINE}
+                shape={ButtonShape.ROUNDED}
+                size={ButtonSize.MEDIUM}
+                animate
+              >
+                Saber Mais
+              </ButtonElement>
+            </Link>
           </div>
         </div>
 
         <div className={"animate-fade-in animate-delay-1000"}>
-          <ChevronDownIcon className="absolute bottom-5 w-10 h-10 text-white animate-bouncing animate-iteration-count-infinite cursor-pointer" />
+          <Link href={`#${Constants.UI.SECTIONS.COURSE}`}>
+            <ChevronDownIcon className="absolute bottom-5 w-10 h-10 text-white animate-bouncing animate-iteration-count-infinite cursor-pointer" />
+          </Link>
         </div>
       </div>
     </div>

@@ -9,6 +9,7 @@ import { Constants } from "@/utils/Constants";
 import { useRouter } from "next/navigation";
 import { handleLogout } from "@/app/actions/auth";
 import LoginModal from "@/components/login-modal/LoginModal";
+import Link from "next/link";
 
 function classNames(...classes: any[]) {
   return classes.filter(Boolean).join(" ");
@@ -80,15 +81,27 @@ export default function HeaderComponent(props: HeaderProps) {
             </li>
           </ul>
         ) : (
-          <form action={handleLogout}>
-            <button
-              className="bg-green-500 text-white px-4 py-2 rounded-md"
-              type={"submit"}
-              value={Constants.AUTH_PROVIDER.GOOGLE}
+          <div className={"flex items-center gap-6"}>
+            <Link
+              href={Constants.APP_ROUTES.COURSE}
+              className={clsx("text-stale-950 font-medium text-sm lg:text-md", {
+                "text-green-400": isSticky,
+                "text-white": !isSticky,
+              })}
             >
-              Sair
-            </button>
-          </form>
+              Curso
+            </Link>
+
+            <form action={handleLogout}>
+              <button
+                className="bg-green-500 text-white px-4 py-2 rounded-md"
+                type={"submit"}
+                value={Constants.AUTH_PROVIDER.GOOGLE}
+              >
+                Sair
+              </button>
+            </form>
+          </div>
         )}
       </div>
 

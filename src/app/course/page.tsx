@@ -8,8 +8,19 @@ import CourseManager from "@/app/business/course/CourseManager";
 import VideoError from "@/components/course/video-player/VideoError";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import SubscriptionManager from "@/app/business/subscription/SubscriptionManager";
+import Logger from "@/utils/Logger";
+
+const LOG_TAG = "CoursePage";
 
 export default async function Page({ searchParams: { w: lessonId } }: ISearchParams) {
+  const hasSubscription = await SubscriptionManager.doesUserHaveActiveSubscription();
+
+  if (!hasSubscription) {
+    Logger.debug(LOG_TAG, `User does not have active subscription`);
+    return redirect(Constants.APP_ROUTES.CHECKOUT);
+  }
+
   const sections = await CourseManager.getCourseSections(CourseManager.getDefaultCourse().id);
 
   if (!lessonId) {

@@ -12,8 +12,8 @@ class FirebaseConfig {
   private firebaseConfig: any = {
     type: "service_account",
     project_id: process.env.FIREBASE_PROJECT_ID,
-    private_key_id: String(process.env.FIREBASE_PRIVATE_KEY_ID).replaceAll(/\\n/gm, "\n"),
-    private_key: process.env.FIREBASE_PRIVATE_KEY,
+    private_key_id: process.env.FIREBASE_PRIVATE_KEY_ID,
+    private_key: String(process.env.FIREBASE_PRIVATE_KEY).replaceAll(/\\n/gm, "\n"),
     client_email: process.env.FIREBASE_CLIENT_EMAIL,
     client_id: process.env.FIREBASE_CLIENT_ID,
     auth_uri: "https://accounts.google.com/o/oauth2/auth",

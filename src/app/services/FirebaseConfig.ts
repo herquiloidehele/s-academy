@@ -18,7 +18,7 @@ class FirebaseConfig {
   }
 
   public initialize(): void {
-    Logger.debug(this.LOG_TAG, "Initializing Firebase Admin");
+    Logger.debug(this.LOG_TAG, "Initializing Firebase Admin", [process.env.FIREBASE_SERVICE_ACCOUNT_KEY]);
 
     try {
       if (this.firebaseApp) {

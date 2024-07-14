@@ -7,6 +7,7 @@ class FirestoreService {
   private readonly LOG_TAG = "FirestoreService";
 
   public async getDocumentById(collection: FirebaseCollections, id?: string | null) {
+    await this.waitForFirestore();
     Logger.info(this.LOG_TAG, `Getting document by id: ${id}`);
 
     try {
@@ -19,18 +20,19 @@ class FirestoreService {
       const documentSnapshot = await documentReference.get();
 
       if (!documentSnapshot.exists) {
-        Logger.error(this.LOG_TAG, `Document not found by id: ${id}`);
+        Logger.error(this.LOG_TAG, `Document not found by id:`, [id, collection]);
         return null;
       }
 
       return documentSnapshot.data();
     } catch (error) {
-      Logger.error(this.LOG_TAG, `Error getting document by id: ${id}`, error);
+      Logger.error(this.LOG_TAG, `Error getting document by id:`, [id, error]);
       return null;
     }
   }
 
   public async getDocumentsByQuery<T>(collection: FirebaseCollections, query: IQuery): Promise<T[]> {
+    await this.waitForFirestore();
     Logger.info(this.LOG_TAG, `Getting documents by query:`, [query]);
 
     try {
@@ -50,6 +52,7 @@ class FirestoreService {
   }
 
   public async saveDocument<T>(collection: FirebaseCollections, data: T, id?: string) {
+    await this.waitForFirestore();
     Logger.info(this.LOG_TAG, `Saving document to collection: ${collection}`);
 
     try {
@@ -70,6 +73,7 @@ class FirestoreService {
   }
 
   public async getDocumentRefById(collection: FirebaseCollections, id: string | null) {
+    await this.waitForFirestore();
     Logger.info(this.LOG_TAG, `Getting document reference by id: ${id}`);
 
     try {
@@ -82,6 +86,13 @@ class FirestoreService {
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error getting document reference by id: ${id}`, error);
       return null;
+    }
+  }
+
+  private async waitForFirestore() {
+    if (!FirebaseConfig.checkFirestoreDB()) {
+      Logger.debug(this.LOG_TAG, "Waiting for Firestore to initialize");
+      await FirebaseConfig.initialize();
     }
   }
 }

@@ -7,7 +7,7 @@ export const {
   signIn,
   signOut,
 } = NextAuth({
-  trustHost: false,
+  trustHost: true,
   providers: [
     Google({
       clientId: process.env.GOOGLE_CLIENT_ID,

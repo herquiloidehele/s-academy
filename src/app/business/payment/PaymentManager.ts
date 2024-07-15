@@ -46,6 +46,7 @@ class PaymentManager {
       const paymentResponse = await mpesaService.customerToBusiness(paymentInfo);
 
       Logger.debug(this.LOG_TAG, `Payment successful`, [paymentResponse]);
+      return paymentResponse;
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error paying course`, error);
       return Promise.reject(error);

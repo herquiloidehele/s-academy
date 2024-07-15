@@ -24,9 +24,11 @@ export default function PaymentCard(props: IPaymentCardProps) {
   const { mutate, isPending } = useMutation({
     mutationFn: (data: { phoneNumber: string; userId?: string }) =>
       payCourseSubscription(data.phoneNumber, data.userId),
-    onSuccess: () => {
-      toast.success("Subscrição paga com sucesso");
-      router.push(Constants.APP_ROUTES.COURSE);
+    onSuccess: ({ success }) => {
+      if (success) {
+        toast.success("Subscrição paga com sucesso");
+        router.push(Constants.APP_ROUTES.COURSE);
+      }
     },
     onError: (error) => {
       toast.error("Erro ao pagar a subscrição");

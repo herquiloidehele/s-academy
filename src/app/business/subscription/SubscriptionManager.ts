@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 class SubscriptionManager {
   private readonly LOG_TAG = "SubscriptionManager";
 
-  public async subscribeCourse(subscriptionData: ISubscriptionRequest): Promise<void> {
+  public async subscribeCourse(subscriptionData: ISubscriptionRequest): Promise<boolean> {
     Logger.debug(this.LOG_TAG, `Subscribing to course`, [subscriptionData]);
 
     try {
@@ -43,7 +43,7 @@ class SubscriptionManager {
       await FirestoreService.saveDocument(FirebaseCollections.SUBSCRIPTIONS, subscription);
 
       Logger.debug(this.LOG_TAG, `Subscription saved successfully`);
-      return;
+      return true;
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error subscribing to course`, error);
       return Promise.reject(error);

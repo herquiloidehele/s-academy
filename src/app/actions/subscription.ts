@@ -21,8 +21,8 @@ export async function payCourseSubscription(phoneNumber: string, userId?: string
       phoneNUmber: phoneNumber,
     };
 
-    await SubscriptionManager.subscribeCourse(subscriptionData);
-    return { success: true };
+    const response = await SubscriptionManager.subscribeCourse(subscriptionData);
+    return { success: response };
   } catch (error) {
     return Promise.reject(error);
   }

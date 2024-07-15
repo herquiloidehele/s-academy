@@ -10,6 +10,7 @@ import { useMutation } from "@tanstack/react-query";
 import { Constants } from "@/utils/Constants";
 import { payCourseSubscription } from "@/app/actions/subscription";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
+import { toast } from "sonner";
 
 interface IPaymentCardProps {
   userId?: string;
@@ -24,10 +25,11 @@ export default function PaymentCard(props: IPaymentCardProps) {
     mutationFn: (data: { phoneNumber: string; userId?: string }) =>
       payCourseSubscription(data.phoneNumber, data.userId),
     onSuccess: () => {
+      toast.success("Subscrição paga com sucesso");
       router.push(Constants.APP_ROUTES.COURSE);
     },
     onError: (error) => {
-      console.error(error);
+      toast.error("Erro ao pagar a subscrição");
     },
   });
 

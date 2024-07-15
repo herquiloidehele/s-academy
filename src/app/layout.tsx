@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import QueryClientWrapper from "@/components/shared/QueryClientWrapper";
 import FirebaseConfig from "@/app/services/FirebaseConfig";
+import { Toaster } from "@/components/ui/sonner";
 
 const font = Inter({ subsets: ["latin"] });
 
@@ -22,6 +23,7 @@ export default async function RootLayout({
     <html className={"scroll-smooth"} lang="en">
       <body className={font.className}>
         <QueryClientWrapper>{children}</QueryClientWrapper>
+        <Toaster />
       </body>
     </html>
   );

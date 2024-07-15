@@ -4,7 +4,6 @@ import MpesaService, { IPaymentInfo } from "@/app/services/MpesaService";
 
 class PaymentManager {
   private readonly LOG_TAG = "PaymentManager";
-  private readonly THIRD_PARTY_REF = "shopify-course";
 
   private readonly paymentFee = {
     [PaymentMethods.MPESA]: 0.03,
@@ -13,7 +12,7 @@ class PaymentManager {
   public async payCourse(paymentRequest: IPaymentRequest) {
     switch (paymentRequest.paymentMethod) {
       case PaymentMethods.MPESA:
-        return this.processMpesaPayment(paymentRequest);
+        return await this.processMpesaPayment(paymentRequest);
       default:
         Logger.error(this.LOG_TAG, `Payment method not supported: ${paymentRequest.paymentMethod}`);
         return Promise.reject("Payment method not supported");

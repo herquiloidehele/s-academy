@@ -53,7 +53,7 @@ class FirestoreService {
 
   public async saveDocument<T>(collection: FirebaseCollections, data: T, id?: string) {
     await this.waitForFirestore();
-    Logger.info(this.LOG_TAG, `Saving document to collection: ${collection}`);
+    Logger.debug(this.LOG_TAG, `Saving document to collection: ${collection}`);
 
     try {
       const collectionReference = FirebaseConfig.firestoreDB.collection(collection);
@@ -65,7 +65,7 @@ class FirestoreService {
         createdAt: new Date().toISOString(),
       });
 
-      Logger.info(this.LOG_TAG, `Document saved to collection: ${collection}`);
+      Logger.debug(this.LOG_TAG, `Document saved to collection: ${collection}`);
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error saving document to collection: ${collection}`, error);
       return Promise.reject(error);

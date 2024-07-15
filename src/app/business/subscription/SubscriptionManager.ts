@@ -39,10 +39,11 @@ class SubscriptionManager {
         phoneNumber: subscriptionData.phoneNUmber,
       });
 
-      Logger.info(this.LOG_TAG, `Subscription Paid successfully`, [subscription]);
+      Logger.debug(this.LOG_TAG, `Subscription Paid successfully`, [subscription]);
       await FirestoreService.saveDocument(FirebaseCollections.SUBSCRIPTIONS, subscription);
 
-      Logger.info(this.LOG_TAG, `Subscription saved successfully`);
+      Logger.debug(this.LOG_TAG, `Subscription saved successfully`);
+      return;
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error subscribing to course`, error);
       return Promise.reject(error);
@@ -50,7 +51,7 @@ class SubscriptionManager {
   }
 
   public async getSubscriptionByUserId(userId: string): Promise<ISubscription | undefined> {
-    Logger.info(this.LOG_TAG, `Getting subscriptions for user: ${userId}`);
+    Logger.debug(this.LOG_TAG, `Getting subscriptions for user: ${userId}`);
 
     try {
       const subscriptions = await FirestoreService.getDocumentsByQuery(FirebaseCollections.SUBSCRIPTIONS, {
@@ -59,7 +60,7 @@ class SubscriptionManager {
         value: userId,
       });
 
-      Logger.info(this.LOG_TAG, `Subscriptions found`, [subscriptions]);
+      Logger.debug(this.LOG_TAG, `Subscriptions found`, [subscriptions]);
 
       if (!subscriptions?.length) {
         return undefined;

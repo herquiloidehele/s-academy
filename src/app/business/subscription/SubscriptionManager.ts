@@ -11,7 +11,7 @@ class SubscriptionManager {
   private readonly LOG_TAG = "SubscriptionManager";
 
   public async subscribeCourse(subscriptionData: ISubscriptionRequest): Promise<void> {
-    Logger.info(this.LOG_TAG, `Subscribing to course`, [subscriptionData]);
+    Logger.debug(this.LOG_TAG, `Subscribing to course`, [subscriptionData]);
 
     try {
       const user = await FirestoreService.getDocumentById(FirebaseCollections.USERS, subscriptionData.userId);
@@ -74,7 +74,7 @@ class SubscriptionManager {
   }
 
   public async doesUserHaveActiveSubscription(userId?: string): Promise<boolean> {
-    Logger.info(this.LOG_TAG, `Checking if user has active subscription: ${userId}`);
+    Logger.debug(this.LOG_TAG, `Checking if user has active subscription: ${userId}`);
 
     try {
       if (!userId) {
@@ -87,7 +87,7 @@ class SubscriptionManager {
       Logger.debug(this.LOG_TAG, `Subscription expire date`, [subscription]);
       const isActive = !!subscription;
 
-      Logger.info(this.LOG_TAG, `Active subscription found`, [isActive]);
+      Logger.debug(this.LOG_TAG, `Active subscription found`, [isActive]);
       return isActive;
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error checking active subscription`, error);

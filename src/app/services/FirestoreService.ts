@@ -8,7 +8,7 @@ class FirestoreService {
 
   public async getDocumentById(collection: FirebaseCollections, id?: string | null) {
     await this.waitForFirestore();
-    Logger.info(this.LOG_TAG, `Getting document by id: ${id}`);
+    Logger.debug(this.LOG_TAG, `Getting document by id: ${id}`);
 
     try {
       if (!id) {
@@ -33,7 +33,7 @@ class FirestoreService {
 
   public async getDocumentsByQuery<T>(collection: FirebaseCollections, query: IQuery): Promise<T[]> {
     await this.waitForFirestore();
-    Logger.info(this.LOG_TAG, `Getting documents by query:`, [query]);
+    Logger.debug(this.LOG_TAG, `Getting documents by query:`, [query]);
 
     try {
       const collectionReference = FirebaseConfig.firestoreDB.collection(collection);
@@ -76,7 +76,7 @@ class FirestoreService {
 
   public async getDocumentRefById(collection: FirebaseCollections, id: string | null) {
     await this.waitForFirestore();
-    Logger.info(this.LOG_TAG, `Getting document reference by id: ${id}`);
+    Logger.debug(this.LOG_TAG, `Getting document reference by id: ${id}`);
 
     try {
       if (!id) {

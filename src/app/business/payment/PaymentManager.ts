@@ -28,13 +28,13 @@ class PaymentManager {
   }
 
   private async processMpesaPayment(paymentData: IPaymentRequest) {
-    Logger.info(this.LOG_TAG, `Paying course`, [paymentData]);
+    Logger.debug(this.LOG_TAG, `Paying course`, [paymentData]);
 
     try {
       const mpesaService = new MpesaService();
       const amountWithFee = this.getAmountWithFee(paymentData.amount, paymentData.paymentMethod);
 
-      Logger.info(this.LOG_TAG, `Amount with fee`, [amountWithFee]);
+      Logger.debug(this.LOG_TAG, `Amount with fee`, [amountWithFee]);
 
       const paymentInfo: IPaymentInfo = {
         amount: amountWithFee,
@@ -45,7 +45,7 @@ class PaymentManager {
 
       const paymentResponse = await mpesaService.customerToBusiness(paymentInfo);
 
-      Logger.info(this.LOG_TAG, `Payment successful`, [paymentResponse]);
+      Logger.debug(this.LOG_TAG, `Payment successful`, [paymentResponse]);
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error paying course`, error);
       return Promise.reject(error);

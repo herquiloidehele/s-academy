@@ -27,7 +27,7 @@ class CourseManager {
   }
 
   public async getCourseSections(courseId: string): Promise<ICourseSection[]> {
-    Logger.info(this.LOG_TAG, `Getting lessons for course: ${courseId}`);
+    Logger.debug(this.LOG_TAG, `Getting lessons for course: ${courseId}`);
 
     try {
       const courseRef = await FirestoreService.getDocumentRefById(FirebaseCollections.COURSES, courseId);
@@ -47,7 +47,7 @@ class CourseManager {
         lessons: _.sortBy(sectionsDictionary[sectionTitle], "order"),
       }));
 
-      Logger.info(this.LOG_TAG, `Section Lessons found for course: ${courseId}`, sections);
+      Logger.debug(this.LOG_TAG, `Section Lessons found for course: ${courseId}`, sections);
 
       return sections;
     } catch (error) {
@@ -57,7 +57,7 @@ class CourseManager {
   }
 
   public async getLessonById(lessonId: string): Promise<ILesson> {
-    Logger.info(this.LOG_TAG, `Getting lesson by id: ${lessonId}`);
+    Logger.debug(this.LOG_TAG, `Getting lesson by id: ${lessonId}`);
 
     try {
       const lesson = FirestoreService.getDocumentById(FirebaseCollections.LESSONS, lessonId);
@@ -67,7 +67,7 @@ class CourseManager {
         return Promise.reject("Lesson not found");
       }
 
-      Logger.info(this.LOG_TAG, `Lesson found by id: ${lessonId}`, lesson);
+      Logger.debug(this.LOG_TAG, `Lesson found by id: ${lessonId}`, lesson);
 
       return lesson as Promise<ILesson>;
     } catch (error) {

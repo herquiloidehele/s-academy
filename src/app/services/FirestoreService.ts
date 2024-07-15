@@ -40,7 +40,7 @@ class FirestoreService {
       const querySnapshot = await collectionReference.where(query.field, query.operator, query.value).get();
 
       if (querySnapshot.empty) {
-        Logger.error(this.LOG_TAG, `Documents not found by query`, [query, collectionReference, querySnapshot]);
+        Logger.warn(this.LOG_TAG, `Documents not found by query`, [query, collectionReference, querySnapshot]);
         return [];
       }
 

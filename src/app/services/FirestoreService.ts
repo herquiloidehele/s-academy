@@ -60,6 +60,8 @@ class FirestoreService {
 
       const documentId = id || collectionReference.doc().id;
 
+      Logger.debug(this.LOG_TAG, `Document id: ${documentId}`);
+
       await collectionReference.doc(documentId).set({
         ...data,
         createdAt: new Date().toISOString(),

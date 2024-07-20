@@ -5,14 +5,17 @@ import PriceSection from "@/components/sections/price-section/PriceSection";
 import TestimonialsSection from "@/components/sections/testimonials-section/TestimonialsSection";
 import CallToActionSection from "@/components/sections/call-to-action-section/CallToActionSection";
 import Footer from "@/components/footer/Footer";
+import { getDefaultCourse } from "@/app/actions/course";
 
-export default function HomePageContent() {
+export default async function HomePageContent() {
+  const baseCourse = await getDefaultCourse();
+
   return (
     <div className="w-full">
       <Header />
       <HeroSection />
       <CourseInfoSection />
-      <PriceSection />
+      <PriceSection course={baseCourse} />
       <TestimonialsSection />
       <CallToActionSection />
       <Footer />

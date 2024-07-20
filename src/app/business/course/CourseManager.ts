@@ -74,6 +74,10 @@ class CourseManager {
       return Promise.reject(error);
     }
   }
+
+  public async getBaseCourse(): Promise<ICourse> {
+    return this.defaultCourse;
+  }
 }
 
 export default new CourseManager();

@@ -5,16 +5,21 @@ import { motion } from "framer-motion";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 import { Constants } from "@/utils/Constants";
 import { useRouter } from "next/navigation";
+import { ICourse } from "@/app/business/course/CourseData";
+import { formatCurrency } from "@/lib/utils";
 
 const itemsIncluded = [
-  "10 módulos de vídeo aulas",
-  "Material de apoio em PDF",
+  "04 módulos de vídeo aulas",
+  "Acesso vitalício ao curso",
   "Grupo de suporte no WhatsApp",
-  "Suporte por email",
   "Atualizações gratuitas",
 ];
 
-export default function PriceSection() {
+interface IPriceSectionProps {
+  course: ICourse;
+}
+
+export default function PriceSection(props: IPriceSectionProps) {
   const router = useRouter();
 
   return (
@@ -46,7 +51,9 @@ export default function PriceSection() {
             </div>
 
             <div className={"flex flex-col justify-center gap-5 items-center"}>
-              <h3 className={"font-bold text-blue-950 text-2xl lg:text-3xl"}>3.000 MZN</h3>
+              <h3 className={"font-bold text-blue-950 text-2xl lg:text-3xl"}>
+                {formatCurrency(props.course.price - props.course.discount)}
+              </h3>
               <ButtonElement
                 size={ButtonSize.MEDIUM}
                 shape={ButtonShape.ROUNDED}

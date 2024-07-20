@@ -31,7 +31,7 @@ class FirebaseConfig {
     try {
       const firebaseConfig = await get("firebaseConfig");
 
-      Logger.debug(this.LOG_TAG, "Firebase Config", [firebaseConfig]);
+      Logger.debug(this.LOG_TAG, "Firebase Config");
 
       if (this.firebaseApp) {
         Logger.info(this.LOG_TAG, "Firebase Admin already initialize", [this.firebaseApp]);

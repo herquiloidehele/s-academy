@@ -10,10 +10,10 @@ class CourseManager {
   private defaultCourse: ICourse = {
     id: this.DEFAULT_COURSE_ID,
     title: "Shopify - Curso completo",
-    price: 3000,
+    price: 4500,
     description: "Curso completo de Shopify",
     duration: "4 semanas",
-    discount: 100,
+    discount: 1500,
   };
 
   private readonly LOG_TAG = "CourseManager";

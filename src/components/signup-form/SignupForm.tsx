@@ -15,21 +15,16 @@ export async function SignupForm() {
       <CardHeader>
         <div className={"flex gap-2 items-center"}>
           <div className={"bg-green-200 p-1 rounded-lg"}>
-            <UserIcon className="w-6 h-6 stroke-green-500" />
+            <UserIcon className="w-4 h-4 lg:w-6 lg:h-6 stroke-green-500" />
           </div>
-          <CardTitle className={"text-xl text-blue-950"}>{user ? `Olá, ${user.name}` : "Crie uma conta"}</CardTitle>
+          <CardTitle className={"text-blue-950"}>{user ? `Olá, ${user.name}` : "Crie uma conta"}</CardTitle>
         </div>
       </CardHeader>
-      <CardContent>
-        {user ? (
-          <>
-            <p className={"text-gray-500 max-w-xl"}>
-              Você já está autenticado 🎉, continue para finalizar a compra 🚀🚀.
-            </p>
-          </>
-        ) : (
+
+      {!user && (
+        <CardContent>
           <form className={"flex flex-col gap-4"} action={handleSocialLogin}>
-            <p className={"text-gray-500 max-w-xl"}>
+            <p className={"text-sm md:text-md text-gray-500 max-w-lg"}>
               Crie uma conta para ter acesso a todos os cursos disponíveis na nossa plataforma.
             </p>
             <div className="flex justify-center">
@@ -47,8 +42,8 @@ export async function SignupForm() {
               </button>
             </div>
           </form>
-        )}
-      </CardContent>
+        </CardContent>
+      )}
     </Card>
   );
 }

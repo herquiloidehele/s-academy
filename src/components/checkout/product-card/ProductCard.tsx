@@ -9,38 +9,41 @@ import { PaymentMethods } from "@/app/business/payment/PaymentData";
 export default function ProductCard() {
   const course = CourseManager.getDefaultCourse();
 
+  const labelClass = "text-sm lg:text-md";
+  const valueClass = "text-sm lg:text-md";
+
   return (
     <Card className="">
       <CardHeader>
         <div className={"flex gap-2 items-center"}>
           <div className={"bg-green-200 p-1 rounded-lg"}>
-            <BookmarkIcon className="w-6 h-6 stroke-green-500" />
+            <BookmarkIcon className="w-4 h-4 lg:w-6 lg:h-6 stroke-green-500" />
           </div>
-          <CardTitle className={"text-xl text-blue-950"}>Informação do curso</CardTitle>
+          <CardTitle className={"text-blue-950"}>Informação do curso</CardTitle>
         </div>
       </CardHeader>
       <CardContent>
         <div className={"flex flex-col gap-3"}>
           <div className={"flex justify-between gap-5"}>
-            <span>{course.title}</span>
-            <span className={"font-normal"}>{formatCurrency(course.price)}</span>
+            <span className={labelClass}>{course.title}</span>
+            <span className={valueClass}>{formatCurrency(course.price)}</span>
           </div>
 
           <div className={"flex justify-between gap-5"}>
-            <span>Desconto</span>
-            <span className={"font-normal"}>{formatCurrency(-course.discount)}</span>
-          </div>
-
-          <div className={"flex justify-between gap-5"}>
-            <span>Taxa Mpesa (3%)</span>
-            <span className={"font-normal"}>
+            <span className={labelClass}>Taxa Mpesa (3%)</span>
+            <span className={valueClass}>
               {formatCurrency(PaymentManager.getFeeAmount(CourseManager.getTotalPrice(course), PaymentMethods.MPESA))}
             </span>
           </div>
 
+          <div className={"flex justify-between gap-5 text-red-400"}>
+            <span className={labelClass}>Desconto (Somente hoje)</span>
+            <span className={valueClass}>{formatCurrency(-course.discount)}</span>
+          </div>
+
           <div className={"flex justify-between gap-5"}>
-            <span className={"font-bold text-lg text-green-400"}>Total</span>
-            <span className={"font-bold text-lg text-green-400"}>
+            <span className={`font-bold text-green-400 ${labelClass}`}>Total</span>
+            <span className={`font-bold text-green-400 ${valueClass}`}>
               {formatCurrency(
                 PaymentManager.getAmountWithFee(CourseManager.getTotalPrice(course), PaymentMethods.MPESA),
               )}

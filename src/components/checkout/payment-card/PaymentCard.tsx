@@ -40,26 +40,27 @@ export default function PaymentCard(props: IPaymentCardProps) {
       <CardHeader>
         <div className={"flex gap-2 items-center"}>
           <div className={"bg-green-200 p-1 rounded-lg"}>
-            <CreditCardIcon className="w-6 h-6 stroke-green-500" />
+            <CreditCardIcon className="w-4 h-4 lg:w-6 lg:h-6 stroke-green-500" />
           </div>
-          <CardTitle className={"text-xl text-blue-950"}>Pagamento M-PESA</CardTitle>
+          <CardTitle className={"text-blue-950"}>Pagamento M-PESA</CardTitle>
         </div>
       </CardHeader>
       <CardContent>
         <form>
           <div className="grid w-full items-center gap-4">
             <div className="flex flex-col space-y-1.5">
-              <Label htmlFor="phone" className={"text-blue-950"}>
+              <Label htmlFor="phone" className={"text-blue-950 text-sm lg:text-md"}>
                 Nome
               </Label>
               <Input
                 disabled={!isUserAuthenticated}
                 id="phone"
                 placeholder="Introduza Número M-Pesa"
-                className={"h-12"}
+                className={"h-12 text-sm lg:text-md"}
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
                 max={9}
+                min={0}
                 type="number"
                 inputMode={"tel"}
               />

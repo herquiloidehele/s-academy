@@ -53,7 +53,7 @@ export default function ButtonElement(props: ButtonProps) {
   };
 
   const buttonSizeClass: Record<ButtonSize, string> = {
-    [ButtonSize.SMALL]: "py-2 px-4",
+    [ButtonSize.SMALL]: "py-2 px-4 text-sm",
     [ButtonSize.MEDIUM]: "px-5 py-3",
     [ButtonSize.LARGE]: "px-8 py-5",
   };

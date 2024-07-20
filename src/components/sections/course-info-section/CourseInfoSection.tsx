@@ -35,7 +35,7 @@ export default function CourseInfoSection() {
               whileInView={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              O curso é composto por 5 módulos, com mais de 50 aulas práticas, apresentadas por um especialista na área
+              O curso é composto por 4 módulos, com mais de 15 aulas práticas, apresentadas por um especialista na área
               de e-commerce e marketing digital. A cada módulo, você terá acesso a um material de apoio em PDF.
               <br /> <br /> Vamos guiá-lo passo a passo com exemplos práticos para que tú possas criar sua loja em
               poucos dias.

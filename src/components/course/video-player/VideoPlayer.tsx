@@ -6,8 +6,7 @@ export default function VideoPlayer(props: VideoPlayerProps) {
   return (
     <div className={"h-full w-full"}>
       <iframe
-        src={`https://www.youtube.com/embed/${props.videoId}?si=jNvGwj--YLRDaLNz&amp;controls=1&amp;showinfo=0&amp;rel=0&amp;autoplay=1&amp;mute=1&amp;loop=1&amp`}
-        title="YouTube video player"
+        src={`https://www.youtube.com/embed/${props.videoId}?controls=1&showinfo=0&rel=0&modestbranding=0&autoplay=1&mute=0&loop=0&=iv_load_policy=3`}
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         referrerPolicy="strict-origin-when-cross-origin"

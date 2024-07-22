@@ -31,7 +31,7 @@ export default async function Page({ searchParams: { w: lessonId } }: ISearchPar
   const sections = await CourseManager.getCourseSections(CourseManager.getDefaultCourse().id);
 
   if (!lessonId) {
-    return redirect(`${Constants.APP_ROUTES.COURSE}/?w=${sections[0].lessons[0].videoRef}`);
+    return redirect(`${Constants.APP_ROUTES.COURSE}/?w=${sections[0].lessons[0].id}`);
   }
 
   return (

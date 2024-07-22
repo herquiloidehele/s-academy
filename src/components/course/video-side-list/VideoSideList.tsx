@@ -21,7 +21,7 @@ export default function VideoSideList(props: VideoSideListProps) {
               <ul className="space-y-4 md:space-y-3">
                 {section.lessons.map((video, index) => (
                   <li key={index} className="">
-                    <VideoItem video={video} isPlaying={isPlaying(video.videoRef)} />
+                    <VideoItem video={video} isPlaying={isPlaying(video.id)} />
                   </li>
                 ))}
               </ul>

@@ -9,6 +9,7 @@ import VideoSideListError from "@/components/course/video-side-list/VideoSideLis
 import VideoSideList from "@/components/course/video-side-list/VideoSideList";
 import { ErrorBoundary } from "react-error-boundary";
 import { IRouteParams } from "@/utils/interfaces";
+import VideoListLoadingState from "@/components/course/video-side-list/VideoListLoadingState";
 
 const LOG_TAG = "CourseLayout";
 
@@ -40,7 +41,7 @@ export default async function CourseLayout({ children, params: { courseId } }: I
         <div className="grid grid-cols-1 md:grid-cols-[4fr_1fr] gap-7">
           {children}
           <ErrorBoundary FallbackComponent={VideoSideListError}>
-            <Suspense fallback={"Loading..."}>
+            <Suspense fallback={<VideoListLoadingState />}>
               <VideoSideList courseId={courseId} />
             </Suspense>
           </ErrorBoundary>

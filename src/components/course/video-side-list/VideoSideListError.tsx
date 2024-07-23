@@ -1,12 +1,13 @@
 "use client";
 
-import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 import { IComponentErrorProps } from "@/utils/interfaces";
+import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 
-export default function VideoError(props: IComponentErrorProps) {
+export default function VideoSideListError(props: IComponentErrorProps) {
   return (
-    <div className={"flex gap-3 flex-col justify-center items-center bg-black rounded-2xl h-[60vh]"}>
-      <h1 className={"text-2xl text-white"}>Erro ao carregar o vídeo</h1>
+    <div className={"flex flex-col gap-3"}>
+      <p>Não foi possível carregar os módulos</p>
+
       <ButtonElement
         shape={ButtonShape.SQUARE}
         size={ButtonSize.SMALL}

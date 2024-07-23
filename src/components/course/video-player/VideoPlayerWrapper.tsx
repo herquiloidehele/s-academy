@@ -6,14 +6,14 @@ interface VideoPlayerWrapperProps {
 }
 export async function VideoPlayerWrapper(props: VideoPlayerWrapperProps) {
   if (!props.lessonId) {
-    throw new Error("Lesson ID is required");
+    return <EmptyVideoPlayer />;
   }
 
   const lesson = await CourseManager.getLessonById(props.lessonId);
 
   return (
     <div className={"w-full flex flex-col gap-2 md:gap-4"}>
-      <div className={""}>
+      <div className={"bg-muted rounded-xl"}>
         <VideoPlayer videoId={lesson.videoRef} />
       </div>
 
@@ -27,3 +27,14 @@ export async function VideoPlayerWrapper(props: VideoPlayerWrapperProps) {
     </div>
   );
 }
+
+const EmptyVideoPlayer = () => {
+  return (
+    <div className={"flex gap-3 flex-col justify-center items-center bg-gray-800 rounded-2xl h-[60vh]"}>
+      <h1 className={"text-2xl text-white"}>Selecione uma aula para começar a assistir</h1>
+      <p className={"text-white text-md max-w-[360px] text-center"}>
+        Comece a assistir as aulas do curso selecionando uma aula na lista ao lado.
+      </p>
+    </div>
+  );
+};

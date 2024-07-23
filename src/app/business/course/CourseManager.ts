@@ -1,8 +1,8 @@
-import { ICourse, ICourseSection, ILesson } from "@/app/business/course/CourseData";
+import { ICourse, ILesson, IModule } from "@/app/business/course/CourseData";
 import Logger from "@/utils/Logger";
 import FirestoreService from "@/app/services/FirestoreService";
 import { FirebaseCollections } from "@/utils/Constants";
-import _ from "lodash";
+import * as _ from "lodash";
 
 class CourseManager {
   private readonly DEFAULT_COURSE_ID = "Q0us6qiWzX00sF2IZyQL";
@@ -14,6 +14,7 @@ class CourseManager {
     description: "Curso completo de Shopify",
     duration: "4 semanas",
     discount: 1500,
+    modules: [],
   };
 
   private readonly LOG_TAG = "CourseManager";
@@ -26,33 +27,56 @@ class CourseManager {
     return course.price - course.discount;
   }
 
-  public async getCourseSections(courseId: string): Promise<ICourseSection[]> {
+  public async getCourseModules(courseId: string): Promise<IModule[]> {
     Logger.debug(this.LOG_TAG, `Getting lessons for course: ${courseId}`);
 
     try {
-      const courseRef = await FirestoreService.getDocumentRefById(FirebaseCollections.COURSES, courseId);
+      const courseModules: IModule[] = await FirestoreService.getDocuments<IModule>(
+        `${FirebaseCollections.COURSES}/${courseId}/${FirebaseCollections.MODULES}`,
+      );
 
-      const lessons = await FirestoreService.getDocumentsByQuery<ILesson>(FirebaseCollections.LESSONS, {
-        field: "courseId",
-        operator: "==",
-        value: courseRef,
-      });
+      Logger.debug(this.LOG_TAG, `Modules Lessons found for course: ${courseId}`, [courseModules]);
 
-      const sortedLessonsByOrder = _.sortBy(lessons, "order");
-      const sortedLessonsBySectionId = _.sortBy(sortedLessonsByOrder, "section.id");
-      const sectionsDictionary = _.groupBy(sortedLessonsBySectionId, "section.title");
+      const courseWithLessons = await Promise.all(
+        courseModules.map(async (module) => ({
+          ...module,
+          order: Number(module.order),
+          lessons: await this.getLessons(courseId, module.id),
+        })),
+      );
 
-      const sections: ICourseSection[] = Object.keys(sectionsDictionary).map((sectionTitle) => ({
-        title: sectionTitle,
-        lessons: _.sortBy(sectionsDictionary[sectionTitle], "order"),
-      }));
+      const sortedModules = _.sortBy(courseWithLessons, "order");
 
-      Logger.debug(this.LOG_TAG, `Section Lessons found for course: ${courseId}`, sections);
+      Logger.debug(this.LOG_TAG, `Modules Lessons sorted for course: ${courseId}`, [sortedModules]);
 
-      return sections;
+      return sortedModules;
     } catch (error) {
-      Logger.error(this.LOG_TAG, `Error getting lessons for course: ${courseId}`, error);
-      return Promise.reject(error);
+      Logger.error(this.LOG_TAG, `Error getting Modules for course: ${courseId}`, error);
+      return [];
+    }
+  }
+
+  public async getLessons(courseId: string, moduleId: string): Promise<ILesson[]> {
+    Logger.debug(this.LOG_TAG, `Getting lessons for course: ${courseId}`);
+
+    try {
+      const lessons: ILesson[] = await FirestoreService.getDocuments<ILesson>(
+        `${FirebaseCollections.COURSES}/${courseId}/${FirebaseCollections.MODULES}/${moduleId}/${FirebaseCollections.LESSONS}`,
+      );
+
+      Logger.debug(this.LOG_TAG, `Lessons found for course: ${courseId}`, [lessons]);
+
+      const lessonsWithOrder = lessons.map((lesson) => ({
+        ...lesson,
+        order: Number(lesson.order),
+      }));
+      const sortedLessons = _.sortBy(lessonsWithOrder, "order");
+
+      Logger.debug(this.LOG_TAG, `Lessons sorted for course: ${courseId}`, [sortedLessons]);
+      return sortedLessons;
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error getting Lessons for course: ${courseId}`, error);
+      return [];
     }
   }
 
@@ -71,6 +95,57 @@ class CourseManager {
 
       return lesson as Promise<ILesson>;
     } catch (error) {
+      Logger.error(this.LOG_TAG, `Error getting lesson by id: ${lessonId}`, [error]);
+      return Promise.reject(error);
+    }
+  }
+
+  public async getModuleById(moduleId: string, courseId: string): Promise<IModule> {
+    Logger.debug(this.LOG_TAG, `Getting module by id:`, [moduleId, courseId]);
+
+    try {
+      const courseModule: any = await FirestoreService.getDocumentById(
+        FirebaseCollections.MODULES.replace("{courseId}", courseId),
+        moduleId,
+      );
+
+      if (!courseModule) {
+        Logger.error(this.LOG_TAG, `Module not found by id: ${moduleId}`);
+        return Promise.reject("Module not found");
+      }
+
+      Logger.debug(this.LOG_TAG, `Module found by id: ${moduleId}`, courseModule);
+
+      return {
+        ...courseModule,
+        id: moduleId,
+      };
+    } catch (error) {
+      return Promise.reject(error);
+    }
+  }
+
+  public async addLessonToModule(lesson: ILesson, courseId: string, moduleId: string): Promise<void> {
+    Logger.debug(this.LOG_TAG, `Adding lesson to module:`, [lesson, moduleId, courseId]);
+
+    try {
+      const lessonCollectionName = FirebaseCollections.LESSONS.replace("{courseId}", courseId).replace(
+        "{moduleId}",
+        moduleId,
+      );
+
+      const hasLesson = await FirestoreService.getDocumentById(lessonCollectionName, lesson.id);
+
+      if (hasLesson) {
+        Logger.warn(this.LOG_TAG, `Lesson already exists in module:`, [hasLesson, lessonCollectionName]);
+        return;
+      }
+
+      await FirestoreService.saveDocument(lessonCollectionName, lesson, lesson.id);
+
+      Logger.debug(this.LOG_TAG, `Lesson added to module:`, [lesson, moduleId, courseId]);
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error adding lesson to module:`, [lesson, moduleId, courseId]);
       return Promise.reject(error);
     }
   }

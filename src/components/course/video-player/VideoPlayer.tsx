@@ -29,5 +29,10 @@ export default function VideoPlayer(props: VideoPlayerProps) {
     }
   }, [playerOptions]);
 
-  return <div className={"w-full rounded-xl shadow-xl overflow-hidden border-2 border-gray-100"} ref={playerRef}></div>;
+  return (
+    <div
+      className={"w-full aspect-video rounded-xl shadow-xl overflow-hidden border-2 border-gray-100"}
+      ref={playerRef}
+    ></div>
+  );
 }

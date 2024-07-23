@@ -1,7 +1,3 @@
-import { DocumentData } from "@firebase/firestore";
-import { firestore } from "firebase-admin";
-import DocumentReference = firestore.DocumentReference;
-
 export interface ICourse {
   id: string;
   title: string;
@@ -9,6 +5,15 @@ export interface ICourse {
   price: number;
   duration: string;
   discount: number;
+  modules: IModule[];
+}
+
+export interface IModule {
+  id: string;
+  order: number;
+  title: string;
+  description?: string;
+  lessons: ILesson[];
 }
 
 export interface ILesson {
@@ -19,14 +24,4 @@ export interface ILesson {
   duration: string;
   description?: string;
   thumbnailUrl: string;
-  courseId: DocumentReference<DocumentData, DocumentData> | null;
-  section: {
-    id: number;
-    title: string;
-  };
-}
-
-export interface ICourseSection {
-  title: string;
-  lessons: ILesson[];
 }

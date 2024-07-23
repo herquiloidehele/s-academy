@@ -1,27 +1,24 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ICourseSection } from "@/app/business/course/CourseData";
 import VideoItem from "@/components/course/video-item/VideoItem";
+import CourseManager from "@/app/business/course/CourseManager";
 
 interface VideoSideListProps {
-  sections: ICourseSection[];
-  currentLesson: string;
+  courseId: string;
 }
-export default function VideoSideList(props: VideoSideListProps) {
-  const isPlaying = (videoId: string) => {
-    return videoId === props.currentLesson;
-  };
+export default async function VideoSideList(props: VideoSideListProps) {
+  const courseModules = await CourseManager.getCourseModules(props.courseId as string);
 
   return (
     <div className="overflow-y-scroll no-scrollbar">
       <Accordion type="single" collapsible className="w-full" defaultValue={"item-0"}>
-        {props.sections.map((section, index) => (
+        {courseModules.map((section, index) => (
           <AccordionItem key={index} value={`item-${index}`} className={"border-b-0"}>
             <AccordionTrigger>{section.title}</AccordionTrigger>
             <AccordionContent>
               <ul className="space-y-4 md:space-y-3">
                 {section.lessons.map((video, index) => (
                   <li key={index} className="">
-                    <VideoItem video={video} isPlaying={isPlaying(video.id)} />
+                    <VideoItem lesson={video} courseId={props.courseId} />
                   </li>
                 ))}
               </ul>

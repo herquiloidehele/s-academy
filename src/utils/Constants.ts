@@ -22,6 +22,7 @@ export const Constants = {
     COMPLETE_AUTH: "/complete-auth",
     COURSE: "/course",
     COURSE_DETAILS: "/course/{courseId}",
+    LESSON: "/course/{courseId}/{lessonId}",
   },
 };
 

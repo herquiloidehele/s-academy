@@ -11,3 +11,8 @@ export interface IErrorProps {
   error: Error & { digest?: string };
   reset: () => void;
 }
+
+export interface IComponentErrorProps {
+  error: Error;
+  resetErrorBoundary: () => void;
+}

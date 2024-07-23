@@ -28,7 +28,7 @@ export default async function Page({ searchParams: { w: lessonId } }: ISearchPar
     return redirect(Constants.APP_ROUTES.CHECKOUT);
   }
 
-  const sections = await CourseManager.getCourseSections(CourseManager.getDefaultCourse().id);
+  const sections = await CourseManager.getCourseModules(CourseManager.getDefaultCourse().id);
 
   if (!lessonId) {
     return redirect(`${Constants.APP_ROUTES.COURSE}/?w=${sections[0].lessons[0].id}`);

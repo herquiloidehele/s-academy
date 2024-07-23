@@ -1,9 +1,9 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { ICourseSection } from "@/app/business/course/CourseData";
+import { IModule } from "@/app/business/course/CourseData";
 import VideoItem from "@/components/course/video-item/VideoItem";
 
 interface VideoSideListProps {
-  sections: ICourseSection[];
+  sections: IModule[];
   currentLesson: string;
 }
 export default function VideoSideList(props: VideoSideListProps) {

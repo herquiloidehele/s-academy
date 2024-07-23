@@ -30,7 +30,8 @@ export enum FirebaseCollections {
   USERS = "users",
   SUBSCRIPTIONS = "subscriptions",
   COURSES = "courses",
-  LESSONS = "lessons",
+  MODULES = "courses/{courseId}/modules",
+  LESSONS = "courses/{courseId}/modules/{moduleId}/lessons",
 }
 
 export enum CurrencyCode {

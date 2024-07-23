@@ -6,7 +6,7 @@ import FirebaseConfig from "@/app/services/FirebaseConfig";
 class FirestoreService {
   private readonly LOG_TAG = "FirestoreService";
 
-  public async getDocumentById(collection: FirebaseCollections, id?: string | null) {
+  public async getDocumentById(collection: FirebaseCollections | string, id?: string | null) {
     await this.waitForFirestore();
     Logger.debug(this.LOG_TAG, `Getting document by id: ${id}`);
 
@@ -51,7 +51,63 @@ class FirestoreService {
     }
   }
 
-  public async saveDocument<T>(collection: FirebaseCollections, data: T, id?: string) {
+  public async getDocumentSubCollection<T>(
+    collection: FirebaseCollections,
+    docId: string,
+    subCollection: FirebaseCollections,
+  ) {
+    await this.waitForFirestore();
+    Logger.debug(this.LOG_TAG, `Getting sub collection: ${subCollection} for document: ${docId}`);
+
+    try {
+      const documentReference = FirebaseConfig.firestoreDB.collection(collection).doc(docId);
+      const subCollectionSnapshot = await documentReference.collection(subCollection).get();
+
+      if (subCollectionSnapshot.empty) {
+        Logger.warn(this.LOG_TAG, `Sub collection not found for document: ${docId}`, [
+          subCollection,
+          documentReference,
+        ]);
+        return [];
+      }
+
+      return subCollectionSnapshot.docs.map((doc) => doc.data()) as T[];
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error getting sub collection for document: ${docId}`, error);
+      return [];
+    }
+  }
+
+  public async addDocumentToSubCollection<T>(
+    collection: FirebaseCollections | string,
+    docId: string,
+    subCollection: FirebaseCollections | string,
+    data: T,
+  ) {
+    await this.waitForFirestore();
+    Logger.debug(this.LOG_TAG, `Adding document to sub collection: ${subCollection} for document: ${docId}`);
+
+    try {
+      const documentReference = FirebaseConfig.firestoreDB.collection(collection).doc(docId);
+      const subCollectionReference = documentReference.collection(subCollection);
+
+      await subCollectionReference.add({
+        ...data,
+        createdAt: new Date().toISOString(),
+      });
+
+      Logger.debug(this.LOG_TAG, `Document added to sub collection: ${subCollection} for document: ${docId}`);
+    } catch (error) {
+      Logger.error(
+        this.LOG_TAG,
+        `Error adding document to sub collection: ${subCollection} for document: ${docId}`,
+        error,
+      );
+      return Promise.reject(error);
+    }
+  }
+
+  public async saveDocument<T>(collection: FirebaseCollections | string, data: T, id?: string) {
     await this.waitForFirestore();
     Logger.debug(this.LOG_TAG, `Saving document to collection: ${collection}`);
 

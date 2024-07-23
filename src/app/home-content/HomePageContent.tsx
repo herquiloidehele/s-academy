@@ -11,7 +11,7 @@ export default async function HomePageContent() {
   const baseCourse = await getDefaultCourse();
 
   if (!baseCourse) {
-    return null;
+    return <div>Course not found</div>;
   }
 
   return (

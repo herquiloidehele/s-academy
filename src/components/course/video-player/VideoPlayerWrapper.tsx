@@ -13,7 +13,7 @@ export async function VideoPlayerWrapper(props: VideoPlayerWrapperProps) {
 
   return (
     <div className={"w-full flex flex-col gap-2 md:gap-4"}>
-      <div className={""}>
+      <div className={"bg-muted rounded-xl"}>
         <VideoPlayer videoId={lesson.videoRef} />
       </div>
 

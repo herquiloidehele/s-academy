@@ -1,6 +1,9 @@
-export interface ISearchParams {
+export interface IRouteParams {
   searchParams: {
-    [key: string]: string | string[] | undefined;
+    [key: string]: string | undefined;
+  };
+  params: {
+    [key: string]: string | undefined;
   };
 }
 

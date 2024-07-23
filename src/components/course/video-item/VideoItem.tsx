@@ -7,10 +7,14 @@ import { clsx } from "clsx";
 interface VideoItemProps {
   video: ILesson;
   isPlaying?: boolean;
+  courseId: string;
 }
 export default function VideoItem(props: VideoItemProps) {
   return (
-    <Link className={"hover:bg-gray-100 w-full"} href={`${Constants.APP_ROUTES.COURSE}/?w=${props.video.id}`}>
+    <Link
+      className={"hover:bg-gray-100 w-full"}
+      href={`${Constants.APP_ROUTES.COURSE_DETAILS.replace("{courseId}", props.courseId)}/?lessonId=${props.video.id}`}
+    >
       <div
         className={clsx("flex flex-col gap-2 w-full rounded-md", {
           "bg-gray-100": !props.isPlaying,

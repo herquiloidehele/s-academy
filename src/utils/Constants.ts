@@ -21,6 +21,7 @@ export const Constants = {
     CHECKOUT: "/checkout",
     COMPLETE_AUTH: "/complete-auth",
     COURSE: "/course",
+    COURSE_DETAILS: "/course/{courseId}",
   },
 };
 
@@ -30,8 +31,8 @@ export enum FirebaseCollections {
   USERS = "users",
   SUBSCRIPTIONS = "subscriptions",
   COURSES = "courses",
-  MODULES = "courses/{courseId}/modules",
-  LESSONS = "courses/{courseId}/modules/{moduleId}/lessons",
+  MODULES = "modules",
+  LESSONS = "lessons",
 }
 
 export enum CurrencyCode {

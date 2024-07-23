@@ -31,6 +31,26 @@ class FirestoreService {
     }
   }
 
+  public async getDocuments<T>(collection: FirebaseCollections | string) {
+    await this.waitForFirestore();
+    Logger.debug(this.LOG_TAG, `Getting documents from collection: ${collection}`);
+
+    try {
+      const collectionReference = FirebaseConfig.firestoreDB.collection(collection);
+      const collectionSnapshot = await collectionReference.get();
+
+      if (collectionSnapshot.empty) {
+        Logger.warn(this.LOG_TAG, `Documents not found in collection: ${collection}`);
+        return [];
+      }
+
+      return collectionSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })) as T[];
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error getting documents from collection: ${collection}`, error);
+      return [];
+    }
+  }
+
   public async getDocumentsByQuery<T>(collection: FirebaseCollections, query: IQuery): Promise<T[]> {
     await this.waitForFirestore();
     Logger.debug(this.LOG_TAG, `Getting documents by query:`, [query]);

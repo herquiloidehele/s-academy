@@ -1,8 +1,8 @@
-import { ISearchParams } from "@/utils/interfaces";
+import { IRouteParams } from "@/utils/interfaces";
 import CourseManager from "@/app/business/course/CourseManager";
 import { getDefaultCourse } from "@/app/actions/course";
 
-export default async function page({ searchParams: { lessonId, moduleOrder } }: ISearchParams) {
+export default async function page({ searchParams: { lessonId, moduleOrder } }: IRouteParams) {
   const courseId = await getDefaultCourse();
   const lesson = await CourseManager.getLessonById(lessonId as string);
   const courseModule = await CourseManager.getModuleById(moduleOrder as string, courseId.id);

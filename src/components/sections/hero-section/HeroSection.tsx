@@ -7,8 +7,12 @@ import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/
 import { useRouter } from "next/navigation";
 import { Constants } from "@/utils/Constants";
 import Link from "next/link";
+import { ICourse } from "@/app/business/course/CourseData";
 
-export default function HeroSection() {
+interface IHeroSectionProps {
+  course: ICourse;
+}
+export default function HeroSection(props: IHeroSectionProps) {
   const router = useRouter();
 
   return (
@@ -40,7 +44,7 @@ export default function HeroSection() {
               shadow
               animate
               onClick={() => {
-                router.push(Constants.APP_ROUTES.CHECKOUT);
+                router.push(Constants.APP_ROUTES.CHECKOUT(props.course.id));
               }}
             >
               Inscreva-se Agora

@@ -5,10 +5,12 @@ import CourseManager from "@/app/business/course/CourseManager";
 import { formatCurrency } from "@/lib/utils";
 import PaymentManager from "@/app/business/payment/PaymentManager";
 import { PaymentMethods } from "@/app/business/payment/PaymentData";
+import { ICourse } from "@/app/business/course/CourseData";
 
-export default function ProductCard() {
-  const course = CourseManager.getDefaultCourse();
-
+interface IProductCardProps {
+  course: ICourse;
+}
+export default function ProductCard({ course }: IProductCardProps) {
   const labelClass = "text-sm lg:text-md";
   const valueClass = "text-sm lg:text-md";
 

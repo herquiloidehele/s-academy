@@ -24,7 +24,10 @@ class FirestoreService {
         return null;
       }
 
-      return documentSnapshot.data();
+      return {
+        ...documentSnapshot.data(),
+        id: documentSnapshot.id,
+      };
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error getting document by id:`, [id, error]);
       return null;

@@ -14,6 +14,7 @@ import { toast } from "sonner";
 
 interface IPaymentCardProps {
   userId?: string;
+  courseId: string;
 }
 export default function PaymentCard(props: IPaymentCardProps) {
   const isUserAuthenticated = !!props.userId;
@@ -22,12 +23,12 @@ export default function PaymentCard(props: IPaymentCardProps) {
   const router = useRouter();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (data: { phoneNumber: string; userId?: string }) =>
-      payCourseSubscription(data.phoneNumber, data.userId),
+    mutationFn: (data: { phoneNumber: string; userId?: string; courseId: string }) =>
+      payCourseSubscription(data.phoneNumber, data.courseId, data.userId),
     onSuccess: ({ success }) => {
       if (success) {
         toast.success("Subscrição paga com sucesso");
-        router.push(Constants.APP_ROUTES.COURSE);
+        router.push(Constants.APP_ROUTES.COURSES);
       }
     },
     onError: (error) => {
@@ -72,7 +73,7 @@ export default function PaymentCard(props: IPaymentCardProps) {
         <ButtonElement
           disabled={!isUserAuthenticated}
           className={"bg-green-400 w-3/12"}
-          onClick={() => mutate({ phoneNumber: phoneNumber, userId: props.userId })}
+          onClick={() => mutate({ phoneNumber: phoneNumber, courseId: props.courseId, userId: props.userId })}
           isLoading={isPending}
           type={ButtonType.PRIMARY}
           fillType={FillType.FILLED}

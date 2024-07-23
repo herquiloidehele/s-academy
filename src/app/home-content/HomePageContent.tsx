@@ -10,14 +10,18 @@ import { getDefaultCourse } from "@/app/actions/course";
 export default async function HomePageContent() {
   const baseCourse = await getDefaultCourse();
 
+  if (!baseCourse) {
+    return null;
+  }
+
   return (
     <div className="w-full">
       <Header />
-      <HeroSection />
+      <HeroSection course={baseCourse} />
       <CourseInfoSection />
       <PriceSection course={baseCourse} />
       <TestimonialsSection />
-      <CallToActionSection />
+      <CallToActionSection course={baseCourse} />
       <Footer />
     </div>
   );

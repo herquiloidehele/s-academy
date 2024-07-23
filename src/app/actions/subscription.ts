@@ -7,7 +7,7 @@ import Logger from "@/utils/Logger";
 
 const LOG_TAG = "SubscriptionActions";
 
-export async function payCourseSubscription(phoneNumber: string, userId?: string) {
+export async function payCourseSubscription(phoneNumber: string, courseId: string, userId?: string) {
   Logger.info(LOG_TAG, `Paying course subscription for user: ${userId}`);
 
   try {
@@ -15,8 +15,14 @@ export async function payCourseSubscription(phoneNumber: string, userId?: string
       return Promise.reject("User not found");
     }
 
+    const course = await CourseManager.getCourseById(courseId);
+
+    if (!course) {
+      return Promise.reject("Course not found");
+    }
+
     const subscriptionData: ISubscriptionRequest = {
-      course: CourseManager.getDefaultCourse(),
+      course: course,
       userId,
       phoneNUmber: phoneNumber,
     };

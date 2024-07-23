@@ -31,7 +31,7 @@ export default async function CourseLayout({ children, params: { courseId } }: I
 
   if (!hasSubscription) {
     Logger.debug(LOG_TAG, `User does not have active subscription`);
-    return redirect(Constants.APP_ROUTES.CHECKOUT);
+    return redirect(Constants.APP_ROUTES.CHECKOUT(courseId));
   }
 
   return (

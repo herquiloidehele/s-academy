@@ -1,30 +1,40 @@
 import { ICourse, ILesson, IModule } from "@/app/business/course/CourseData";
 import Logger from "@/utils/Logger";
 import FirestoreService from "@/app/services/FirestoreService";
-import { FirebaseCollections } from "@/utils/Constants";
+import { Constants, FirebaseCollections } from "@/utils/Constants";
 import * as _ from "lodash";
 
 class CourseManager {
-  private readonly DEFAULT_COURSE_ID = "Q0us6qiWzX00sF2IZyQL";
-
-  private defaultCourse: ICourse = {
-    id: this.DEFAULT_COURSE_ID,
-    title: "Shopify - Curso completo",
-    price: 4500,
-    description: "Curso completo de Shopify",
-    duration: "4 semanas",
-    discount: 1500,
-    modules: [],
-  };
+  private readonly DEFAULT_COURSE_ID = Constants.COURSE.DEFAULT_COURSE_ID;
 
   private readonly LOG_TAG = "CourseManager";
 
-  public getDefaultCourse() {
-    return this.defaultCourse;
+  public get defaultCourseId() {
+    return this.DEFAULT_COURSE_ID;
   }
 
   public getTotalPrice(course: ICourse) {
     return course.price - course.discount;
+  }
+
+  public async getCourseById(courseId: string): Promise<ICourse | undefined> {
+    Logger.debug(this.LOG_TAG, `Getting course by id: ${courseId}`);
+
+    try {
+      const course = await FirestoreService.getDocumentById(FirebaseCollections.COURSES, courseId);
+
+      if (!course) {
+        Logger.error(this.LOG_TAG, `Course not found by id: ${courseId}`);
+        return Promise.reject("Course not found");
+      }
+
+      Logger.debug(this.LOG_TAG, `Course found by id: ${courseId}`, course);
+
+      return course as ICourse;
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error getting course by id: ${courseId}`, error);
+      return;
+    }
   }
 
   public async getCourseModules(courseId: string): Promise<IModule[]> {
@@ -148,10 +158,6 @@ class CourseManager {
       Logger.error(this.LOG_TAG, `Error adding lesson to module:`, [lesson, moduleId, courseId]);
       return Promise.reject(error);
     }
-  }
-
-  public async getBaseCourse(): Promise<ICourse> {
-    return this.defaultCourse;
   }
 }
 

@@ -11,10 +11,6 @@ import { handleLogout } from "@/app/actions/auth";
 import LoginModal from "@/components/login-modal/LoginModal";
 import Link from "next/link";
 
-function classNames(...classes: any[]) {
-  return classes.filter(Boolean).join(" ");
-}
-
 const START_STICKY_POSITION = 10;
 
 interface HeaderProps {
@@ -73,7 +69,7 @@ export default function HeaderComponent(props: HeaderProps) {
                 shape={ButtonShape.ROUNDED}
                 shadow
                 onClick={() => {
-                  router.push(Constants.APP_ROUTES.CHECKOUT);
+                  router.push(Constants.APP_ROUTES.CHECKOUT(Constants.COURSE.DEFAULT_COURSE_ID));
                 }}
               >
                 Inscrição
@@ -83,7 +79,7 @@ export default function HeaderComponent(props: HeaderProps) {
         ) : (
           <div className={"flex items-center gap-6"}>
             <Link
-              href={Constants.APP_ROUTES.COURSE}
+              href={Constants.APP_ROUTES.COURSES}
               className={clsx("text-stale-950 font-medium text-sm lg:text-md", {
                 "text-green-400": isSticky,
                 "text-white": !isSticky,

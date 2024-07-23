@@ -7,7 +7,7 @@ export default async function page() {
   const defaultCourse = await getDefaultCourse();
 
   if (defaultCourse) {
-    return redirect(Constants.APP_ROUTES.COURSE_DETAILS.replace("{courseId}", defaultCourse.id));
+    return redirect(Constants.APP_ROUTES.COURSE_DETAILS(defaultCourse.id));
   }
 
   return (

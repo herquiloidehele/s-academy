@@ -4,8 +4,9 @@ import { Constants, FirebaseCollections } from "@/utils/Constants";
 import FirestoreService from "@/app/services/FirestoreService";
 import { UserRole } from "@/app/business/auth/UsersData";
 import Logger from "@/utils/Logger";
+import { IRouteParams } from "@/utils/interfaces";
 
-export default async function page() {
+export default async function page({ params: { courseId } }: IRouteParams) {
   const session = await auth();
   const user = session?.user;
 
@@ -26,16 +27,25 @@ export default async function page() {
       user.email,
     );
 
-    redirect(Constants.APP_ROUTES.CHECKOUT);
+    if (courseId) {
+      redirect(Constants.APP_ROUTES.CHECKOUT(courseId));
+    } else {
+      redirect(Constants.APP_ROUTES.COURSES);
+    }
   } else {
     const doesUserHaveSubscription = await FirestoreService.getDocumentById(
       FirebaseCollections.SUBSCRIPTIONS,
       user.email,
     );
+
     if (doesUserHaveSubscription) {
-      redirect(Constants.APP_ROUTES.COURSE);
+      return redirect(Constants.APP_ROUTES.COURSES);
     }
 
-    redirect(Constants.APP_ROUTES.CHECKOUT);
+    if (courseId) {
+      redirect(Constants.APP_ROUTES.CHECKOUT(courseId));
+    } else {
+      redirect(Constants.APP_ROUTES.COURSES);
+    }
   }
 }

@@ -18,15 +18,18 @@ export const Constants = {
   },
   APP_ROUTES: {
     HOME: "/",
-    CHECKOUT: "/checkout",
+    CHECKOUT: (courseId: string) => `/checkout/${courseId}`,
     COMPLETE_AUTH: "/complete-auth",
-    COURSE: "/course",
-    COURSE_DETAILS: "/course/{courseId}",
-    LESSON: "/course/{courseId}/{lessonId}",
+    COURSES: "/courses",
+    COURSE_DETAILS: (courseId: string) => `/courses/${courseId}`,
+    LESSON: (courseId: string, lessonId: string) => `/courses/${courseId}/${lessonId}`,
+  },
+  COURSE: {
+    DEFAULT_COURSE_ID: "Q0us6qiWzX00sF2IZyQL",
   },
 };
 
-export const PROTECTED_ROUTES = [Constants.APP_ROUTES.COURSE];
+export const PROTECTED_ROUTES = [Constants.APP_ROUTES.COURSES];
 
 export enum FirebaseCollections {
   USERS = "users",

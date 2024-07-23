@@ -17,10 +17,7 @@ export default function VideoItem(props: VideoItemProps) {
   const isPlaying = selectedLessonId === props.lesson.id;
 
   return (
-    <Link
-      className={"hover:bg-gray-100 w-full"}
-      href={`${Constants.APP_ROUTES.LESSON.replace("{courseId}", props.courseId).replace("{lessonId}", props.lesson.id)}`}
-    >
+    <Link className={"hover:bg-gray-100 w-full"} href={Constants.APP_ROUTES.LESSON(props.courseId, props.lesson.id)}>
       <div
         className={clsx("flex flex-col gap-2 w-full rounded-md", {
           "bg-gray-100": !isPlaying,

@@ -6,14 +6,22 @@ import AuthManager from "@/app/business/auth/AuthManager";
 import SubscriptionManager from "@/app/business/subscription/SubscriptionManager";
 import { redirect } from "next/navigation";
 import { Constants } from "@/utils/Constants";
+import { IRouteParams } from "@/utils/interfaces";
+import CourseManager from "@/app/business/course/CourseManager";
 
-export default async function page() {
+export default async function page({ params: { courseId } }: IRouteParams) {
+  const course = await CourseManager.getCourseById(courseId as string);
+
+  if (!course) {
+    return redirect(Constants.APP_ROUTES.HOME);
+  }
+
   const authUser = await AuthManager.getAuthUser();
 
   const hasActiveSubscription = await SubscriptionManager.doesUserHaveActiveSubscription(authUser?.email);
 
   if (hasActiveSubscription) {
-    return redirect(Constants.APP_ROUTES.COURSE);
+    return redirect(Constants.APP_ROUTES.COURSES);
   }
 
   return (
@@ -26,14 +34,14 @@ export default async function page() {
             <SignupForm />
 
             <div className={"block lg:hidden"}>
-              <ProductCard />
+              <ProductCard course={course} />
             </div>
 
-            <PaymentCard userId={authUser?.email} />
+            <PaymentCard userId={authUser?.email} courseId={course.id} />
           </div>
 
           <div className={"hidden lg:flex flex-col gap-5"}>
-            <ProductCard />
+            <ProductCard course={course} />
           </div>
         </div>
       </div>

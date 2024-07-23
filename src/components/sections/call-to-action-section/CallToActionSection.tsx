@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 import { useRouter } from "next/navigation";
 import { Constants } from "@/utils/Constants";
+import { ICourse } from "@/app/business/course/CourseData";
 
 const TESTIMONIALS_AVATARS_DATA = [
   {
@@ -25,7 +26,10 @@ const TESTIMONIALS_AVATARS_DATA = [
   },
 ];
 
-export default function CallToActionSection() {
+interface ICallToActionSectionProps {
+  course: ICourse;
+}
+export default function CallToActionSection(props: ICallToActionSectionProps) {
   const router = useRouter();
 
   return (
@@ -109,7 +113,7 @@ export default function CallToActionSection() {
                   fillType={FillType.FILLED}
                   shadow
                   onClick={() => {
-                    router.push(Constants.APP_ROUTES.CHECKOUT);
+                    router.push(Constants.APP_ROUTES.CHECKOUT(props.course.id));
                   }}
                 >
                   Inscreva-se Agora

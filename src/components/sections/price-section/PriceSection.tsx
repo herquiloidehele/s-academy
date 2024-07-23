@@ -61,7 +61,7 @@ export default function PriceSection(props: IPriceSectionProps) {
                 fillType={FillType.FILLED}
                 shadow
                 onClick={() => {
-                  router.push(Constants.APP_ROUTES.CHECKOUT);
+                  router.push(Constants.APP_ROUTES.CHECKOUT(props.course.id));
                 }}
               >
                 COMPRAR AGORA

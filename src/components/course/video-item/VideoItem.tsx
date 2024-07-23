@@ -27,11 +27,11 @@ export default function VideoItem(props: VideoItemProps) {
           "bg-green-100": isPlaying,
         })}
       >
-        <div className={"w-full h-[120px] relative rounded-md overflow-hidden"}>
+        <div className={"w-full h-[180px] md:h-[135px] relative rounded-md overflow-hidden"}>
           <Image
             src={props.lesson.thumbnailUrl}
             alt={props.lesson.title}
-            className={"w-full h-full rounded-md"}
+            className={"w-full h-full rounded-md object-cover"}
             quality={100}
             objectFit={"cover"}
             fill={true}

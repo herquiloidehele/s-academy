@@ -1,46 +1,51 @@
 "use client";
 import { motion } from "framer-motion";
 
+import AvatarImage1 from "@/assets/images/avatar1.png";
+import AvatarImage2 from "@/assets/images/avatar2.png";
+import AvatarImage3 from "@/assets/images/avatar3.png";
+import AvatarImage4 from "@/assets/images/avatar4.png";
+
 const TESTIMONIALS_DATA = [
   {
     name: "Daniella Martins",
     role: "Estudante",
-    avatar: "https://randomuser.me/api/portraits/women/68.jpg",
+    avatar: AvatarImage1.src,
     testimonial:
       "Estou muito satisfeita com o curso, aprendi muito e recomendo a todos os meus conhecidos. Quando comecei nao sabia nada de shopify e e-commerce, agora ja tenho a minha loja online e estou a vender bem.",
   },
   {
     name: "João Neves",
     role: "Empresário",
-    avatar: "https://randomuser.me/api/portraits/men/60.jpg",
+    avatar: AvatarImage2.src,
     testimonial:
       "O curso foi muito bom, aprendi muito sobre como criar uma loja online e como vender os meus produtos. Recomendo a todos que querem ter uma loja online.",
   },
   {
     name: "Maria Silva",
     role: "Estudante",
-    avatar: "https://randomuser.me/api/portraits/men/60.jpg",
+    avatar: AvatarImage3.src,
     testimonial:
       "O curso é autoguiado, então você pode completá-lo no seu próprio ritmo. A maioria dos alunos termina em 2 semanas ou menos.",
   },
   {
     name: "António Costa",
     role: "Empresário",
-    avatar: "https://randomuser.me/api/portraits/men/10.jpg",
+    avatar: AvatarImage4.src,
     testimonial:
       "Este curso mudou a minha vida! Agora eu tenho uma loja online lucrativa e em crescimento constante. Estou a espera de mais cursos desta qualidade.",
   },
   {
     name: "Ana Maria",
     role: "Estudante",
-    avatar: "https://randomuser.me/api/portraits/women/10.jpg",
+    avatar: AvatarImage1.src,
     testimonial:
       "O curso é muito prático e fácil de seguir. Aprendi muito sobre como criar uma loja online e como vender os meus produtos. Recomendo a todos que querem ter uma loja online.",
   },
   {
     name: "João Neves",
     role: "Empresário",
-    avatar: "https://randomuser.me/api/portraits/men/40.jpg",
+    avatar: AvatarImage2.src,
     testimonial:
       "O curso foi muito bom, aprendi muito sobre como criar uma loja online e como vender os meus produtos. Recomendo a todos que querem ter uma loja online.",
   },

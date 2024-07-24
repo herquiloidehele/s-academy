@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ICourse } from "@/app/backend/business/course/CourseData";
 import { Constants } from "@/utils/Constants";
 import AvatarImage1 from "@/assets/images/avatar1.png";
 import AvatarImage2 from "@/assets/images/avatar2.png";
@@ -10,10 +9,7 @@ import AvatarImage4 from "@/assets/images/avatar4.png";
 import HeroImage from "@/assets/images/hero1.jpg";
 import Image from "next/image";
 
-interface IHeroSectionProps {
-  course: ICourse;
-}
-export default function HeroSection(props: IHeroSectionProps) {
+export default function HeroSection() {
   const router = useRouter();
 
   return (

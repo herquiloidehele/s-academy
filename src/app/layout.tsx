@@ -4,6 +4,7 @@ import "./globals.css";
 import QueryClientWrapper from "@/components/shared/QueryClientWrapper";
 import FirebaseConfig from "@/app/backend/services/FirebaseConfig";
 import { Toaster } from "@/components/ui/sonner";
+import PrelineScript from "@/components/preline/PrelineScript";
 
 const font = Inter({ subsets: ["latin"] });
 
@@ -25,6 +26,8 @@ export default async function RootLayout({
         <QueryClientWrapper>{children}</QueryClientWrapper>
         <Toaster />
       </body>
+
+      <PrelineScript />
     </html>
   );
 }

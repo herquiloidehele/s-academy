@@ -31,7 +31,7 @@ export default function HeaderComponent(props: HeaderProps) {
   return (
     <header
       className={clsx(`fixed top-0 left-0 w-full z-[200] flex justify-center px-4 py-4 lg:px-8 lg:py-6`, {
-        "shadow-lg bg-white": isSticky,
+        "shadow-sm bg-white": isSticky,
         "bg-white border border-b-gray-100": props.solidBg,
       })}
     >

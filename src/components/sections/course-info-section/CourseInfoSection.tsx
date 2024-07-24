@@ -10,7 +10,7 @@ export default function CourseInfoSection() {
   return (
     <div
       className={"w-full py-14 px-4 lg:px-6 lg:py-32 bg-[rgba(217,255,229,34%)] relative scroll-mt-20"}
-      id={Constants.UI.SECTIONS.COURSE}
+      id={Constants.UI.SECTIONS.COURSES}
     >
       <div className={"max-w-[1300px] mx-auto "}>
         <motion.div animate={{ y: [0, 10, 0] }} transition={{ duration: 1.5, repeat: Infinity }}>

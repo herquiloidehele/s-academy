@@ -47,18 +47,20 @@ export default function HeaderComponent(props: HeaderProps) {
           <ul className="flex items-center gap-6">
             <li>
               <a
-                href="#"
-                className={clsx("text-stale-950 font-medium text-sm lg:text-md", {
-                  "text-green-400": isSticky,
-                  "text-white": !isSticky,
-                })}
-                onClick={(e) => {
-                  e.preventDefault();
-                  setModalOpen(true);
-                }}
+                href={`#${Constants.UI.SECTIONS.COURSES}`}
+                className={clsx("text-stale-950 font-medium text-sm lg:text-md hover:text-green-400 text-black")}
               >
-                Entrar
+                Cursos
               </a>
+            </li>
+
+            <li>
+              <Link
+                href={Constants.APP_ROUTES.TUTOR_SIGNUP}
+                className={clsx("text-stale-950 font-medium text-sm lg:text-md hover:text-green-400 text-black")}
+              >
+                Vender meu curso
+              </Link>
             </li>
 
             <li>
@@ -69,34 +71,34 @@ export default function HeaderComponent(props: HeaderProps) {
                 shape={ButtonShape.ROUNDED}
                 shadow
                 onClick={() => {
-                  router.push(Constants.APP_ROUTES.CHECKOUT(Constants.COURSE.DEFAULT_COURSE_ID));
+                  setModalOpen(true);
                 }}
               >
-                Inscrição
+                Entrar
               </ButtonElement>
             </li>
           </ul>
         ) : (
           <div className={"flex items-center gap-6"}>
             <Link
-              href={Constants.APP_ROUTES.COURSES}
+              href={`#${Constants.UI.SECTIONS.COURSES}`}
               className={clsx("text-stale-950 font-medium text-sm lg:text-md", {
                 "text-green-400": isSticky,
-                "text-white": !isSticky,
+                "text-black": !isSticky,
               })}
             >
-              Curso
+              Cursos
             </Link>
 
-            <form action={handleLogout}>
-              <button
-                className="bg-green-500 text-white px-4 py-2 rounded-md"
-                type={"submit"}
-                value={Constants.AUTH_PROVIDER.GOOGLE}
-              >
-                Sair
-              </button>
-            </form>
+            <a
+              className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-green-400 text-white hover:bg-green-300 focus:outline-none focus:bg-green-700 disabled:opacity-50 disabled:pointer-events-none"
+              href={`#`}
+              onClick={async () => {
+                await handleLogout();
+              }}
+            >
+              Sair
+            </a>
           </div>
         )}
       </div>

@@ -30,8 +30,8 @@ export default function HeroSection(props: IHeroSectionProps) {
 
           <div className="mt-7 grid gap-3 w-full sm:inline-flex">
             <a
-              className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-green-400 text-white hover:bg-green-700 focus:outline-none focus:bg-green-700 disabled:opacity-50 disabled:pointer-events-none"
-              href={`#${Constants.UI.SECTIONS.COURSE}`}
+              className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-green-400 text-white hover:bg-green-300 focus:outline-none focus:bg-green-700 disabled:opacity-50 disabled:pointer-events-none"
+              href={`#${Constants.UI.SECTIONS.COURSES}`}
             >
               Ver cursos
               <svg
@@ -51,7 +51,7 @@ export default function HeroSection(props: IHeroSectionProps) {
             </a>
             <a
               className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-              href="#"
+              href={`#${Constants.APP_ROUTES.TUTOR_SIGNUP}`}
             >
               Vender meu curso
             </a>

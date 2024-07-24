@@ -3,7 +3,7 @@ export const Constants = {
     HEADER_HEIGHT: "80px",
     SECTIONS: {
       HERO: "heroSection",
-      COURSE: "courseSection",
+      COURSES: "courseSection",
       PRICE: "priceSection",
       TESTEMONIALS: "testemonialsSection",
       CALL_TO_ACTION: "callToActionSection",
@@ -21,6 +21,7 @@ export const Constants = {
     CHECKOUT: (courseId: string) => `/checkout/${courseId}`,
     COMPLETE_AUTH: "/complete-auth",
     COURSES: "/courses",
+    TUTOR_SIGNUP: "/tutor-signup",
     COURSE_DETAILS: (courseId: string) => `/courses/${courseId}`,
     LESSON: (courseId: string, moduleId: string, lessonId: string) => `/courses/${courseId}/${moduleId}/${lessonId}`,
   },

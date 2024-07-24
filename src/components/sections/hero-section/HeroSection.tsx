@@ -20,10 +20,10 @@ export default function HeroSection(props: IHeroSectionProps) {
     <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 h-auto mt-24 md:mt-auto">
       <div className="grid md:grid-cols-2 gap-4 md:gap-8 xl:gap-20 md:items-center h-auto md:h-[100vh]">
         <div>
-          <h1 className="block text-3xl font-bold text-gray-800 sm:text-4xl lg:text-6xl lg:leading-tight dark:text-white">
+          <h1 className="block text-4xl font-bold text-gray-800 sm:text-4xl lg:text-6xl lg:leading-tight dark:text-white text-center md:text-left">
             Encontre os melhores <span className="text-green-400">Cursos</span>
           </h1>
-          <p className="mt-3 sm:text-md md:text-lg text-gray-500 dark:text-neutral-400">
+          <p className="mt-3 sm:text-md md:text-lg text-gray-500 dark:text-neutral-400 text-center md:text-left">
             A melhor plataforma para você encontrar os melhores cursos online. Aprenda com os melhores tutores ou
             mentores
           </p>
@@ -109,7 +109,7 @@ export default function HeroSection(props: IHeroSectionProps) {
           </div>
         </div>
 
-        <div className="relative ms-4">
+        <div className="relative md:ms-4">
           <img className="w-full rounded-md" alt="Hero Image" src={HeroImage.src} />
           <div className="absolute inset-0 -z-[1] bg-gradient-to-tr from-gray-200 via-white/0 to-white/0 size-full rounded-md mt-4 -mb-4 me-4 -ms-4 lg:mt-6 lg:-mb-6 lg:me-6 lg:-ms-6 dark:from-neutral-800 dark:via-neutral-900/0 dark:to-neutral-900/0"></div>
 

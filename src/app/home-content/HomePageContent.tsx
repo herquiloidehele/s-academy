@@ -1,6 +1,6 @@
 import Header from "@/components/header/Header";
 import HeroSection from "@/components/sections/hero-section/HeroSection";
-import CourseInfoSection from "@/components/sections/course-info-section/CourseInfoSection";
+import CoursesList from "@/components/sections/courses-list/CoursesList";
 import PriceSection from "@/components/sections/price-section/PriceSection";
 import TestimonialsSection from "@/components/sections/testimonials-section/TestimonialsSection";
 import CallToActionSection from "@/components/sections/call-to-action-section/CallToActionSection";
@@ -18,7 +18,7 @@ export default async function HomePageContent() {
     <div className="w-full">
       <Header />
       <HeroSection course={baseCourse} />
-      <CourseInfoSection />
+      <CoursesList />
       <PriceSection course={baseCourse} />
       <TestimonialsSection />
       <CallToActionSection course={baseCourse} />

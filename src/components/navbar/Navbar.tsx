@@ -8,9 +8,9 @@ function Navbar() {
   const setIsOpen = useMenuStore((state) => state.setIsOpen);
   return (
     <div className="flex flex-row">
-      <div className="p-4 cursor-pointer" >
+      <div className="py-4 px-8 cursor-pointer" >
         {
-          isOpened?  <Bars3Icon className="w-4 h-4 md:w-8 md:h-8" onClick={()=>setIsOpen(false)}/>:<ArrowLeftIcon className="w-4 h-4 md:w-8 md:h-8" onClick={()=>setIsOpen(true)}/>
+          isOpened?  <ArrowLeftIcon className="w-4 h-4 md:w-8 md:h-8" onClick={()=>setIsOpen(false)}/>:<Bars3Icon className="w-4 h-4 md:w-8 md:h-8" onClick={()=>setIsOpen(true)}/>
         }
 
       </div>

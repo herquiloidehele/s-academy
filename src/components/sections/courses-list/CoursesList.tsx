@@ -6,18 +6,10 @@ import { Constants } from "@/utils/Constants";
 import CourseEntry from "@/components/course/course-entry/CourseEntry";
 import { ICourse } from "@/app/backend/business/course/CourseData";
 
-const mockCourse: ICourse = {
-  id: "1",
-  coverUrl: "https://dummyimage.com/460x460",
-  modules: [],
-  price: 5000,
-  title: "Curso de Programação",
-  discount: 0,
-  categories: ["Programação", "Desenvolvimento"],
-  duration: "10:30",
-};
-
-export default function CoursesList() {
+interface ICCourseListProps {
+  courses: ICourse[];
+}
+export default function CoursesList(props: ICCourseListProps) {
   return (
     <div
       className={"w-full py-14 px-4 lg:px-6 lg:py-24 bg-[rgba(217,255,229,15%)] relative scroll-mt-20"}
@@ -39,8 +31,15 @@ export default function CoursesList() {
           <section className="text-gray-600 body-font">
             <div className="container px-0 md:px-5 py-8 md:py-16 mx-auto">
               <div className="grid grid-cols-[repeat(auto-fill_,_minmax(350px_,_1fr))] gap-x-4 gap-y-11">
-                {Array.from({ length: 10 }).map((_, index) => (
-                  <CourseEntry key={index} course={mockCourse} />
+                {props.courses.map((course, index) => (
+                  <motion.div
+                    key={`${course.id}-${index}`}
+                    initial={{ opacity: 0, y: 50 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 1, delay: index * 0.1 }}
+                  >
+                    <CourseEntry course={course} />
+                  </motion.div>
                 ))}
               </div>
             </div>

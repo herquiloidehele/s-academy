@@ -3,6 +3,7 @@ import Logger from "@/utils/Logger";
 import FirestoreService from "@/app/backend/services/FirestoreService";
 import { Constants, FirebaseCollections } from "@/utils/Constants";
 import * as _ from "lodash";
+import { CourseMock } from "@/mock/CourseMock";
 
 class CourseManager {
   private readonly DEFAULT_COURSE_ID = Constants.COURSE.DEFAULT_COURSE_ID;
@@ -160,6 +161,23 @@ class CourseManager {
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error adding lesson to module:`, [lesson, moduleId, courseId]);
       return Promise.reject(error);
+    }
+  }
+
+  public async getAllCourses(): Promise<ICourse[]> {
+    Logger.debug(this.LOG_TAG, `Getting all courses`);
+
+    try {
+      const courses = await FirestoreService.getDocuments<ICourse>(FirebaseCollections.COURSES);
+
+      Logger.debug(this.LOG_TAG, `Courses found`, [courses]);
+
+      const mockCourses = Array.from({ length: 8 }).map(() => CourseMock);
+
+      return [...courses, ...mockCourses];
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error getting all courses`, error);
+      return [];
     }
   }
 }

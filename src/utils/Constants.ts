@@ -9,6 +9,7 @@ export const Constants = {
       CALL_TO_ACTION: "callToActionSection",
       FOOTER: "footerSection",
     },
+    FALLBACK_IMAGES: { COURSE_ENTRY: "https://dummyimage.com/460x460" },
   },
   AUTH_PROVIDER: {
     GOOGLE: "google",
@@ -21,6 +22,7 @@ export const Constants = {
     CHECKOUT: (courseId: string) => `/checkout/${courseId}`,
     COMPLETE_AUTH: "/complete-auth",
     COURSES: "/courses",
+    COURSE_DETAILS_PUBLIC: (courseId: string) => `/course/${courseId}`,
     TUTOR_SIGNUP: "/tutor-signup",
     COURSE_DETAILS: (courseId: string) => `/courses/${courseId}`,
     LESSON: (courseId: string, moduleId: string, lessonId: string) => `/courses/${courseId}/${moduleId}/${lessonId}`,

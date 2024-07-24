@@ -1,8 +1,8 @@
 import { ICourse } from "@/app/backend/business/course/CourseData";
 import Image from "next/image";
 import { formatCurrency } from "@/lib/utils";
-
-const FALLBACK_IMAGE_URL = "https://dummyimage.com/460x460";
+import Link from "next/link";
+import { Constants } from "@/utils/Constants";
 
 interface ICourseEntryProps {
   course: ICourse;
@@ -12,12 +12,12 @@ export default function CourseEntry(props: ICourseEntryProps) {
   const category = course.categories?.[0] || "Sem Categoria";
 
   return (
-    <div className="flex flex-col gap-1">
+    <Link href={Constants.APP_ROUTES.COURSE_DETAILS_PUBLIC(props.course.id)} className="flex flex-col gap-1">
       <a className="block relative h-80 rounded overflow-hidden aspect-square">
         <Image
           alt="ecommerce"
           className="object-cover object-center w-full h-full block"
-          src={course.coverUrl || FALLBACK_IMAGE_URL}
+          src={course.coverUrl || Constants.UI.FALLBACK_IMAGES.COURSE_ENTRY}
           width={460}
           height={460}
         />
@@ -27,6 +27,6 @@ export default function CourseEntry(props: ICourseEntryProps) {
         <h2 className="text-gray-900 title-font text-lg font-medium">{course.title}</h2>
         <p className="mt-1 text-green-400 font-bold">{formatCurrency(course.price)}</p>
       </div>
-    </div>
+    </Link>
   );
 }

@@ -2,7 +2,7 @@
 
 import SubscriptionManager from "../business/subscription/SubscriptionManager";
 import CourseManager from "../business/course/CourseManager";
-import { ISubscriptionRequest } from "@/app/business/subscription/SubscriptionData";
+import { ISubscriptionRequest } from "@/app/backend/business/subscription/SubscriptionData";
 import Logger from "@/utils/Logger";
 
 const LOG_TAG = "SubscriptionActions";

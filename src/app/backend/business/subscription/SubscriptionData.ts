@@ -1,4 +1,4 @@
-import { ICourse } from "@/app/business/course/CourseData";
+import { ICourse } from "@/app/backend/business/course/CourseData";
 
 export interface ISubscription {
   id?: string;

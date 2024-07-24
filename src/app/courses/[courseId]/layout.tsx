@@ -13,10 +13,10 @@ import VideoListLoadingState from "@/components/course/video-side-list/VideoList
 
 const LOG_TAG = "CourseLayout";
 
-interface ICourseLayoutProps extends IRouteParams {
+interface ICourseLayoutProps {
   children: React.ReactNode;
 }
-export default async function CourseLayout({ children, params: { courseId } }: ICourseLayoutProps) {
+export default async function CourseLayout({ children, params: { courseId } }: ICourseLayoutProps & IRouteParams) {
   if (!courseId) {
     return redirect(Constants.APP_ROUTES.HOME);
   }

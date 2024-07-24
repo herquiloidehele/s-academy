@@ -5,7 +5,7 @@ import PriceSection from "@/components/sections/price-section/PriceSection";
 import TestimonialsSection from "@/components/sections/testimonials-section/TestimonialsSection";
 import CallToActionSection from "@/components/sections/call-to-action-section/CallToActionSection";
 import Footer from "@/components/footer/Footer";
-import { getDefaultCourse } from "@/app/actions/course";
+import { getDefaultCourse } from "@/app/backend/actions/course";
 
 export default async function HomePageContent() {
   const baseCourse = await getDefaultCourse();

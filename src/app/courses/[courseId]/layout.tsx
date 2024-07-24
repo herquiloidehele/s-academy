@@ -1,9 +1,9 @@
 import Header from "@/components/header/Header";
 import React, { Suspense } from "react";
-import AuthManager from "@/app/business/auth/AuthManager";
+import AuthManager from "@/app/backend/business/auth/AuthManager";
 import { redirect } from "next/navigation";
 import { Constants } from "@/utils/Constants";
-import SubscriptionManager from "@/app/business/subscription/SubscriptionManager";
+import SubscriptionManager from "@/app/backend/business/subscription/SubscriptionManager";
 import Logger from "@/utils/Logger";
 import VideoSideListError from "@/components/course/video-side-list/VideoSideListError";
 import VideoSideList from "@/components/course/video-side-list/VideoSideList";

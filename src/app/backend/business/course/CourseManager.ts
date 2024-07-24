@@ -1,6 +1,6 @@
-import { ICourse, ILesson, IModule } from "@/app/business/course/CourseData";
+import { ICourse, ILesson, IModule } from "@/app/backend/business/course/CourseData";
 import Logger from "@/utils/Logger";
-import FirestoreService from "@/app/services/FirestoreService";
+import FirestoreService from "@/app/backend/services/FirestoreService";
 import { Constants, FirebaseCollections } from "@/utils/Constants";
 import * as _ from "lodash";
 
@@ -90,11 +90,14 @@ class CourseManager {
     }
   }
 
-  public async getLessonById(lessonId: string): Promise<ILesson> {
+  public async getLessonById(courseId: string, moduleId: string, lessonId: string): Promise<ILesson> {
     Logger.debug(this.LOG_TAG, `Getting lesson by id: ${lessonId}`);
 
     try {
-      const lesson = FirestoreService.getDocumentById(FirebaseCollections.LESSONS, lessonId);
+      const lesson = FirestoreService.getDocumentById(
+        `${FirebaseCollections.COURSES}/${courseId}/${FirebaseCollections.MODULES}/${moduleId}/${FirebaseCollections.LESSONS}`,
+        lessonId,
+      );
 
       if (!lesson) {
         Logger.error(this.LOG_TAG, `Lesson not found by id: ${lessonId}`);

@@ -7,7 +7,7 @@ import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/
 import { useRouter } from "next/navigation";
 import { Constants } from "@/utils/Constants";
 import Link from "next/link";
-import { ICourse } from "@/app/business/course/CourseData";
+import { ICourse } from "@/app/backend/business/course/CourseData";
 
 interface IHeroSectionProps {
   course: ICourse;

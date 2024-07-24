@@ -1,7 +1,7 @@
 "use server";
 
-import SubscriptionManager from "@/app/business/subscription/SubscriptionManager";
-import CourseManager from "@/app/business/course/CourseManager";
+import SubscriptionManager from "../business/subscription/SubscriptionManager";
+import CourseManager from "../business/course/CourseManager";
 import { ISubscriptionRequest } from "@/app/business/subscription/SubscriptionData";
 import Logger from "@/utils/Logger";
 

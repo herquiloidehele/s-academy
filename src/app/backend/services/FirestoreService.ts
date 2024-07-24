@@ -1,7 +1,7 @@
 import { FirebaseCollections } from "@/utils/Constants";
 import Logger from "@/utils/Logger";
-import { IQuery } from "@/app/services/ServiceDaos";
-import FirebaseConfig from "@/app/services/FirebaseConfig";
+import { IQuery } from "@/app/backend/services/ServiceDaos";
+import FirebaseConfig from "@/app/backend/services/FirebaseConfig";
 
 class FirestoreService {
   private readonly LOG_TAG = "FirestoreService";

@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 import { useRouter } from "next/navigation";
 import { Constants } from "@/utils/Constants";
-import { ICourse } from "@/app/business/course/CourseData";
+import { ICourse } from "@/app/backend/business/course/CourseData";
 
 const TESTIMONIALS_AVATARS_DATA = [
   {

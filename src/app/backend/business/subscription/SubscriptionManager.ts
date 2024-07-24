@@ -1,9 +1,9 @@
-import { ISubscription, ISubscriptionRequest } from "@/app/business/subscription/SubscriptionData";
+import { ISubscription, ISubscriptionRequest } from "@/app/backend/business/subscription/SubscriptionData";
 import Logger from "@/utils/Logger";
-import CourseManager from "@/app/business/course/CourseManager";
-import PaymentManager from "@/app/business/payment/PaymentManager";
-import { PaymentMethods } from "@/app/business/payment/PaymentData";
-import FirestoreService from "@/app/services/FirestoreService";
+import CourseManager from "@/app/backend/business/course/CourseManager";
+import PaymentManager from "@/app/backend/business/payment/PaymentManager";
+import { PaymentMethods } from "@/app/backend/business/payment/PaymentData";
+import FirestoreService from "@/app/backend/services/FirestoreService";
 import { FirebaseCollections } from "@/utils/Constants";
 import dayjs from "dayjs";
 

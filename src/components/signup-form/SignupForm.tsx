@@ -2,7 +2,7 @@ import * as React from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { UserIcon } from "@heroicons/react/24/outline";
 import GoogleIco from "@/assets/icons/google-icon.svg";
-import { handleSocialLogin } from "@/app/actions/auth";
+import { handleSocialLogin } from "@/app/backend/actions/auth";
 import { Constants } from "@/utils/Constants";
 import { auth } from "@/auth";
 

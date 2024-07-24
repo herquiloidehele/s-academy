@@ -7,9 +7,9 @@ import { clsx } from "clsx";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 import { Constants } from "@/utils/Constants";
 import { useRouter } from "next/navigation";
-import { handleLogout } from "@/app/actions/auth";
 import LoginModal from "@/components/login-modal/LoginModal";
 import Link from "next/link";
+import { handleLogout } from "@/app/backend/actions/auth";
 
 const START_STICKY_POSITION = 10;
 

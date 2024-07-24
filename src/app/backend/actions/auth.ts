@@ -1,8 +1,8 @@
 "use server";
 
-import { Constants } from "@/utils/Constants";
+import { Constants } from "../../../utils/Constants";
 
-import { signIn, signOut } from "@/auth";
+import { signIn, signOut } from "../../../auth";
 
 export async function handleSocialLogin(formData: FormData) {
   const provider = formData.get(Constants.ACTIONS.LOGIN);

@@ -1,5 +1,5 @@
 import Header from "@/components/header/Header";
-import { getDefaultCourse } from "@/app/actions/course";
+import { getDefaultCourse } from "@/app/backend/actions/course";
 import { redirect } from "next/navigation";
 import { Constants } from "@/utils/Constants";
 

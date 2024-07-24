@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import QueryClientWrapper from "@/components/shared/QueryClientWrapper";
-import FirebaseConfig from "@/app/services/FirebaseConfig";
+import FirebaseConfig from "@/app/backend/services/FirebaseConfig";
 import { Toaster } from "@/components/ui/sonner";
 
 const font = Inter({ subsets: ["latin"] });

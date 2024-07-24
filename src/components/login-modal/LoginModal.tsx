@@ -1,5 +1,5 @@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { handleSocialLogin } from "@/app/actions/auth";
+import { handleSocialLogin } from "@/app/backend/actions/auth";
 import { Constants } from "@/utils/Constants";
 import GoogleIco from "@/assets/icons/google-icon.svg";
 import * as React from "react";

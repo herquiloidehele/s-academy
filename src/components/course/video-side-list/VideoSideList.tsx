@@ -1,6 +1,6 @@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import VideoItem from "@/components/course/video-item/VideoItem";
-import CourseManager from "@/app/business/course/CourseManager";
+import CourseManager from "@/app/backend/business/course/CourseManager";
 
 interface VideoSideListProps {
   courseId: string;
@@ -18,7 +18,7 @@ export default async function VideoSideList(props: VideoSideListProps) {
               <ul className="space-y-4 md:space-y-3">
                 {section.lessons.map((video, index) => (
                   <li key={index} className="">
-                    <VideoItem lesson={video} courseId={props.courseId} />
+                    <VideoItem lesson={video} courseId={props.courseId} moduleId={section.id} />
                   </li>
                 ))}
               </ul>

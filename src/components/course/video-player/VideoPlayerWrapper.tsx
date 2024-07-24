@@ -1,15 +1,17 @@
 import VideoPlayer from "@/components/course/video-player/VideoPlayer";
-import CourseManager from "@/app/business/course/CourseManager";
+import CourseManager from "@/app/backend/business/course/CourseManager";
 
 interface VideoPlayerWrapperProps {
   lessonId?: string;
+  courseId?: string;
+  moduleId?: string;
 }
 export async function VideoPlayerWrapper(props: VideoPlayerWrapperProps) {
-  if (!props.lessonId) {
+  if (!props.lessonId || !props.courseId || !props.moduleId) {
     return <EmptyVideoPlayer />;
   }
 
-  const lesson = await CourseManager.getLessonById(props.lessonId);
+  const lesson = await CourseManager.getLessonById(props.courseId, props.moduleId, props.lessonId);
 
   return (
     <div className={"w-full flex flex-col gap-2 md:gap-4"}>

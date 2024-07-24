@@ -2,12 +2,12 @@ import Header from "@/components/header/Header";
 import { SignupForm } from "@/components/signup-form/SignupForm";
 import ProductCard from "@/components/checkout/product-card/ProductCard";
 import PaymentCard from "@/components/checkout/payment-card/PaymentCard";
-import AuthManager from "@/app/business/auth/AuthManager";
-import SubscriptionManager from "@/app/business/subscription/SubscriptionManager";
+import AuthManager from "@/app/backend/business/auth/AuthManager";
+import SubscriptionManager from "@/app/backend/business/subscription/SubscriptionManager";
 import { redirect } from "next/navigation";
 import { Constants } from "@/utils/Constants";
 import { IRouteParams } from "@/utils/interfaces";
-import CourseManager from "@/app/business/course/CourseManager";
+import CourseManager from "@/app/backend/business/course/CourseManager";
 
 export default async function page({ params: { courseId } }: IRouteParams) {
   const course = await CourseManager.getCourseById(courseId as string);

@@ -1,8 +1,8 @@
 import Logger from "@/utils/Logger";
 import { auth } from "@/auth";
-import FirestoreService from "@/app/services/FirestoreService";
+import FirestoreService from "@/app/backend/services/FirestoreService";
 import { FirebaseCollections } from "@/utils/Constants";
-import { IUser } from "@/app/business/auth/UsersData";
+import { IUser } from "@/app/backend/business/auth/UsersData";
 
 class AuthManager {
   private readonly LOG_TAG = "AuthManager";

@@ -1,6 +1,6 @@
 import Logger from "@/utils/Logger";
-import { IPaymentRequest, PaymentMethods } from "@/app/business/payment/PaymentData";
-import MpesaService, { IPaymentInfo } from "@/app/services/MpesaService";
+import { IPaymentRequest, PaymentMethods } from "@/app/backend/business/payment/PaymentData";
+import MpesaService, { IPaymentInfo } from "@/app/backend/services/MpesaService";
 
 class PaymentManager {
   private readonly LOG_TAG = "PaymentManager";

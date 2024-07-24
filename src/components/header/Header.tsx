@@ -1,5 +1,5 @@
 import HeaderComponent from "@/components/header/HeaderComponent";
-import AuthManager from "@/app/business/auth/AuthManager";
+import AuthManager from "@/app/backend/business/auth/AuthManager";
 
 interface HeaderProps {
   solidBg?: boolean;

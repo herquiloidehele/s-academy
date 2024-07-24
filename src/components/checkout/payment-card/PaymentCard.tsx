@@ -8,7 +8,7 @@ import * as React from "react";
 import { useRouter } from "next/navigation";
 import { useMutation } from "@tanstack/react-query";
 import { Constants } from "@/utils/Constants";
-import { payCourseSubscription } from "@/app/actions/subscription";
+import { payCourseSubscription } from "@/app/backend/actions/subscription";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 import { toast } from "sonner";
 

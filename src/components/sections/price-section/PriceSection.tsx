@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 import { Constants } from "@/utils/Constants";
 import { useRouter } from "next/navigation";
-import { ICourse } from "@/app/business/course/CourseData";
+import { ICourse } from "@/app/backend/business/course/CourseData";
 import { formatCurrency } from "@/lib/utils";
 
 const itemsIncluded = [

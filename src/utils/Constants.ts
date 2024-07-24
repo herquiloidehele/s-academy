@@ -22,7 +22,7 @@ export const Constants = {
     COMPLETE_AUTH: "/complete-auth",
     COURSES: "/courses",
     COURSE_DETAILS: (courseId: string) => `/courses/${courseId}`,
-    LESSON: (courseId: string, lessonId: string) => `/courses/${courseId}/${lessonId}`,
+    LESSON: (courseId: string, moduleId: string, lessonId: string) => `/courses/${courseId}/${moduleId}/${lessonId}`,
   },
   COURSE: {
     DEFAULT_COURSE_ID: "Q0us6qiWzX00sF2IZyQL",

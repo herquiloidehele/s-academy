@@ -5,12 +5,12 @@ import { VideoPlayerWrapper } from "@/components/course/video-player/VideoPlayer
 import { ErrorBoundary } from "react-error-boundary";
 import VideoLoadingState from "@/components/course/video-player/VideoLoadingState";
 
-export default function page({ params: { lessonId } }: IRouteParams) {
+export default function page({ params: { lessonId, courseId, moduleId } }: IRouteParams) {
   return (
     <div className={"w-full aspect-auto"}>
       <ErrorBoundary FallbackComponent={VideoError}>
         <Suspense fallback={<VideoLoadingState />}>
-          <VideoPlayerWrapper lessonId={lessonId} />
+          <VideoPlayerWrapper lessonId={lessonId} courseId={courseId} moduleId={moduleId} />
         </Suspense>
       </ErrorBoundary>
     </div>

@@ -1,11 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { BookmarkIcon } from "@heroicons/react/24/outline";
 import * as React from "react";
-import CourseManager from "@/app/business/course/CourseManager";
+import CourseManager from "@/app/backend/business/course/CourseManager";
 import { formatCurrency } from "@/lib/utils";
-import PaymentManager from "@/app/business/payment/PaymentManager";
-import { PaymentMethods } from "@/app/business/payment/PaymentData";
-import { ICourse } from "@/app/business/course/CourseData";
+import PaymentManager from "@/app/backend/business/payment/PaymentManager";
+import { PaymentMethods } from "@/app/backend/business/payment/PaymentData";
+import { ICourse } from "@/app/backend/business/course/CourseData";
 
 interface IProductCardProps {
   course: ICourse;

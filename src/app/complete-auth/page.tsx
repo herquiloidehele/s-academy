@@ -1,8 +1,8 @@
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { Constants, FirebaseCollections } from "@/utils/Constants";
-import FirestoreService from "@/app/services/FirestoreService";
-import { UserRole } from "@/app/business/auth/UsersData";
+import FirestoreService from "@/app/backend/services/FirestoreService";
+import { UserRole } from "@/app/backend/business/auth/UsersData";
 import Logger from "@/utils/Logger";
 import { IRouteParams } from "@/utils/interfaces";
 

@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React from "react";
 import { USER_ROLES } from "@/utils/Constants";
 import { ArrowDownIcon, ArrowUpIcon } from "@heroicons/react/24/outline";
 import useMenuStore from "@/app/menuStore";
+import { usePathname } from "next/navigation";
 
 export interface ISidebarSubMenuItem {
   title: string;
@@ -22,15 +23,11 @@ export interface ISidebarMenu {
 }
 
 function MenuItem({ menu }: { menu: ISidebarMenu }) {
-  const [stateClass, setStateClass] = React.useState("");
   const isOpened = useMenuStore((state) => state.isOpened);
   const setIsOpen = useMenuStore((state) => state.setIsOpen);
-  const [isOpenedSubmenu, setIsOpenedSubmenu] = React.useState(false);
+  const [isOpenedSubmenu, setIsOpenedSubmenu] = React.useState(true);
+  const pathName = usePathname();
 
-  useEffect(() => {
-    const stateClass = menu.isActive ? "bg-primary text-primary-foreground" : "";
-    setStateClass(stateClass);
-  }, [menu.isActive]);
   const CategoryTitle = () => (
     <div
       onClick={() => {
@@ -41,7 +38,7 @@ function MenuItem({ menu }: { menu: ISidebarMenu }) {
           setIsOpenedSubmenu((prevState) => !prevState);
         }
       }}
-      className={`cursor-pointer ${stateClass}${!isOpened ? "p-5 w-fit" : "grid grid-cols-5 w-full py-5 gap-2 "}`}
+      className={`cursor-pointer ${!isOpened ? `p-5 w-fit ${menu.isActive ? "bg-green-100" : ""}` : "grid grid-cols-5 w-full py-5 gap-2 "} ${!isOpenedSubmenu ? "bg-green-100" : ""} px-4`}
     >
       <div className="col-span-1">{menu.icon}</div>
 
@@ -60,22 +57,35 @@ function MenuItem({ menu }: { menu: ISidebarMenu }) {
     </div>
   );
 
+  function isMenuActive(path: string) {
+    const normalizedPathName = pathName.trim().toLowerCase();
+    const normalizedItemPath = `${path.trim().toLowerCase()}`;
+    const isActive = normalizedPathName.startsWith(normalizedItemPath);
+    if (isActive) {
+      menu.isActive = true;
+      return true;
+    }
+    return false;
+  }
+
   return (
-    <div className="w-full px-4 ">
+    <div className="w-full ">
       <CategoryTitle />
       {isOpenedSubmenu &&
         isOpened &&
         menu.items.length > 0 &&
-        menu.items.map((item, index) => (
-          <div
-            key={index}
-            className={` cursor-pointer focus:bg-primary ${stateClass} ${!isOpened ? "px-5 w-fit" : "grid grid-cols-5 w-full py-3 gap-2"}`}
-          >
-            <span className=" block text-lg font-extralight col-start-2 col-span-3" onClick={item.onClick}>
-              {item.title}
-            </span>
-          </div>
-        ))}
+        menu.items.map((item, index) => {
+          return (
+            <div
+              key={index}
+              className={` cursor-pointer focus:bg-primary ${isMenuActive(item.path) ? "bg-green-400 text-primary-foreground" : ""} ${!isOpened ? "px-5 w-fit" : "grid grid-cols-5 w-full py-3 gap-2"}`}
+            >
+              <span className=" block text-lg font-extralight col-start-2 col-span-3" onClick={item.onClick}>
+                {item.title}
+              </span>
+            </div>
+          );
+        })}
     </div>
   );
 }

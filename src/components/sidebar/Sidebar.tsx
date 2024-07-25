@@ -7,15 +7,15 @@ interface ISideMenuProps {
   menuItems: ISidebarMenu[];
 }
 
-function Sidebar({ menuItems }:ISideMenuProps) {
+function Sidebar({ menuItems }: ISideMenuProps) {
   const pathName = usePathname();
-
 
   return (
     <div>
       <ul className="h-fit">
         {menuItems.map((menu, index) => {
           const isActive = pathName.startsWith(`/${menu.path}`);
+
           return (
             <li key={index}>
               <MenuItem menu={{ ...menu, isActive }}></MenuItem>
@@ -23,7 +23,6 @@ function Sidebar({ menuItems }:ISideMenuProps) {
           );
         })}
       </ul>
-
     </div>
   );
 }

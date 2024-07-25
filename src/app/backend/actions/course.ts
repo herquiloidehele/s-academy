@@ -10,3 +10,7 @@ export async function getDefaultCourse() {
 export async function fetchCourses(): Promise<ICourse[]> {
   return await CourseManager.getAllCourses();
 }
+
+export async function getCourseModules(courseId: string) {
+  return CourseManager.getCourseModules(courseId);
+}

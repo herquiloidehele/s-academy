@@ -23,7 +23,7 @@ export default function CourseInfo(props: ICourseInfoProps) {
   ];
 
   return (
-    <div className={"w-100 sticky"}>
+    <div className={"w-100"}>
       <div className="group flex flex-col bg-white border shadow-sm rounded-xl hover:shadow-md focus:outline-none focus:shadow-md transition dark:bg-neutral-900 dark:border-neutral-800">
         <div className="p-4 md:p-7 flex flex-col gap-y-4">
           <h1 className={"text-black/70 text-2xl font-bold"}>

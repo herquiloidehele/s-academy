@@ -23,3 +23,13 @@ export const formatCurrency = (price: number) => {
 };
 
 export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+/**
+ * Format number
+ * Ex: 1 => 01
+ * @param number
+ * @returns formatted string
+ */
+export function formatNumber(number: number) {
+  return number.toString().padStart(2, "0");
+}

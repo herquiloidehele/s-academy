@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { CurrencyCode, Locales } from "@/utils/Constants";
+import dayjs from "dayjs";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -32,4 +33,12 @@ export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve
  */
 export function formatNumber(number: number) {
   return number.toString().padStart(2, "0");
+}
+
+export function formatDate(format: string, date?: string | Date) {
+  if (!date) {
+    return "--";
+  }
+
+  return dayjs(date).format(format);
 }

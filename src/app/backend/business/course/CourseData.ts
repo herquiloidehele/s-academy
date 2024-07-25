@@ -9,6 +9,7 @@ export interface ICourse {
   coverUrl?: string;
   promoVideoRef?: number;
   categories?: string[];
+  createdAt?: Date;
 }
 
 export interface IModule {

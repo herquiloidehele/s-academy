@@ -1,10 +1,14 @@
+"use client";
+
 import { ICourse } from "@/app/backend/business/course/CourseData";
-import { formatCurrency } from "@/lib/utils";
+import { formatCurrency, formatDate } from "@/lib/utils";
 import Image from "next/image";
 import CheckIcon from "@/assets/images/check_black.svg";
 import DeviceIcon from "@/assets/images/device-redesign.svg";
 import PlayIcon from "@/assets/images/hours-redesign.svg";
 import UserIcon from "@/assets/images/students-redesign.svg";
+import { useRouter } from "next/navigation";
+import { Constants } from "@/utils/Constants";
 
 interface ICourseInfoProps {
   course: ICourse;
@@ -12,6 +16,8 @@ interface ICourseInfoProps {
   totalLessons: number;
 }
 export default function CourseInfo(props: ICourseInfoProps) {
+  const router = useRouter();
+
   const courseFeatures = [
     { icon: <CheckIcon />, text: "Curso Verificado" },
     { icon: <DeviceIcon />, text: "Acesso em qualquer dispositivo" },
@@ -34,6 +40,9 @@ export default function CourseInfo(props: ICourseInfoProps) {
             className={
               "w-full bg-green-400 text-white text-md font-semibold py-4 rounded-lg hover:bg-green-300 focus:outline-none focus:shadow-md transition"
             }
+            onClick={() => {
+              router.push(Constants.APP_ROUTES.CHECKOUT(props.course.id));
+            }}
           >
             COMPRAR
           </button>
@@ -74,7 +83,9 @@ export default function CourseInfo(props: ICourseInfoProps) {
             />
             <div className="grow">
               <h3 className="font-medium text-sm text-gray-800 dark:text-neutral-200">Herquilóide Hele</h3>
-              <p className="text-xs text-gray-500 dark:text-neutral-500">10 Jan. 2024</p>
+              <p className="text-xs text-gray-500 dark:text-neutral-500">
+                {formatDate(Constants.UI.DATE_FORMATS.BASE_DATE, props.course.createdAt)}
+              </p>
             </div>
           </div>
         </div>

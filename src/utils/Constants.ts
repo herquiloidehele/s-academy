@@ -9,7 +9,11 @@ export const Constants = {
       CALL_TO_ACTION: "callToActionSection",
       FOOTER: "footerSection",
     },
-    FALLBACK_IMAGES: { COURSE_ENTRY: "https://dummyimage.com/460x460" },
+    FALLBACK_IMAGES: { COURSE_ENTRY: "https://dummyimage.com/1460x1460" },
+    DATE_FORMATS: {
+      DATE_AND_TIME: "D MMM, HH:mm",
+      BASE_DATE: "DD MMM YYYY",
+    },
   },
   AUTH_PROVIDER: {
     GOOGLE: "google",

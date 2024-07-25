@@ -1,11 +1,11 @@
 import HeaderComponent from "@/components/header/HeaderComponent";
-import AuthManager from "@/app/backend/business/auth/AuthManager";
+import getAuthUser from "@/app/backend/actions/auth";
 
 interface HeaderProps {
   solidBg?: boolean;
 }
 export default async function Header(props: HeaderProps) {
-  const user = await AuthManager.getAuthUser();
+  const user = await getAuthUser();
 
   return <HeaderComponent solidBg={props.solidBg} isAuthenticated={!!user} />;
 }

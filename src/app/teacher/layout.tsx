@@ -24,11 +24,11 @@ const Layout = ({ children }) => {
         <Navbar></Navbar>
       </div>
 
-      <div className="grid grid-cols-5 w-full h-full">
-        <div className="w-fit h-screen col-span-1 border-r-2 ">
+      <div className="flex flex-row gap-4 w-full h-full">
+        <div className="w-fit h-screen border-r-2 ">
           <Sidebar menuItems={getMenuItemsByRole(USER_ROLES.TEACHER, [])}></Sidebar>
         </div>
-        <div className="overflow-y-auto bg-background items-center w-full  px-16 py-9">{children}</div>
+        <div className="overflow-y-auto bg-background items-center w-full p-12">{children}</div>
       </div>
     </div>
   );

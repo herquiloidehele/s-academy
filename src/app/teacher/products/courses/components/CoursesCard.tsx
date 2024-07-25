@@ -1,4 +1,5 @@
 import React from "react";
+import { truncateText } from "@/utils/functions";
 
 interface ICourse {
   name: string; // Nome do curso
@@ -12,13 +13,6 @@ interface ICourse {
 }
 
 function CoursesCard({ course }: { course: ICourse }) {
-  const truncateText = (text: string, maxLength: number) => {
-    if (text.length > maxLength) {
-      return text.substring(0, maxLength) + "...";
-    }
-    return text;
-  };
-
   return (
     <div className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
       <a href="#">

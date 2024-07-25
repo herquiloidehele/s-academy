@@ -16,6 +16,7 @@ export interface IModule {
   id: string;
   order: number;
   title: string;
+  courseId: string;
   description?: string;
   lessons: ILesson[];
 }
@@ -25,6 +26,7 @@ export interface ILesson {
   order: number;
   videoRef: number;
   title: string;
+  moduleId: string;
   duration: string;
   description?: string;
   thumbnailUrl: string;

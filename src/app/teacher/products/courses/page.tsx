@@ -1,8 +1,11 @@
+"use client";
 import React from "react";
 import CoursesCard from "@/app/teacher/products/courses/components/CoursesCard";
 import { SearchIcon } from "lucide-react";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 import { PlusIcon } from "@heroicons/react/24/outline";
+import { useRouter } from "next/navigation";
+import { Constants } from "@/utils/Constants";
 
 const courses = [
   {
@@ -65,6 +68,7 @@ const courses = [
 ];
 
 function CoursePage(props) {
+  const router = useRouter();
   return (
     <div>
       <div className="flex flex-row w-full items-center justify-between gap-6 mb-8">
@@ -85,7 +89,7 @@ function CoursePage(props) {
             size={ButtonSize.SMALL}
             fillType={FillType.FILLED}
             type={ButtonType.PRIMARY}
-            onClick={props.resetErrorBoundary}
+            onClick={() => router.push(Constants.APP_ROUTES.TEACHER.NEW_COURSES)}
           >
             <div className="flex flex-row gap-2 justify-center items-center">
               <PlusIcon className="size-8" />

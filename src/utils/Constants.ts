@@ -34,6 +34,7 @@ export const Constants = {
       HOME: "/teacher",
       PRODUCTS: "/teacher/products",
       COURSES: "/teacher/products/courses",
+      NEW_COURSES: "/teacher/products/courses/form",
       EBOOKS: "/teacher/products/ebooks",
       COURSE: (courseId: string) => `/teacher/courses/${courseId}`,
       MODULE: (courseId: string, moduleId: string) => `/teacher/courses/${courseId}/${moduleId}`,

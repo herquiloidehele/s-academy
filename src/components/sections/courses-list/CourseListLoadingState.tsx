@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function CourseListLoadingState() {
   return (
-    <div className="grid grid-cols-[repeat(auto-fill_,_minmax(350px_,_1fr))] gap-x-4 gap-y-11">
+    <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fill_,_minmax(350px_,_1fr))] gap-x-4 gap-y-11">
       {Array.from({ length: 10 }).map((_, index) => (
         <CourseEntryLoadingState key={index} />
       ))}

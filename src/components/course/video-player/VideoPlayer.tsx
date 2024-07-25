@@ -5,16 +5,17 @@ import VimeoPlayer from "@vimeo/player";
 
 interface VideoPlayerProps {
   videoId: number;
+  autoplay?: boolean;
 }
 
-export default function VideoPlayer(props: VideoPlayerProps) {
+export default function VideoPlayer({ autoplay = true, ...props }: VideoPlayerProps) {
   const playerRef = useRef<HTMLDivElement>(null);
   const player = useRef<any>(null);
 
   const playerOptions = useMemo((): VimeoPlayer.Options => {
     return {
       id: props.videoId,
-      autoplay: true,
+      autoplay: autoplay,
       muted: false,
       responsive: true,
       byline: false,

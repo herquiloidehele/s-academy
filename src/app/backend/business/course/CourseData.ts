@@ -7,8 +7,9 @@ export interface ICourse {
   discount: number;
   modules: IModule[];
   coverUrl?: string;
-  promoVideoRef?: string;
+  promoVideoRef?: number;
   categories?: string[];
+  createdAt?: Date;
 }
 
 export interface IModule {

@@ -45,7 +45,7 @@ export default function HeaderComponent(props: HeaderProps) {
 
         {!props.isAuthenticated ? (
           <ul className="flex items-center gap-6">
-            <li>
+            <li className={"hidden md:inline-block"}>
               <a
                 href={`#${Constants.UI.SECTIONS.COURSES}`}
                 className={clsx("text-stale-950 font-medium text-sm lg:text-md hover:text-green-400 text-black")}
@@ -54,7 +54,7 @@ export default function HeaderComponent(props: HeaderProps) {
               </a>
             </li>
 
-            <li>
+            <li className={"hidden md:inline-block"}>
               <Link
                 href={Constants.APP_ROUTES.TUTOR_SIGNUP}
                 className={clsx("text-stale-950 font-medium text-sm lg:text-md hover:text-green-400 text-black")}

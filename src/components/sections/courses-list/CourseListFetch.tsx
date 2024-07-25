@@ -24,7 +24,7 @@ export default async function CourseListFetch() {
           </h2>
 
           <section className="text-gray-600 body-font">
-            <div className="container px-0 md:px-5 py-8 md:py-16 mx-auto">
+            <div className="container px-0 md:px-0 py-8 md:py-16 mx-auto">
               <Suspense fallback={<CourseListLoadingState />}>
                 <ErrorBoundary FallbackComponent={ErrorCourseListState}>
                   <AwaitFetch promise={fetchCoursePromise}>

@@ -30,21 +30,22 @@ export const Constants = {
     TUTOR_SIGNUP: "/tutor-signup",
     COURSE_DETAILS: (courseId: string) => `/courses/${courseId}`,
     LESSON: (courseId: string, moduleId: string, lessonId: string) => `/courses/${courseId}/${moduleId}/${lessonId}`,
-    TEACHER:{
+    TEACHER: {
       HOME: "/teacher",
       PRODUCTS: "/teacher/products",
       COURSES: "/teacher/products/courses",
+      EBOOKS: "/teacher/products/ebooks",
       COURSE: (courseId: string) => `/teacher/courses/${courseId}`,
       MODULE: (courseId: string, moduleId: string) => `/teacher/courses/${courseId}/${moduleId}`,
-      LESSON: (courseId: string, moduleId: string, lessonId: string) => `/teacher/courses/${courseId}/${moduleId}/${lessonId}`,
-      WALLET:{
+      LESSON: (courseId: string, moduleId: string, lessonId: string) =>
+        `/teacher/courses/${courseId}/${moduleId}/${lessonId}`,
+      WALLET: {
         HOME: "/teacher/wallet",
         WITHDRAW: "/teacher/wallet/withdraw",
         HISTORY: "/teacher/wallet/history",
         BALANCE: "/teacher/wallet/balance",
       },
-    }
-
+    },
   },
   COURSE: {
     DEFAULT_COURSE_ID: "Q0us6qiWzX00sF2IZyQL",

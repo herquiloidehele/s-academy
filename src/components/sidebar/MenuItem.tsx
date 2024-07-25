@@ -38,7 +38,7 @@ function MenuItem({ menu }: { menu: ISidebarMenu }) {
           setIsOpenedSubmenu((prevState) => !prevState);
         }
       }}
-      className={`cursor-pointer ${!isOpened ? `p-5 w-fit ${menu.isActive ? "bg-green-100" : ""}` : "grid grid-cols-5 w-full py-5 gap-2 "} ${!isOpenedSubmenu ? "bg-green-100" : ""} px-4`}
+      className={`cursor-pointer ${isSingleMenuActive(menu.path) && menu.items.length == 0 ? "bg-green-100" : ""} ${!isOpened ? `p-5 w-fit ${menu.isActive ? "bg-green-100" : ""}` : "grid grid-cols-5 w-full py-5 gap-2 "} ${!isOpenedSubmenu ? "bg-green-100" : ""} px-4`}
     >
       <div className="col-span-1">{menu.icon}</div>
 
@@ -61,11 +61,17 @@ function MenuItem({ menu }: { menu: ISidebarMenu }) {
     const normalizedPathName = pathName.trim().toLowerCase();
     const normalizedItemPath = `${path.trim().toLowerCase()}`;
     const isActive = normalizedPathName.startsWith(normalizedItemPath);
+
     if (isActive) {
       menu.isActive = true;
       return true;
     }
     return false;
+  }
+  function isSingleMenuActive(path: string) {
+    const normalizedPathName = pathName.trim().toLowerCase();
+    const normalizedItemPath = `${path.trim().toLowerCase()}`;
+    return normalizedPathName == normalizedItemPath;
   }
 
   return (

@@ -21,7 +21,7 @@ export default async function CourseModules(props: ICourseModuleProps) {
               >
                 {formatNumber(index + 1)}
               </h3>
-              <h3 className={"text-black/80 text-xl"}>{section.title}</h3>
+              <h3 className={"text-black/80 text-lg md:text-xl"}>{section.title}</h3>
             </div>
           </AccordionTrigger>
           <AccordionContent className={"pl-2 pt-5"}>

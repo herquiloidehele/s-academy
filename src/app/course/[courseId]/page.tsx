@@ -7,13 +7,13 @@ import CourseDetails from "@/components/course/course-details/CourseDetails";
 
 export default async function page({ params: { courseId } }: IRouteParams) {
   if (!courseId) {
-    return null;
+    return Promise.reject("Course ID not found");
   }
 
   const course = await CourseManager.getCourseById(courseId);
 
   if (!course) {
-    return null;
+    throw new Error("Course not found");
   }
 
   return (

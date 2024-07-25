@@ -6,6 +6,9 @@ export interface ICourse {
   duration: string;
   discount: number;
   modules: IModule[];
+  coverUrl?: string;
+  promoVideoRef?: string;
+  categories?: string[];
 }
 
 export interface IModule {

@@ -21,3 +21,5 @@ export const formatCurrency = (price: number) => {
     useGrouping: true,
   }).format(price);
 };
+
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));

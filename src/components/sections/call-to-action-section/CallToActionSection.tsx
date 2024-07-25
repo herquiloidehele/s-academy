@@ -3,33 +3,36 @@ import { motion } from "framer-motion";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 import { useRouter } from "next/navigation";
 import { Constants } from "@/utils/Constants";
-import { ICourse } from "@/app/backend/business/course/CourseData";
+import Image from "next/image";
+import Link from "next/link";
+
+import AvatarImage1 from "@/assets/images/avatar1.png";
+import AvatarImage2 from "@/assets/images/avatar2.png";
+import AvatarImage3 from "@/assets/images/avatar3.png";
+import AvatarImage4 from "@/assets/images/avatar4.png";
 
 const TESTIMONIALS_AVATARS_DATA = [
   {
-    avatar: "https://randomuser.me/api/portraits/women/68.jpg",
+    avatar: AvatarImage1.src,
   },
   {
-    avatar: "https://randomuser.me/api/portraits/men/60.jpg",
+    avatar: AvatarImage2.src,
   },
   {
-    avatar: "https://randomuser.me/api/portraits/men/60.jpg",
+    avatar: AvatarImage3.src,
   },
   {
-    avatar: "https://randomuser.me/api/portraits/men/10.jpg",
+    avatar: AvatarImage4.src,
   },
   {
-    avatar: "https://randomuser.me/api/portraits/women/10.jpg",
+    avatar: AvatarImage1.src,
   },
   {
-    avatar: "https://randomuser.me/api/portraits/men/40.jpg",
+    avatar: AvatarImage2.src,
   },
 ];
 
-interface ICallToActionSectionProps {
-  course: ICourse;
-}
-export default function CallToActionSection(props: ICallToActionSectionProps) {
+export default function CallToActionSection() {
   const router = useRouter();
 
   return (
@@ -46,7 +49,7 @@ export default function CallToActionSection(props: ICallToActionSectionProps) {
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
           >
-            <img
+            <Image
               loading="lazy"
               width="400"
               height="400"
@@ -54,7 +57,7 @@ export default function CallToActionSection(props: ICallToActionSectionProps) {
               alt="member photo"
               className="h-8 w-8 rounded-full object-cover filter grayscale"
             />
-            <img
+            <Image
               loading="lazy"
               width="200"
               height="200"
@@ -62,7 +65,7 @@ export default function CallToActionSection(props: ICallToActionSectionProps) {
               alt="member photo"
               className="h-12 w-12 rounded-full object-cover filter grayscale"
             />
-            <img
+            <Image
               loading="lazy"
               width="200"
               height="200"
@@ -70,7 +73,7 @@ export default function CallToActionSection(props: ICallToActionSectionProps) {
               alt="member photo"
               className="z-10 h-16 w-16 rounded-full object-cover filter grayscale"
             />
-            <img
+            <Image
               loading="lazy"
               width="200"
               height="200"
@@ -78,7 +81,7 @@ export default function CallToActionSection(props: ICallToActionSectionProps) {
               alt="member photo"
               className="relative h-12 w-12 rounded-full object-cover filter grayscale"
             />
-            <img
+            <Image
               loading="lazy"
               width="200"
               height="200"
@@ -102,24 +105,21 @@ export default function CallToActionSection(props: ICallToActionSectionProps) {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              Faça parte da nossa comunidade e comece a criar a sua loja online hoje mesmo.
+              Faça parte da nossa comunidade de partilha de conhecimento e experiências.
             </motion.p>
             <div className="flex flex-wrap justify-center gap-3 lg:gap-5">
-              <a href="#">
+              <Link href={`#${Constants.UI.SECTIONS.COURSES}`}>
                 <ButtonElement
                   size={ButtonSize.SMALL}
                   shape={ButtonShape.ROUNDED}
                   type={ButtonType.PRIMARY}
                   fillType={FillType.FILLED}
                   shadow
-                  onClick={() => {
-                    router.push(Constants.APP_ROUTES.CHECKOUT(props.course.id));
-                  }}
                 >
-                  Inscreva-se Agora
+                  Comprar Cursos
                 </ButtonElement>
-              </a>
-              <a href="whatsapp://send?phone=+258847005571&text=Olá, gostaria de saber mais sobre os vossos cursos.">
+              </Link>
+              <Link href={Constants.APP_ROUTES.TUTOR_SIGNUP}>
                 <ButtonElement
                   size={ButtonSize.SMALL}
                   shape={ButtonShape.ROUNDED}
@@ -127,9 +127,9 @@ export default function CallToActionSection(props: ICallToActionSectionProps) {
                   fillType={FillType.FILLED}
                   shadow
                 >
-                  Fale Connosco
+                  Vender meu Curso
                 </ButtonElement>
-              </a>
+              </Link>
             </div>
           </div>
         </div>

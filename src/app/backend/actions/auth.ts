@@ -4,13 +4,17 @@ import { Constants } from "@/utils/Constants";
 
 import { signIn, signOut } from "@/auth";
 import AuthManager from "@/app/backend/business/auth/AuthManager";
+import { SignupType } from "@/utils/interfaces";
 
 export async function handleSocialLogin(formData: FormData) {
   const provider = formData.get(Constants.ACTIONS.LOGIN);
-  const courseId = formData.get("courseId") as string;
+  const courseId = formData.get(Constants.AUTH_ATTRIBUTES.COURSE_ID) as string;
+  const authType = formData.get(Constants.AUTH_ATTRIBUTES.SINGNUP_TYPE) as SignupType;
 
   if (provider === Constants.AUTH_PROVIDER.GOOGLE) {
-    await signIn(provider, { redirectTo: `${Constants.APP_ROUTES.COMPLETE_AUTH}/?courseId=${courseId}` });
+    await signIn(provider, {
+      redirectTo: Constants.APP_ROUTES.COMPLETE_AUTH(authType, courseId),
+    });
   }
 }
 

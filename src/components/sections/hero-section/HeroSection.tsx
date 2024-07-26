@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { Constants } from "@/utils/Constants";
 import AvatarImage1 from "@/assets/images/avatar1.png";
 import AvatarImage2 from "@/assets/images/avatar2.png";
@@ -8,9 +7,12 @@ import AvatarImage3 from "@/assets/images/avatar3.png";
 import AvatarImage4 from "@/assets/images/avatar4.png";
 import HeroImage from "@/assets/images/hero1.jpg";
 import Image from "next/image";
+import GenericSignupModal from "@/components/generic-signup-modal/GenericSignupModal";
+import { useState } from "react";
+import { SignupType } from "@/utils/interfaces";
 
 export default function HeroSection() {
-  const router = useRouter();
+  const [isOpenTutorSignupModal, setIsOpenTutorSignupModal] = useState(false);
 
   return (
     <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8 h-auto mt-24 md:mt-auto">
@@ -47,7 +49,11 @@ export default function HeroSection() {
             </a>
             <a
               className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-gray-200 bg-white text-gray-800 shadow-sm hover:bg-gray-50 focus:outline-none focus:bg-gray-50 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-white dark:hover:bg-neutral-800 dark:focus:bg-neutral-800"
-              href={`#${Constants.APP_ROUTES.TUTOR_SIGNUP}`}
+              href={`#`}
+              onClick={(event) => {
+                event.preventDefault();
+                setIsOpenTutorSignupModal(true);
+              }}
             >
               Vender meu curso
             </a>
@@ -139,6 +145,14 @@ export default function HeroSection() {
           </div>
         </div>
       </div>
+
+      <GenericSignupModal
+        open={isOpenTutorSignupModal}
+        onChange={(value) => {
+          setIsOpenTutorSignupModal(value);
+        }}
+        signupModalType={SignupType.TUTOR_SIGN_UP}
+      />
     </div>
   );
 }

@@ -6,24 +6,20 @@ import HeroImage4 from "@/assets/images/hero4.jpg";
 import HeroImage5 from "@/assets/images/hero5.jpg";
 import * as React from "react";
 import Image from "next/image";
-
-export enum SignupModalType {
-  TUTOR_SIGN_UP = "tutor-sign-up",
-  GENERAL_LOGIN = "general-login",
-}
+import { SignupType } from "@/utils/interfaces";
 
 interface TutorSignupModalProps {
   open: boolean;
   onChange: (isOpen: boolean) => void;
-  signupModalType?: SignupModalType;
+  signupModalType?: SignupType;
 }
 export default function GenericSignupModal(props: TutorSignupModalProps) {
   if (!props.signupModalType) {
     return null;
   }
 
-  const modalInfo: Record<SignupModalType, { title: JSX.Element | string; description: string; image: string }> = {
-    [SignupModalType.TUTOR_SIGN_UP]: {
+  const modalInfo: Record<SignupType, { title: JSX.Element | string; description: string; image: string }> = {
+    [SignupType.TUTOR_SIGN_UP]: {
       title: (
         <span>
           Torne-se um <span className={"text-green-400"}>Tutor</span> hoje mesmo
@@ -32,7 +28,7 @@ export default function GenericSignupModal(props: TutorSignupModalProps) {
       description: "Comece a vender os seus cursos online para uma audiência global.",
       image: HeroImage4.src,
     },
-    [SignupModalType.GENERAL_LOGIN]: {
+    [SignupType.GENERAL_LOGIN]: {
       title: "Encontre os melhores cursos online",
       description: "Encontre os melhores cursos online e comece a aprender hoje mesmo.",
       image: HeroImage5.src,
@@ -54,7 +50,7 @@ export default function GenericSignupModal(props: TutorSignupModalProps) {
 
               <form className={"flex flex-col gap-4 mt-5"} action={handleSocialLogin}>
                 <div className="flex justify-start">
-                  <input type={"hidden"} name={"auth-type"} value={props.signupModalType} />
+                  <input type={"hidden"} name={Constants.AUTH_ATTRIBUTES.SINGNUP_TYPE} value={props.signupModalType} />
                   <button
                     aria-label="Sign in with Google"
                     className="flex items-center bg-white border border-button-border-light rounded-md p-0.5 pr-3"

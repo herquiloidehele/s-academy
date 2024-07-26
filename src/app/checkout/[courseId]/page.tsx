@@ -31,7 +31,7 @@ export default async function page({ params: { courseId } }: IRouteParams) {
       <div className={"flex flex-col gap-3"}>
         <div className={"grid grid-cols-1 lg:grid-cols-[1.5fr_1fr] gap-10 grid-flow-dense"}>
           <div className={"flex flex-col gap-5 lg:gap-8"}>
-            <SignupForm />
+            <SignupForm courseId={course.id} />
 
             <div className={"block lg:hidden"}>
               <ProductCard course={course} />

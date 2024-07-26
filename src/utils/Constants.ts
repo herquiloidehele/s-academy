@@ -1,3 +1,5 @@
+import { SignupType } from "@/utils/interfaces";
+
 export const Constants = {
   UI: {
     HEADER_HEIGHT: "80px",
@@ -18,18 +20,24 @@ export const Constants = {
   AUTH_PROVIDER: {
     GOOGLE: "google",
   },
+  AUTH_ATTRIBUTES: {
+    SINGNUP_TYPE: "authType",
+    COURSE_ID: "courseId",
+  },
   ACTIONS: {
     LOGIN: "LOGIN",
   },
   APP_ROUTES: {
     HOME: "/",
     CHECKOUT: (courseId: string) => `/checkout/${courseId}`,
-    COMPLETE_AUTH: "/complete-auth",
+    COMPLETE_AUTH: (authType: SignupType, courseId: string) =>
+      `/complete-auth/?authType=${authType}${courseId ? `&courseId=${courseId}` : ""}`,
     COURSES: "/courses",
     COURSE_DETAILS_PUBLIC: (courseId: string) => `/course/${courseId}`,
-    TUTOR_SIGNUP: "/tutor-signup",
+    COMPLETE_TUTOR_SIGNUP: "/complete-tutor-signup",
     COURSE_DETAILS: (courseId: string) => `/courses/${courseId}`,
     LESSON: (courseId: string, moduleId: string, lessonId: string) => `/courses/${courseId}/${moduleId}/${lessonId}`,
+    TUTOR_DASHBOARD: "/tutor",
   },
   COURSE: {
     DEFAULT_COURSE_ID: "Q0us6qiWzX00sF2IZyQL",
@@ -39,6 +47,9 @@ export const Constants = {
 export const PROTECTED_ROUTES = [Constants.APP_ROUTES.COURSES];
 
 export enum FirebaseCollections {
+  TUTORS = "tutors",
+  STUDENTS = "students",
+  WITHDRAWALS = "withdrawals",
   USERS = "users",
   SUBSCRIPTIONS = "subscriptions",
   COURSES = "courses",

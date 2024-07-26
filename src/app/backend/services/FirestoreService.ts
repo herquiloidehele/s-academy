@@ -6,7 +6,7 @@ import FirebaseConfig from "@/app/backend/services/FirebaseConfig";
 class FirestoreService {
   private readonly LOG_TAG = "FirestoreService";
 
-  public async getDocumentById(collection: FirebaseCollections | string, id?: string | null) {
+  public async getDocumentById<T>(collection: FirebaseCollections | string, id?: string | null): Promise<T | null> {
     await this.waitForFirestore();
     Logger.debug(this.LOG_TAG, `Getting document by id: ${id}`);
 
@@ -28,7 +28,7 @@ class FirestoreService {
         ...documentSnapshot.data(),
         id: documentSnapshot.id,
         createdAt: documentSnapshot.createTime?.toDate()?.toISOString(),
-      };
+      } as T;
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error getting document by id:`, [id, error]);
       return null;

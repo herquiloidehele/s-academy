@@ -9,7 +9,8 @@ import { Constants } from "@/utils/Constants";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { handleLogout } from "@/app/backend/actions/auth";
-import GenericSignupModal, { SignupModalType } from "@/components/generic-signup-modal/GenericSignupModal";
+import GenericSignupModal from "@/components/generic-signup-modal/GenericSignupModal";
+import { SignupType } from "@/utils/interfaces";
 
 const START_STICKY_POSITION = 10;
 
@@ -19,7 +20,7 @@ interface HeaderProps {
 }
 export default function HeaderComponent(props: HeaderProps) {
   const [isOpenTutorSignupModal, setIsOpenTutorSignupModal] = useState(false);
-  const [signInType, setSignInType] = useState<SignupModalType>();
+  const [signInType, setSignInType] = useState<SignupType>();
 
   const { y: scrollPosition } = useScrollPosition();
 
@@ -59,7 +60,7 @@ export default function HeaderComponent(props: HeaderProps) {
               <div
                 className={clsx("text-stale-950 font-medium text-sm lg:text-md hover:text-green-400 text-black")}
                 onClick={() => {
-                  setSignInType(SignupModalType.TUTOR_SIGN_UP);
+                  setSignInType(SignupType.TUTOR_SIGN_UP);
                   setIsOpenTutorSignupModal(true);
                 }}
               >
@@ -75,7 +76,7 @@ export default function HeaderComponent(props: HeaderProps) {
                 shape={ButtonShape.ROUNDED}
                 shadow
                 onClick={() => {
-                  setSignInType(SignupModalType.GENERAL_LOGIN);
+                  setSignInType(SignupType.GENERAL_LOGIN);
                   setIsOpenTutorSignupModal(true);
                 }}
               >

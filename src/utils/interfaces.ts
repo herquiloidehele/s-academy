@@ -16,3 +16,8 @@ export interface IComponentErrorProps {
   error: Error;
   resetErrorBoundary: () => void;
 }
+
+export enum SignupType {
+  TUTOR_SIGN_UP = "tutor-sign-up",
+  GENERAL_LOGIN = "general-login",
+}

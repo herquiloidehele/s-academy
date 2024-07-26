@@ -51,7 +51,13 @@ function CourseFormPreview({ formData }: { formData: any }) {
         </div>
         <div>
           <strong className="block text-lg font-light">Video Promocional:</strong>
-          <video src={formData.promo_video} />
+          <video
+            controls
+            src={"https://youtu.be/78Ex_vru4SU?list=RDEM-Yw74Q2nLPAU8zT3co3EmQ"}
+            className="w-full h-fit object-cover"
+          >
+            Your browser does not support the video tag.
+          </video>
         </div>
       </div>
       <div className="my-6 flex justify-end gap-2">

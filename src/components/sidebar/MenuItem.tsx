@@ -88,7 +88,7 @@ function MenuItem({ menu }: { menu: ISidebarMenu }) {
               key={index}
               className={` cursor-pointer ${isMenuActive(item.path) ? "bg-active text-active-foreground" : ""} grid grid-cols-5 w-full py-3 gap-2`}
             >
-              <span className=" block text-lg font-extralight col-start-2 col-span-3" onClick={item.onClick}>
+              <span className=" block text-lg font-light col-start-2 col-span-3" onClick={item.onClick}>
                 {item.title}
               </span>
             </div>

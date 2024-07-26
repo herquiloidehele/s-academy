@@ -14,15 +14,15 @@ function FormPage(props) {
       title: "Course Information",
       key: "course-information",
       description: "Fill in the course information",
-      icon: <InformationCircleIcon className="w-3 h-3 md:w-6 md:h-6 font-extralight stroke-1 text-md" />,
+      icon: <InformationCircleIcon className="w-3 h-3 md:w-6 md:h-6 font-light stroke-1 text-md" />,
       page: <CourseFormInformation />,
-      state: true,
+      state: false,
     },
     {
       title: "Course Content",
       key: "course-Content",
       description: "Add course content",
-      icon: <FolderOpen className="w-3 h-3 md:w-6 md:h-6 font-extralight stroke-1 text-md" />,
+      icon: <FolderOpen className="w-3 h-3 md:w-6 md:h-6 font-light stroke-1 text-md" />,
       page: <CourseFormContent />,
       state: false,
     },
@@ -30,7 +30,7 @@ function FormPage(props) {
       title: "Course Pricing",
       key: "course-Pricing",
       description: "Set the course price",
-      icon: <CurrencyIcon className="w-3 h-3 md:w-6 md:h-6 font-extralight stroke-1 text-md" />,
+      icon: <CurrencyIcon className="w-3 h-3 md:w-6 md:h-6 font-light stroke-1 text-md" />,
       page: <CourseFormInformation />,
       state: false,
     },
@@ -38,7 +38,7 @@ function FormPage(props) {
       title: "Course Preview",
       key: "course-Preview",
       description: "Preview the course",
-      icon: <EyeIcon className="w-3 h-3 md:w-6 md:h-6 font-extralight stroke-1 text-md" />,
+      icon: <EyeIcon className="w-3 h-3 md:w-6 md:h-6 font-light stroke-1 text-md" />,
       page: <CourseFormInformation />,
       state: false,
     },
@@ -46,7 +46,7 @@ function FormPage(props) {
   const currentFormStep = useCourseStore((state) => state.currentFormStep);
   const router = useRouter();
   return (
-    <div className="flex flex-row gap-3">
+    <div className="flex flex-row gap-3 ">
       <FormStepper
         title="Registo de curso"
         steps={formSteps}

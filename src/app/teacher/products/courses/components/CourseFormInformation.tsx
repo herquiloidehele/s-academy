@@ -44,14 +44,16 @@ function CourseFormInformation(props) {
   return (
     <div>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 font-light text-lg leading-tight">
           <div className=" grid grid-cols-2 gap-3">
             <FormField
               control={form.control}
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name</FormLabel>
+                  <FormLabel className="font-light leading-tight" className="font-light leading-tight">
+                    Name
+                  </FormLabel>
                   <FormControl>
                     <Input placeholder="name" {...field} />
                   </FormControl>
@@ -65,7 +67,7 @@ function CourseFormInformation(props) {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel className="font-light leading-tight">Description</FormLabel>
                   <FormControl>
                     <Textarea placeholder="description" {...field} />
                   </FormControl>
@@ -79,7 +81,7 @@ function CourseFormInformation(props) {
               name="price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Price</FormLabel>
+                  <FormLabel className="font-light leading-tight">Price</FormLabel>
                   <div className="flex flex-row gap-2 items-center">
                     <FormControl>
                       <Input type="number" placeholder="price" {...field} />
@@ -95,7 +97,7 @@ function CourseFormInformation(props) {
               name="discount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Disconto</FormLabel>
+                  <FormLabel className="font-light leading-tight">Disconto</FormLabel>
                   <FormControl>
                     <Input type="number" placeholder="disconto" {...field} />
                   </FormControl>
@@ -108,7 +110,7 @@ function CourseFormInformation(props) {
               name="cover"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Capa</FormLabel>
+                  <FormLabel className="font-light leading-tight">Capa</FormLabel>
                   <FormControl>
                     <Input placeholder="cover" {...field} />
                   </FormControl>
@@ -121,7 +123,7 @@ function CourseFormInformation(props) {
               name="promo_video"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Video Promoção</FormLabel>
+                  <FormLabel className="font-light leading-tight">Video Promoção</FormLabel>
                   <FormControl>
                     <Input placeholder="url do video promocional" {...field} />
                   </FormControl>

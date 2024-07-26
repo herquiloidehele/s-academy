@@ -27,8 +27,8 @@ function CoursesCard({ course }: { course: ICourse }) {
       </a>
       <div className="p-5">
         <a href="#">
-          <h5 className="mb-2 text-xl font-bold tracking-tight text-gray-900 dark:text-white">
-            {truncateText(course.name, 50)}
+          <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
+            {truncateText(course.name, 25)}
           </h5>
         </a>
         <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">{truncateText(course.description, 75)}</p>

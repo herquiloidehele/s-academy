@@ -13,13 +13,31 @@ function ModuleItemList({ module, index }) {
             <div className="p-3 bg-blue-100 rounded-full">
               <FolderOpen className="size-8 text-blue-700 stroke-1" />
             </div>
-            <span className=" text text-green-600">Módulo {index + 1}:</span>
+            <span className=" text text-green-600 ">Módulo {index + 1}:</span>
             <span className="text-gray-500 text">{module.title}</span>
           </div>
           <div className="flex flex-row gap-2 col-span-1">
-            <Edit2Icon className="w-6 h-6 text-blue-700" />
-            <Trash2Icon className="w-6 h-6 text-red-700" />
-            <EyeIcon className="w-6 h-6 text-green-700" />
+            <Edit2Icon
+              className="w-6 h-6 stroke-1 text-blue-700"
+              onClick={(event) => {
+                event.preventDefault();
+                alert("hey edit");
+              }}
+            />
+            <Trash2Icon
+              className="w-6 h-6 stroke-1 text-red-700"
+              onClick={(event) => {
+                event.preventDefault();
+                alert("hey delete");
+              }}
+            />
+            <EyeIcon
+              className="w-6 h-6 stroke-1 text-green-700"
+              onClick={(event) => {
+                event.preventDefault();
+                alert("hey view");
+              }}
+            />
           </div>
         </div>
       </AccordionTrigger>

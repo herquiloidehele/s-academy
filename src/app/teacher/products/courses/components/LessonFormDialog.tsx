@@ -59,7 +59,7 @@ export function LessonFormDialog(props: { children: React.ReactNode; productID?:
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nome</FormLabel>
+                    <FormLabel className="font-light leading-tight">Nome</FormLabel>
                     <FormControl>
                       <Input placeholder="nome da aula" {...field} />
                     </FormControl>
@@ -72,7 +72,7 @@ export function LessonFormDialog(props: { children: React.ReactNode; productID?:
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Descrição</FormLabel>
+                    <FormLabel className="font-light leading-tight">Descrição</FormLabel>
                     <FormControl>
                       <Textarea placeholder="Descrição da aula" {...field} />
                     </FormControl>
@@ -82,7 +82,7 @@ export function LessonFormDialog(props: { children: React.ReactNode; productID?:
               />
 
               <div>
-                <FormLabel>Module</FormLabel>
+                <FormLabel className="font-light leading-tight">Module</FormLabel>
                 <div className="flex-grow">
                   <Popover open={openModulesCombobox} onOpenChange={setOpenModulesCombobox}>
                     <PopoverTrigger asChild>
@@ -129,7 +129,7 @@ export function LessonFormDialog(props: { children: React.ReactNode; productID?:
                 name="order"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Posição</FormLabel>
+                    <FormLabel className="font-light leading-tight">Posição</FormLabel>
                     <div className="flex flex-row gap-2 items-center">
                       <FormControl>
                         <Input type="number" placeholder="posição da aula" {...field} />

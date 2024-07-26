@@ -21,7 +21,7 @@ const Layout = ({ children }) => {
     asyncFunction();
   }, []);
   return (
-    <div className="flex flex-col w-full overflow-y-hidden fixed">
+    <div className="flex flex-col w-full overflow-y-hidden fixed bg-neutral-100">
       <div className="flex w-full border-b-2 fixed ">
         <Navbar></Navbar>
       </div>

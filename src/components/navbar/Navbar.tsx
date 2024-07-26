@@ -23,21 +23,19 @@ function Navbar() {
     {
       title: "Minha Conta",
       onClick: () => router.push("/teacher/account"),
-      icon: <User2Icon className="size-6 font-extralight self-center text-indigo-600 stroke-1 text-xm " />,
+      icon: <User2Icon className="size-6 font-light self-center text-indigo-600 stroke-1 text-xm " />,
       backgroundIconColor: "bg-indigo-100",
     },
     {
       title: "Ajuda",
       onClick: () => router.push("/teacher/account"),
-      icon: <InformationCircleIcon className="size-6 font-extralight self-center text-yellow-600 stroke-1 text-xm " />,
+      icon: <InformationCircleIcon className="size-6 font-light self-center text-yellow-600 stroke-1 text-xm " />,
       backgroundIconColor: "bg-yellow-100",
     },
     {
       title: "Sair",
       onClick: () => router.push("/teacher/account"),
-      icon: (
-        <ArrowRightStartOnRectangleIcon className="size-6 font-extralight self-center text-red-600 stroke-1 text-xm " />
-      ),
+      icon: <ArrowRightStartOnRectangleIcon className="size-6 font-light self-center text-red-600 stroke-1 text-xm " />,
       backgroundIconColor: "bg-red-100",
     },
   ];
@@ -60,7 +58,7 @@ function Navbar() {
           email={loggedUser?.email || "erciliomarquesmanhica@gmail.com"}
           userName={loggedUser?.email || "Ercilio Marques Manhica"}
         >
-          <User2Icon className="size-10 font-extralight self-center ml-auto stroke-1 text-xm mr-3 rounded-full border-2 border-green-600" />
+          <User2Icon className="size-10 font-light self-center ml-auto stroke-1 text-xm mr-3 rounded-full border-2 border-green-600" />
         </UserMenu>
       </div>
     </div>

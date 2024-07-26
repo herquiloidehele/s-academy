@@ -54,7 +54,7 @@ export function ModuleFormDialog(props: { children: React.ReactNode; productID?:
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Nome</FormLabel>
+                    <FormLabel className="font-light leading-tight">Nome</FormLabel>
                     <FormControl>
                       <Input placeholder="Nome do módulo" {...field} />
                     </FormControl>
@@ -67,7 +67,7 @@ export function ModuleFormDialog(props: { children: React.ReactNode; productID?:
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Descrição</FormLabel>
+                    <FormLabel className="font-light leading-tight">Descrição</FormLabel>
                     <FormControl>
                       <Textarea placeholder="Descrição do módulo" {...field} />
                     </FormControl>
@@ -80,7 +80,7 @@ export function ModuleFormDialog(props: { children: React.ReactNode; productID?:
                 name="order"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Posição</FormLabel>
+                    <FormLabel className="font-light leading-tight">Posição</FormLabel>
                     <div className="flex flex-row gap-2 items-center">
                       <FormControl>
                         <Input type="number" placeholder="posição da aula" {...field} />

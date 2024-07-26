@@ -27,7 +27,7 @@ function UserMenu({
       <PopoverContent className="p-4 w-full">
         <div className="flex flex-col gap-2">
           <div className="flex flex-col-2 gap-2">
-            <User2Icon className="size-10 font-extralight self-center ml-auto stroke-1 text-xm mr-3 rounded-full border-2 border-green-600" />
+            <User2Icon className="size-10 font-light self-center ml-auto stroke-1 text-xm mr-3 rounded-full border-2 border-green-600" />
             <div className="flex flex-col">
               <span className="block font-semibold text-gray-800">{userName}</span>
               <span className="block text-sm text-gray-500">{email}</span>

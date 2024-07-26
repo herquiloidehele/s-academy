@@ -3,6 +3,7 @@ import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/
 import { Edit2Icon, FolderOpen, Trash2Icon } from "lucide-react";
 import { EyeIcon } from "@heroicons/react/24/outline";
 import { LessonModuleListItems } from "@/app/teacher/products/courses/components/LessonModuleListItems";
+import { ModuleFormDialog } from "@/app/teacher/products/courses/components/ModuleFormDialog";
 
 function ModuleItemList({ module, index }) {
   return (
@@ -17,13 +18,9 @@ function ModuleItemList({ module, index }) {
             <span className="text-gray-500 text">{module.title}</span>
           </div>
           <div className="flex flex-row gap-2 col-span-1 justify-end">
-            <Edit2Icon
-              className="w-6 h-6 stroke-1 text-blue-700"
-              onClick={(event) => {
-                event.preventDefault();
-                alert("hey edit");
-              }}
-            />
+            <ModuleFormDialog>
+              <Edit2Icon className="w-6 h-6 stroke-1 text-blue-700" />
+            </ModuleFormDialog>
             <Trash2Icon
               className="w-6 h-6 stroke-1 text-red-700"
               onClick={(event) => {

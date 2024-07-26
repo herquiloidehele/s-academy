@@ -25,13 +25,13 @@ export default async function CourseListFetch() {
 
           <section className="text-gray-600 body-font">
             <div className="container px-0 md:px-0 py-8 md:py-16 mx-auto">
-              <Suspense fallback={<CourseListLoadingState />}>
-                <ErrorBoundary FallbackComponent={ErrorCourseListState}>
+              <ErrorBoundary FallbackComponent={ErrorCourseListState}>
+                <Suspense fallback={<CourseListLoadingState />}>
                   <AwaitFetch promise={fetchCoursePromise}>
                     {(courses: ICourse[]) => <CoursesList courses={courses} />}
                   </AwaitFetch>
-                </ErrorBoundary>
-              </Suspense>
+                </Suspense>
+              </ErrorBoundary>
             </div>
           </section>
         </div>

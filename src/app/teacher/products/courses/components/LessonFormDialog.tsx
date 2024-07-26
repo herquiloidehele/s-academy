@@ -8,7 +8,6 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Check, ChevronsUpDown, Command } from "lucide-react";
@@ -25,7 +24,6 @@ export const ILessonSchema = z.object({
 });
 
 export function LessonFormDialog(props: { children: React.ReactNode; productID?: number }) {
-  const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [openModulesCombobox, setOpenModulesCombobox] = React.useState(false);
   const modules = useCourseStore((state) => state.modules);
@@ -40,17 +38,12 @@ export function LessonFormDialog(props: { children: React.ReactNode; productID?:
     },
   });
 
-  async function onSubmit(values) {
-    if (props.productID) {
-      return;
-    } else {
-    }
-  }
+  async function onSubmit() {}
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{props.children}</DialogTrigger>
-      <DialogContent className="w-[90vw] h-[90vh] max-w-4xl overflow-y-auto">
+      <DialogContent className="w-[90vw] max-h-[90vh] h-fit max-w-4xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Formulário da Aula</DialogTitle>
         </DialogHeader>

@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import FileUploader from "@/components/file-uploader/FileUploader";
 
-function CourseFormInformation(props) {
+function CourseFormInformation() {
   const formSchema = z.object({
     name: z.string().min(1, { message: "O nome do curso é obrigatório." }),
     description: z
@@ -52,11 +52,9 @@ function CourseFormInformation(props) {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-light leading-tight" className="font-light leading-tight">
-                    Name
-                  </FormLabel>
+                  <FormLabel className="font-light leading-tight">Nome</FormLabel>
                   <FormControl>
-                    <Input placeholder="name" {...field} />
+                    <Input placeholder="name" className="bg-smoothBackground" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -68,9 +66,9 @@ function CourseFormInformation(props) {
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-light leading-tight">Description</FormLabel>
+                  <FormLabel className="font-light leading-tight">Descrição</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="description" {...field} />
+                    <Textarea placeholder="description" className="bg-smoothBackground" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -82,10 +80,10 @@ function CourseFormInformation(props) {
               name="price"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-light leading-tight">Price</FormLabel>
+                  <FormLabel className="font-light leading-tight">Preço</FormLabel>
                   <div className="flex flex-row gap-2 items-center">
                     <FormControl>
-                      <Input type="number" placeholder="price" {...field} />
+                      <Input type="number" placeholder="price" className="bg-smoothBackground" {...field} />
                     </FormControl>
                     <span>Mtn</span>
                   </div>
@@ -98,9 +96,9 @@ function CourseFormInformation(props) {
               name="discount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-light leading-tight">Disconto</FormLabel>
+                  <FormLabel className="font-light leading-tight">Desconto</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="disconto" {...field} />
+                    <Input type="number" placeholder="disconto" className="bg-smoothBackground" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

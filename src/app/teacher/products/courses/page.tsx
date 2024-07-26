@@ -73,7 +73,7 @@ export const courses = [
   },
 ];
 
-function CoursePage(props) {
+function CoursePage() {
   const router = useRouter();
   return (
     <div>
@@ -105,7 +105,7 @@ function CoursePage(props) {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-3">
+      <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-3 mb-8">
         {courses.map((course, index) => (
           <div key={index}>
             <motion.div

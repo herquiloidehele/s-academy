@@ -3,8 +3,8 @@ import { Loader2Icon, XIcon } from "lucide-react";
 
 function FileUploader({
   onFileChange,
-  label = "Click to upload",
-  instructions = "or drag and drop your file here",
+  label = "Clique para fazer upload",
+  instructions = "ou arraste e solte um arquivo",
   fileTypes = "SVG, PNG, JPG or MP4 (MAX. 800x400px)",
 }) {
   const [file, setFile] = useState(null);
@@ -47,9 +47,9 @@ function FileUploader({
       {file ? (
         <div className="relative w-full h-64 border-2 border-gray-300 rounded-lg overflow-hidden">
           {file.type.startsWith("image/") ? (
-            <img src={fileUrl} alt="Preview" className="w-full h-full object-cover" />
+            <img src={fileUrl} alt="Preview" className="w-full h-full object-cover rounded-lg" />
           ) : file.type.startsWith("video/") ? (
-            <video controls src={fileUrl} className="w-full h-full object-cover">
+            <video controls src={fileUrl} className="w-full h-full object-cover rounded-lg">
               Your browser does not support the video tag.
             </video>
           ) : null}
@@ -60,7 +60,7 @@ function FileUploader({
       ) : (
         <label
           htmlFor="dropzone-file"
-          className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600"
+          className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
         >
           {loading ? (
             <div className="flex flex-col items-center justify-center">

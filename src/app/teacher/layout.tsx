@@ -21,18 +21,20 @@ const Layout = ({ children }) => {
     asyncFunction();
   }, []);
   return (
-    <div className="flex flex-col w-full overflow-y-hidden fixed bg-neutral-100">
-      <div className="flex w-full border-b-2 fixed ">
+    <div className="flex flex-col w-full overflow-y-hidden fixed bg-neutral-100 bg-smoothBackground text-smoothForeground">
+      <div className="flex w-full border-b-2 fixed bg-smoothBackground text-smoothForeground">
         <Navbar></Navbar>
       </div>
 
-      <div className="flex flex-row gap-4 w-full h-screen mt-16">
+      <div className="flex flex-row gap-4 w-full h-screen mt-16 bg-smoothBackground text-smoothForeground">
         <div
           className={`h-screen bg-gradient-to-br from-green-400 to-green-800  transition duration-300 ease-in-out ${isOpened ? "w-fit" : "w-[80px]"}`}
         >
           <Sidebar menuItems={getMenuItemsByRole(USER_ROLES.TEACHER, [])}></Sidebar>
         </div>
-        <div className="overflow-y-auto bg-background items-center w-full p-12">{children}</div>
+        <div className="overflow-y-auto bg-smoothBackground text-smoothForeground items-center w-full p-12">
+          {children}
+        </div>
       </div>
     </div>
   );

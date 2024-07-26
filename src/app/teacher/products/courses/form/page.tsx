@@ -15,25 +15,25 @@ function FormPage() {
 
   const formSteps: IFormStep[] = [
     {
-      title: "Course Information",
+      title: "Informações do Curso",
       key: "course-information",
-      description: "Fill in the course information",
+      description: "Prencher informações do curso",
       icon: <InformationCircleIcon className="w-3 h-3 md:w-6 md:h-6 font-light stroke-1 text-md" />,
       page: <CourseFormInformation />,
       state: false,
     },
     {
-      title: "Course Content",
+      title: "Conteúdo do Curso",
       key: "course-Content",
-      description: "Add course content",
+      description: "Adicionar conteúdo ao curso",
       icon: <FolderOpen className="w-3 h-3 md:w-6 md:h-6 font-light stroke-1 text-md" />,
       page: <CourseFormContent />,
       state: false,
     },
     {
-      title: "Course Preview",
+      title: "Revisão dos Dados",
       key: "course-Preview",
-      description: "Preview the course",
+      description: "Rever os dados do curso",
       icon: <EyeIcon className="w-3 h-3 md:w-6 md:h-6 font-light stroke-1 text-md" />,
       page: (
         <CourseFormReview

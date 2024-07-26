@@ -35,7 +35,11 @@ function FormPage() {
       key: "course-Preview",
       description: "Preview the course",
       icon: <EyeIcon className="w-3 h-3 md:w-6 md:h-6 font-light stroke-1 text-md" />,
-      page: <CourseFormReview formData={{ ...courses[0], modules: modules, title: "tsee", tutorId: "eee" }} />,
+      page: (
+        <CourseFormReview
+          formData={{ ...courses[0], modules: modules, title: "Metódo Educação Intensiva", tutorId: "1233" }}
+        />
+      ),
       state: false,
     },
   ];

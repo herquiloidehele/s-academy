@@ -48,7 +48,7 @@ function Navbar() {
           <Bars3Icon className="w-4 h-4 md:w-8 md:h-8" onClick={() => setIsOpen(true)} />
         )}
       </div>
-      <div className="flex items-center justify-center bg-white w-32 h-16 rounded-l">
+      <div className="flex items-center justify-center w-32 h-16 rounded-l">
         <AppLogo className="h-12 lg:h-7 w-auto" />
       </div>
 

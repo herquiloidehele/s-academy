@@ -6,7 +6,6 @@ import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/
 import { Constants } from "@/utils/Constants";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
-import { LessonFormDialog } from "@/app/teacher/products/courses/components/LessonFormDialog";
 import { ModuleFormDialog } from "@/app/teacher/products/courses/components/ModuleFormDialog";
 import ModuleItemList from "@/app/teacher/products/courses/components/ModuleItemList";
 
@@ -22,7 +21,7 @@ function CourseFormContent(props) {
             shape={ButtonShape.SQUARE}
             size={ButtonSize.SMALL}
             fillType={FillType.FILLED}
-            type={ButtonType.SECONDARY}
+            type={ButtonType.PRIMARY}
             onClick={() => router.push(Constants.APP_ROUTES.TEACHER.NEW_COURSES)}
           >
             <div className="flex flex-row gap-2 justify-center items-center">
@@ -31,20 +30,6 @@ function CourseFormContent(props) {
             </div>
           </ButtonElement>
         </ModuleFormDialog>
-        <LessonFormDialog>
-          <ButtonElement
-            shape={ButtonShape.SQUARE}
-            size={ButtonSize.SMALL}
-            fillType={FillType.FILLED}
-            type={ButtonType.PRIMARY}
-            onClick={() => router.push(Constants.APP_ROUTES.TEACHER.NEW_COURSES)}
-          >
-            <div className="flex flex-row gap-2 justify-center items-center">
-              <PlusIcon className="size-8" />
-              <span>Adicionar Aula</span>
-            </div>
-          </ButtonElement>
-        </LessonFormDialog>
       </div>
       <Accordion type="single" collapsible>
         {modules.map((module, index) => (

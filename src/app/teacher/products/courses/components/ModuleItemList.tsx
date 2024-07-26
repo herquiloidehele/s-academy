@@ -6,8 +6,12 @@ import { LessonModuleListItems } from "@/app/teacher/products/courses/components
 import { ModuleFormDialog } from "@/app/teacher/products/courses/components/ModuleFormDialog";
 
 function ModuleItemList({ module, index }) {
+  const [showActions, setShowActions] = React.useState(false);
+  const handleShowActions = () => setShowActions(true);
+  const handleHideActions = () => setShowActions(false);
+
   return (
-    <AccordionItem key={module.id} value={module.id}>
+    <AccordionItem key={module.id} value={module.id} onMouseEnter={handleShowActions} onMouseLeave={handleHideActions}>
       <AccordionTrigger>
         <div className="grid grid-cols-8 gap-2 font-light items-center w-full">
           <div className="flex flex-row gap-2 col-span-7 items-center">
@@ -17,7 +21,7 @@ function ModuleItemList({ module, index }) {
             <span className=" text text-green-600 ">Módulo {index + 1}:</span>
             <span className="text-gray-500 text">{module.title}</span>
           </div>
-          <div className="flex flex-row gap-2 col-span-1 justify-end">
+          <div className={`flex flex-row gap-2 col-span-1 justify-end ${showActions ? "block" : "hidden"}`}>
             <ModuleFormDialog>
               <Edit2Icon className="w-6 h-6 stroke-1 text-blue-700" />
             </ModuleFormDialog>

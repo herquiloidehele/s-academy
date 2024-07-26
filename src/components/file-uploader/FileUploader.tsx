@@ -1,15 +1,21 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Loader2Icon, XIcon } from "lucide-react";
 
 function FileUploader({
+  id,
   onFileChange,
   label = "Clique para fazer upload",
   instructions = "ou arraste e solte um arquivo",
+  mimeType,
   fileTypes = "SVG, PNG, JPG or MP4 (MAX. 800x400px)",
 }) {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    setFile(null);
+  }, [mimeType]);
 
   const handleDragOver = (event) => {
     event.preventDefault();
@@ -43,7 +49,7 @@ function FileUploader({
   const fileUrl = file ? URL.createObjectURL(file) : null;
 
   return (
-    <div className="flex items-center justify-center w-full" onDragOver={handleDragOver} onDrop={handleDrop}>
+    <div id={id} className="flex items-center justify-center w-full" onDragOver={handleDragOver} onDrop={handleDrop}>
       {file ? (
         <div className="relative w-full h-64 border-2 border-gray-300 rounded-lg overflow-hidden">
           {file.type.startsWith("image/") ? (
@@ -59,7 +65,7 @@ function FileUploader({
         </div>
       ) : (
         <label
-          htmlFor="dropzone-file"
+          htmlFor={`dropzone-file-${id}`}
           className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
         >
           {loading ? (
@@ -94,8 +100,9 @@ function FileUploader({
             </div>
           )}
           <input
-            id="dropzone-file"
+            id={`dropzone-file-${id}`}
             type="file"
+            accept={mimeType}
             className="hidden"
             ref={inputRef}
             onChange={(e) => handleFileUpload(e.target.files?.[0])}

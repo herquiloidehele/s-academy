@@ -1,6 +1,5 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import React, { useState } from "react";
@@ -9,11 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Check, ChevronsUpDown, Command } from "lucide-react";
 import useCourseStore from "@/app/teacher/products/courses/courseStore";
-import { CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { cn } from "@/lib/utils";
 import ButtonElement, { ButtonShape, ButtonSize, FillType } from "@/components/shared/Button";
 import FileUploader from "@/components/file-uploader/FileUploader";
 
@@ -77,49 +72,50 @@ export function LessonFormDialog(props: { children: React.ReactNode; productID?:
                     </FormItem>
                   )}
                 />
-                <div>
-                  <FormLabel className="font-light leading-tight">Module</FormLabel>
-                  <div className="flex-grow">
-                    <Popover open={openModulesCombobox} onOpenChange={setOpenModulesCombobox}>
-                      <PopoverTrigger asChild>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          aria-expanded={openModulesCombobox}
-                          className="w-full justify-between"
-                        >
-                          Selecionar Módulo...
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-full p-0">
-                        <Command>
-                          <CommandInput placeholder="Procurar módulo..." />
-                          <CommandEmpty>No Products found.</CommandEmpty>
-                          <CommandGroup>
-                            <CommandList>
-                              {modules &&
-                                modules.map((module, index) => (
-                                  <CommandItem
-                                    key={index}
-                                    value={module.id.toString()}
-                                    onSelect={(currentValue) => {
-                                      setValue(currentValue);
-                                    }}
-                                  >
-                                    <Check
-                                      className={cn("mr-2 h-4 w-4", value === module.id ? "opacity-100" : "opacity-0")}
-                                    />
-                                    {module.title}
-                                  </CommandItem>
-                                ))}
-                            </CommandList>
-                          </CommandGroup>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-                </div>
+                {/*//ToDo: this will be how a user will change module of a lesson in case he wants to change it*/}
+                {/*<div>*/}
+                {/*  <FormLabel className="font-light leading-tight">Module</FormLabel>*/}
+                {/*  <div className="flex-grow">*/}
+                {/*    <Popover open={openModulesCombobox} onOpenChange={setOpenModulesCombobox}>*/}
+                {/*      <PopoverTrigger asChild>*/}
+                {/*        <Button*/}
+                {/*          variant="outline"*/}
+                {/*          role="combobox"*/}
+                {/*          aria-expanded={openModulesCombobox}*/}
+                {/*          className="w-full justify-between"*/}
+                {/*        >*/}
+                {/*          Selecionar Módulo...*/}
+                {/*          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />*/}
+                {/*        </Button>*/}
+                {/*      </PopoverTrigger>*/}
+                {/*      <PopoverContent className="w-full p-0">*/}
+                {/*        <Command>*/}
+                {/*          <CommandInput placeholder="Procurar módulo..." />*/}
+                {/*          <CommandEmpty>No Products found.</CommandEmpty>*/}
+                {/*          <CommandGroup>*/}
+                {/*            <CommandList>*/}
+                {/*              {modules &&*/}
+                {/*                modules.map((module, index) => (*/}
+                {/*                  <CommandItem*/}
+                {/*                    key={index}*/}
+                {/*                    value={module.id.toString()}*/}
+                {/*                    onSelect={(currentValue) => {*/}
+                {/*                      setValue(currentValue);*/}
+                {/*                    }}*/}
+                {/*                  >*/}
+                {/*                    <Check*/}
+                {/*                      className={cn("mr-2 h-4 w-4", value === module.id ? "opacity-100" : "opacity-0")}*/}
+                {/*                    />*/}
+                {/*                    {module.title}*/}
+                {/*                  </CommandItem>*/}
+                {/*                ))}*/}
+                {/*            </CommandList>*/}
+                {/*          </CommandGroup>*/}
+                {/*        </Command>*/}
+                {/*      </PopoverContent>*/}
+                {/*    </Popover>*/}
+                {/*  </div>*/}
+                {/*</div>*/}
                 <FormField
                   control={form.control}
                   name="order"
@@ -143,6 +139,7 @@ export function LessonFormDialog(props: { children: React.ReactNode; productID?:
                       <FormLabel className="font-light leading-tight">Video Aula</FormLabel>
                       <FormControl>
                         <FileUploader
+                          mimeType="video/*"
                           fileTypes={["MP4"]}
                           onFileChange={(file) => {
                             console.log("file", file);

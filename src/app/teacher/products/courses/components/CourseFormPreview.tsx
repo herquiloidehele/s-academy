@@ -23,23 +23,23 @@ function CourseFormPreview({ formData }: { formData: any }) {
     <div className="container mx-auto p-4">
       <div className="grid grid-cols-2 gap-2 p-4 rounded-md shadow-md space-y-4">
         <div>
-          <strong className="block font-light">Nome:</strong>
+          <strong className="block font-bold">Nome:</strong>
           <p>{formData.title}</p>
         </div>
         <div>
-          <strong className="block font-light">Descrição:</strong>
+          <strong className="block font-bold">Descrição:</strong>
           <p>{formData.description}</p>
         </div>
         <div>
-          <strong className="block text-lg font-light">Preço:</strong>
+          <strong className="block text-lg font-bold">Preço:</strong>
           <p>{formData.price} Mtn</p>
         </div>
         <div>
-          <strong className="block text-lg font-light">Disconto:</strong>
+          <strong className="block text-lg font-bold">Disconto:</strong>
           <p>{formData.discount}%</p>
         </div>
         <div>
-          <strong className="block text-lg font-light">Capa:</strong>
+          <strong className="block text-lg font-bold">Capa:</strong>
           <img
             loading="lazy"
             width="100"
@@ -50,7 +50,7 @@ function CourseFormPreview({ formData }: { formData: any }) {
           />
         </div>
         <div>
-          <strong className="block text-lg font-light">Video Promocional:</strong>
+          <strong className="block text-lg font-bold">Video Promocional:</strong>
           <video
             controls
             src={"https://youtu.be/78Ex_vru4SU?list=RDEM-Yw74Q2nLPAU8zT3co3EmQ"}

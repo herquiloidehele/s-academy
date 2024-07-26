@@ -1,4 +1,3 @@
-"use client";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -46,7 +45,7 @@ function CourseFormInformation() {
     <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 font-light text-lg leading-tight">
-          <div className=" grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3">
             <FormField
               control={form.control}
               name="name"
@@ -83,9 +82,15 @@ function CourseFormInformation() {
                   <FormLabel className="font-light leading-tight">Preço</FormLabel>
                   <div className="flex flex-row gap-2 items-center">
                     <FormControl>
-                      <Input type="number" placeholder="price" className="bg-smoothBackground" {...field} />
+                      <Input
+                        type="number"
+                        placeholder="price"
+                        className="bg-smoothBackground"
+                        {...field}
+                        onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                      />
                     </FormControl>
-                    <span>Mtn</span>
+                    <span>MZN</span>
                   </div>
                   <FormMessage />
                 </FormItem>
@@ -96,9 +101,15 @@ function CourseFormInformation() {
               name="discount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-light leading-tight">Desconto</FormLabel>
+                  <FormLabel className="font-light leading-tight">Desconto (%)</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="disconto" className="bg-smoothBackground" {...field} />
+                    <Input
+                      type="number"
+                      placeholder="disconto"
+                      className="bg-smoothBackground"
+                      {...field}
+                      onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -112,7 +123,8 @@ function CourseFormInformation() {
                   <FormLabel className="font-light leading-tight">Capa</FormLabel>
                   <FormControl>
                     <FileUploader
-                      key="cover"
+                      id="cover"
+                      mimeType="image/*"
                       fileTypes={["SVG, PNG, JPG"]}
                       onFileChange={(file) => {
                         console.log("file", file);
@@ -131,7 +143,8 @@ function CourseFormInformation() {
                   <FormLabel className="font-light leading-tight">Video Promoção</FormLabel>
                   <FormControl>
                     <FileUploader
-                      key="promo_video"
+                      id="promo_video"
+                      mimeType="video/*"
                       fileTypes={["MP4"]}
                       onFileChange={(file) => {
                         console.log("file", file);

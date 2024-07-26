@@ -16,7 +16,7 @@ function FormPage(props) {
       description: "Fill in the course information",
       icon: <InformationCircleIcon className="w-3 h-3 md:w-6 md:h-6 font-extralight stroke-1 text-md" />,
       page: <CourseFormInformation />,
-      state: false,
+      state: true,
     },
     {
       title: "Course Content",

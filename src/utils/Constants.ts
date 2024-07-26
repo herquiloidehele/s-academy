@@ -31,7 +31,7 @@ export const Constants = {
     COURSE_DETAILS: (courseId: string) => `/courses/${courseId}`,
     LESSON: (courseId: string, moduleId: string, lessonId: string) => `/courses/${courseId}/${moduleId}/${lessonId}`,
     TEACHER: {
-      HOME: "/teacher",
+      HOME: "/teacher/summary",
       PRODUCTS: "/teacher/products",
       COURSES: "/teacher/products/courses",
       NEW_COURSES: "/teacher/products/courses/form",

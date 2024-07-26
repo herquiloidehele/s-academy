@@ -21,7 +21,6 @@ function CourseFormInformation(props) {
       .number()
       .min(0, { message: "O desconto deve ser um número positivo." })
       .max(100, { message: "O desconto não pode exceder 100%." }),
-    duration: z.string().min(1, { message: "A duração é obrigatória." }),
     cover: z.string().url({ message: "A URL da imagem de capa deve ser válida." }),
     promo_video: z.string().url({ message: "A URL do vídeo promocional deve ser válida." }),
   });
@@ -33,7 +32,6 @@ function CourseFormInformation(props) {
       description: "",
       price: 0,
       discount: 0,
-      duration: "",
       categories: [],
       cover: "",
       promo_video: "",
@@ -47,101 +45,91 @@ function CourseFormInformation(props) {
     <div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="name" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
-                <FormControl>
-                  <Textarea placeholder="description" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="cover"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Capa</FormLabel>
-                <FormControl>
-                  <Input placeholder="cover" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="price"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Price</FormLabel>
-                <div className="flex flex-row gap-2 items-center">
+          <div className=" grid grid-cols-2 gap-3">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Name</FormLabel>
                   <FormControl>
-                    <Input type="number" placeholder="price" {...field} />
+                    <Input placeholder="name" {...field} />
                   </FormControl>
-                  <span>Mtn</span>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="discount"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Disconto</FormLabel>
-                <FormControl>
-                  <Input type="number" placeholder="disconto" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="duration"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Duração</FormLabel>
-                <FormControl>
-                  <Input type="duration" placeholder="duração do curso" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="promo_video"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Video Promoção</FormLabel>
-                <FormControl>
-                  <Input placeholder="url do video promocional" {...field} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="description" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Price</FormLabel>
+                  <div className="flex flex-row gap-2 items-center">
+                    <FormControl>
+                      <Input type="number" placeholder="price" {...field} />
+                    </FormControl>
+                    <span>Mtn</span>
+                  </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="discount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Disconto</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder="disconto" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="cover"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Capa</FormLabel>
+                  <FormControl>
+                    <Input placeholder="cover" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="promo_video"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Video Promoção</FormLabel>
+                  <FormControl>
+                    <Input placeholder="url do video promocional" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
           <DialogFooter>
             <Button type="submit">Próximo</Button>
           </DialogFooter>

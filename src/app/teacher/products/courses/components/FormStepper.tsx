@@ -20,7 +20,7 @@ function FormStepper({ steps, onBackClick, title }: { steps: IFormStep[]; onBack
         {steps.map((step, index) => (
           <li key={step.key} className="mb-10 ms-6 cursor-pointer" onClick={() => setCurrentFormStep(step)}>
             <span
-              className={`absolute flex items-center justify-center w-8 h-8 ${step.state || currentFormStep.key == step.key ? "bg-green-200" : "bg-yellow-100"} rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900`}
+              className={`absolute flex items-center justify-center  w-8 h-8 ${step.state || currentFormStep.key == step.key ? "bg-green-100 text-green-600" : "bg-gray-100 text-blue-600"} rounded-full -start-4 ring-4 ring-white dark:ring-gray-900 dark:bg-green-900`}
             >
               {step.state ? (
                 <svg

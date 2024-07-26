@@ -11,7 +11,7 @@ function Sidebar({ menuItems }: ISideMenuProps) {
   const pathName = usePathname();
 
   return (
-    <div>
+    <div className=" h-screen text-white w-fit">
       <ul className="h-fit">
         {menuItems.map((menu, index) => {
           const isActive = pathName.startsWith(`/${menu.path}`);

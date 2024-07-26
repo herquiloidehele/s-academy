@@ -6,9 +6,11 @@ import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { Constants } from "@/utils/Constants";
+import { motion } from "framer-motion";
 
 const courses = [
   {
+    id: "1",
     name: "Introdução ao Desenvolvimento Web",
     description: "Aprenda os fundamentos do desenvolvimento web, incluindo HTML, CSS e JavaScript.",
     price: 49.99,
@@ -20,6 +22,7 @@ const courses = [
     promo_video: "https://example.com/videos/webdev_intro.mp4",
   },
   {
+    id: "2",
     name: "Curso Completo de React",
     description: "Domine o desenvolvimento de aplicações front-end com React, incluindo hooks e state management.",
     price: 99.99,
@@ -31,6 +34,7 @@ const courses = [
     promo_video: "https://example.com/videos/react_complete.mp4",
   },
   {
+    id: "3",
     name: "Design de UI/UX para Iniciantes",
     description:
       "Aprenda os princípios de design de interface e experiência do usuário para criar produtos digitais envolventes.",
@@ -43,6 +47,7 @@ const courses = [
     promo_video: "https://example.com/videos/uiux_design.mp4",
   },
   {
+    id: "4",
     name: "Python para Data Science",
     description: "Explore o mundo da ciência de dados com Python, incluindo pandas, numpy e visualização de dados.",
     price: 79.99,
@@ -54,6 +59,7 @@ const courses = [
     promo_video: "https://example.com/videos/python_datascience.mp4",
   },
   {
+    id: "5",
     name: "Design de UI/UX para Iniciantes",
     description:
       "Aprenda os princípios de design de interface e experiência do usuário para criar produtos digitais envolventes.",
@@ -102,7 +108,14 @@ function CoursePage(props) {
       <div className="grid grid-cols-4 gap-3">
         {courses.map((course, index) => (
           <div key={index}>
-            <CoursesCard course={course} />
+            <motion.div
+              key={`${course.id}-${index}`}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: index * 0.1 }}
+            >
+              <CoursesCard course={course} />
+            </motion.div>
           </div>
         ))}
       </div>

@@ -23,17 +23,22 @@ function Navbar() {
     {
       title: "Minha Conta",
       onClick: () => router.push("/teacher/account"),
-      icon: <User2Icon className="size-6 font-extralight self-center stroke-1 text-xm mr-3" />,
+      icon: <User2Icon className="size-6 font-extralight self-center text-indigo-600 stroke-1 text-xm " />,
+      backgroundIconColor: "bg-indigo-100",
     },
     {
       title: "Ajuda",
       onClick: () => router.push("/teacher/account"),
-      icon: <InformationCircleIcon className="size-6 font-extralight self-center stroke-1 text-xm mr-3" />,
+      icon: <InformationCircleIcon className="size-6 font-extralight self-center text-yellow-600 stroke-1 text-xm " />,
+      backgroundIconColor: "bg-yellow-100",
     },
     {
       title: "Sair",
       onClick: () => router.push("/teacher/account"),
-      icon: <ArrowRightStartOnRectangleIcon className="size-6 font-extralight self-center stroke-1 text-xm mr-3" />,
+      icon: (
+        <ArrowRightStartOnRectangleIcon className="size-6 font-extralight self-center text-red-600 stroke-1 text-xm " />
+      ),
+      backgroundIconColor: "bg-red-100",
     },
   ];
   return (

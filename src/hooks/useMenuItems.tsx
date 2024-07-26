@@ -13,7 +13,7 @@ export const useMenuItems = () => {
       path: Constants.APP_ROUTES.TEACHER.HOME,
       title: "Home",
       permissions: [USER_ROLES.TEACHER],
-      icon: <HomeIcon className="w-3 h-3 md:w-6 md:h-6 font-extralight stroke-1 text-md" />,
+      icon: <HomeIcon className="w-3 h-3 md:w-6 md:h-6  stroke-1 text-md" />,
       onClick: () => {
         router.push(Constants.APP_ROUTES.TEACHER.HOME);
       },
@@ -21,26 +21,15 @@ export const useMenuItems = () => {
     },
 
     {
-      key: Constants.APP_ROUTES.TEACHER.PRODUCTS,
-      path: Constants.APP_ROUTES.TEACHER.PRODUCTS,
-      title: "Products",
+      key: Constants.APP_ROUTES.TEACHER.COURSES,
+      path: Constants.APP_ROUTES.TEACHER.COURSES,
+      title: "Courses",
       permissions: [USER_ROLES.TEACHER],
-      icon: <FolderIcon className="w-3 h-3 md:w-6 md:h-6 font-extralight stroke-1 text-md" />,
+      icon: <FolderIcon className="w-3 h-3 md:w-6 md:h-6  stroke-1 text-md" />,
       onClick: () => {
-        router.push(Constants.APP_ROUTES.TEACHER.PRODUCTS);
+        router.push(Constants.APP_ROUTES.TEACHER.COURSES);
       },
-      items: [
-        {
-          title: "Courses",
-          path: Constants.APP_ROUTES.TEACHER.COURSES,
-          onClick: () => router.push(Constants.APP_ROUTES.TEACHER.COURSES),
-        },
-        {
-          title: "Ebooks",
-          path: Constants.APP_ROUTES.TEACHER.EBOOKS,
-          onClick: () => router.push(Constants.APP_ROUTES.TEACHER.EBOOKS),
-        },
-      ],
+      items: [],
     },
 
     {
@@ -48,22 +37,11 @@ export const useMenuItems = () => {
       path: Constants.APP_ROUTES.TEACHER.WALLET.HOME,
       title: "Wallet",
       permissions: [USER_ROLES.TEACHER],
-      icon: <WalletIcon className="w-3 h-3 md:w-6 md:h-6 font-extralight stroke-1 text-md" />,
+      icon: <WalletIcon className="w-3 h-3 md:w-6 md:h-6  stroke-1 text-md" />,
       onClick: () => {
         router.push(Constants.APP_ROUTES.TEACHER.WALLET.HOME);
       },
-      items: [
-        {
-          title: "Balance",
-          path: Constants.APP_ROUTES.TEACHER.WALLET.BALANCE,
-          onClick: () => router.push(Constants.APP_ROUTES.TEACHER.WALLET.BALANCE),
-        },
-        {
-          title: "Withdraw",
-          path: Constants.APP_ROUTES.TEACHER.WALLET.WITHDRAW,
-          onClick: () => router.push(Constants.APP_ROUTES.TEACHER.WALLET.WITHDRAW),
-        },
-      ],
+      items: [],
     },
   ];
 

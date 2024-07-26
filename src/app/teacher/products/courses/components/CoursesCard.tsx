@@ -22,7 +22,7 @@ function CoursesCard({ course }: { course: ICourse }) {
           height="100"
           src={course.cover}
           alt="Course cover"
-          className="relative h-[250px] w-full object-cover transition-transform duration-300 hover:scale-105 focus:scale-105"
+          className="relative h-[250px] w-full object-cover "
         />
       </a>
       <div className="p-5">
@@ -35,9 +35,9 @@ function CoursesCard({ course }: { course: ICourse }) {
         <div className="w-full flex flex-row justify-end">
           <a
             href="#"
-            className="self-end inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+            className="self-end inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-green-400 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
           >
-            Read more
+            Ver
             <svg
               className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
               aria-hidden="true"

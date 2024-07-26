@@ -23,30 +23,32 @@ export interface ISidebarMenu {
 }
 
 function MenuItem({ menu }: { menu: ISidebarMenu }) {
-  const isOpened = useMenuStore((state) => state.isOpened);
   const setIsOpen = useMenuStore((state) => state.setIsOpen);
   const [isOpenedSubmenu, setIsOpenedSubmenu] = React.useState(true);
   const pathName = usePathname();
+  const isOpened = useMenuStore((state) => state.isOpened);
+
+  function onClickMenuHandle() {
+    if (menu.items.length === 0 && menu.onClick) {
+      menu.onClick();
+    } else {
+      setIsOpen(true);
+      setIsOpenedSubmenu((prevState) => !prevState);
+    }
+  }
 
   const CategoryTitle = () => (
     <div
-      onClick={() => {
-        if (menu.items.length === 0 && menu.onClick) {
-          menu.onClick();
-        } else {
-          setIsOpen(true);
-          setIsOpenedSubmenu((prevState) => !prevState);
-        }
-      }}
-      className={`cursor-pointer ${isSingleMenuActive(menu.path) && menu.items.length == 0 ? "bg-green-100" : ""} ${!isOpened ? `p-5 w-fit ${menu.isActive ? "bg-green-100" : ""}` : "grid grid-cols-5 w-full py-5 gap-2 "} ${!isOpenedSubmenu ? "bg-green-100" : ""} px-4`}
+      onClick={onClickMenuHandle}
+      className={`flex flex-row cursor-pointer px-4  py-3 gap-6 ${isOpened ? "pr-16" : "px-3"}  ${isSingleMenuActive(menu.path) && menu.items.length == 0 ? "bg-active text-active-foreground" : ""}  `}
     >
-      <div className="col-span-1">{menu.icon}</div>
+      <div>{menu.icon}</div>
 
-      <span className={`block col-span-3 text-textOnPrimary  text-md font-extralight ${isOpened ? "block" : "hidden"}`}>
+      <span className={` text-textOnPrimary  text-md font-semibold ${isOpened ? "block" : "hidden"}`}>
         {menu.title}
       </span>
 
-      <div className={`flex flex-row items-center col-span-1 justify-center ${isOpened ? "block" : "hidden"}`}>
+      <div className={`flex flex-row items-center justify-center`}>
         {menu.items.length > 0 &&
           (isOpenedSubmenu ? (
             <ArrowUpIcon className="stroke-1 size-3" onClick={() => setIsOpenedSubmenu(false)} />
@@ -71,11 +73,11 @@ function MenuItem({ menu }: { menu: ISidebarMenu }) {
   function isSingleMenuActive(path: string) {
     const normalizedPathName = pathName.trim().toLowerCase();
     const normalizedItemPath = `${path.trim().toLowerCase()}`;
-    return normalizedPathName == normalizedItemPath;
+    return normalizedPathName.startsWith(normalizedItemPath);
   }
 
   return (
-    <div className="w-full ">
+    <div className="w-full">
       <CategoryTitle />
       {isOpenedSubmenu &&
         isOpened &&
@@ -84,7 +86,7 @@ function MenuItem({ menu }: { menu: ISidebarMenu }) {
           return (
             <div
               key={index}
-              className={` cursor-pointer focus:bg-primary ${isMenuActive(item.path) ? "bg-green-400 text-primary-foreground" : ""} ${!isOpened ? "px-5 w-fit" : "grid grid-cols-5 w-full py-3 gap-2"}`}
+              className={` cursor-pointer ${isMenuActive(item.path) ? "bg-active text-active-foreground" : ""} grid grid-cols-5 w-full py-3 gap-2`}
             >
               <span className=" block text-lg font-extralight col-start-2 col-span-3" onClick={item.onClick}>
                 {item.title}

@@ -7,9 +7,9 @@ import { clsx } from "clsx";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 import { Constants } from "@/utils/Constants";
 import { useRouter } from "next/navigation";
-import LoginModal from "@/components/login-modal/LoginModal";
 import Link from "next/link";
 import { handleLogout } from "@/app/backend/actions/auth";
+import GenericSignupModal, { SignupModalType } from "@/components/generic-signup-modal/GenericSignupModal";
 
 const START_STICKY_POSITION = 10;
 
@@ -18,7 +18,8 @@ interface HeaderProps {
   isAuthenticated?: any;
 }
 export default function HeaderComponent(props: HeaderProps) {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [isOpenTutorSignupModal, setIsOpenTutorSignupModal] = useState(false);
+  const [signInType, setSignInType] = useState<SignupModalType>();
 
   const { y: scrollPosition } = useScrollPosition();
 
@@ -30,7 +31,7 @@ export default function HeaderComponent(props: HeaderProps) {
 
   return (
     <header
-      className={clsx(`fixed top-0 left-0 w-full z-[200] flex justify-center px-4 py-4 lg:px-8 lg:py-6`, {
+      className={clsx(`fixed top-0 left-0 w-full z-[10] flex justify-center px-4 py-4 lg:px-8 lg:py-6`, {
         "shadow-sm bg-white": isSticky,
         "bg-white border border-b-gray-100": props.solidBg,
       })}
@@ -55,12 +56,15 @@ export default function HeaderComponent(props: HeaderProps) {
             </li>
 
             <li className={"hidden md:inline-block"}>
-              <Link
-                href={Constants.APP_ROUTES.TUTOR_SIGNUP}
+              <div
                 className={clsx("text-stale-950 font-medium text-sm lg:text-md hover:text-green-400 text-black")}
+                onClick={() => {
+                  setSignInType(SignupModalType.TUTOR_SIGN_UP);
+                  setIsOpenTutorSignupModal(true);
+                }}
               >
                 Vender meu curso
-              </Link>
+              </div>
             </li>
 
             <li>
@@ -71,7 +75,8 @@ export default function HeaderComponent(props: HeaderProps) {
                 shape={ButtonShape.ROUNDED}
                 shadow
                 onClick={() => {
-                  setModalOpen(true);
+                  setSignInType(SignupModalType.GENERAL_LOGIN);
+                  setIsOpenTutorSignupModal(true);
                 }}
               >
                 Entrar
@@ -103,7 +108,14 @@ export default function HeaderComponent(props: HeaderProps) {
         )}
       </div>
 
-      <LoginModal open={modalOpen} onChange={setModalOpen} />
+      <GenericSignupModal
+        open={isOpenTutorSignupModal}
+        onChange={(value) => {
+          setSignInType(undefined);
+          setIsOpenTutorSignupModal(value);
+        }}
+        signupModalType={signInType}
+      />
     </header>
   );
 }

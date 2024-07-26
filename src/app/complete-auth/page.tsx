@@ -22,7 +22,7 @@ export default async function page({ params: { courseId } }: IRouteParams) {
       FirebaseCollections.USERS,
       {
         email: user.email,
-        role: UserRole.USER,
+        role: UserRole.STUDENT,
       },
       user.email,
     );

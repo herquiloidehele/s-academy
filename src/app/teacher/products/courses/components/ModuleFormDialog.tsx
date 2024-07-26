@@ -90,6 +90,7 @@ export function ModuleFormDialog(props: { children: React.ReactNode; productID?:
                   </FormItem>
                 )}
               />
+
               <DialogFooter>
                 <ButtonElement
                   type="submit"

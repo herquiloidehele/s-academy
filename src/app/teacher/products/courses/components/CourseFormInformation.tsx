@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import FileUploader from "@/components/file-uploader/FileUploader";
 
 function CourseFormInformation(props) {
   const formSchema = z.object({
@@ -112,7 +113,13 @@ function CourseFormInformation(props) {
                 <FormItem>
                   <FormLabel className="font-light leading-tight">Capa</FormLabel>
                   <FormControl>
-                    <Input placeholder="cover" {...field} />
+                    <FileUploader
+                      key="cover"
+                      fileTypes={["SVG, PNG, JPG"]}
+                      onFileChange={(file) => {
+                        console.log("file", file);
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -125,7 +132,13 @@ function CourseFormInformation(props) {
                 <FormItem>
                   <FormLabel className="font-light leading-tight">Video Promoção</FormLabel>
                   <FormControl>
-                    <Input placeholder="url do video promocional" {...field} />
+                    <FileUploader
+                      key="promo_video"
+                      fileTypes={["MP4"]}
+                      onFileChange={(file) => {
+                        console.log("file", file);
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

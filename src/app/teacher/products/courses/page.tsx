@@ -8,7 +8,7 @@ import { useRouter } from "next/navigation";
 import { Constants } from "@/utils/Constants";
 import { motion } from "framer-motion";
 
-const courses = [
+export const courses = [
   {
     id: "1",
     name: "Introdução ao Desenvolvimento Web",
@@ -105,7 +105,7 @@ function CoursePage(props) {
         </div>
       </div>
 
-      <div className="grid grid-cols-4 gap-3">
+      <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-3">
         {courses.map((course, index) => (
           <div key={index}>
             <motion.div

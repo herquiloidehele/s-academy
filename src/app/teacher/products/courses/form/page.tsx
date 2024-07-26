@@ -4,11 +4,15 @@ import FormStepper from "@/app/teacher/products/courses/components/FormStepper";
 import CourseFormInformation from "@/app/teacher/products/courses/components/CourseFormInformation";
 import { EyeIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
 import useCourseStore, { IFormStep } from "@/app/teacher/products/courses/courseStore";
-import { CurrencyIcon, FolderOpen } from "lucide-react";
+import { FolderOpen } from "lucide-react";
 import CourseFormContent from "@/app/teacher/products/courses/components/CourseFormContent";
 import { useRouter } from "next/navigation";
+import CourseFormReview from "@/app/teacher/products/courses/components/CourseFormPreview";
+import { courses } from "@/app/teacher/products/courses/page";
 
-function FormPage(props) {
+function FormPage() {
+  const modules = useCourseStore((state) => state.modules);
+
   const formSteps: IFormStep[] = [
     {
       title: "Course Information",
@@ -27,19 +31,11 @@ function FormPage(props) {
       state: false,
     },
     {
-      title: "Course Pricing",
-      key: "course-Pricing",
-      description: "Set the course price",
-      icon: <CurrencyIcon className="w-3 h-3 md:w-6 md:h-6 font-light stroke-1 text-md" />,
-      page: <CourseFormInformation />,
-      state: false,
-    },
-    {
       title: "Course Preview",
       key: "course-Preview",
       description: "Preview the course",
       icon: <EyeIcon className="w-3 h-3 md:w-6 md:h-6 font-light stroke-1 text-md" />,
-      page: <CourseFormInformation />,
+      page: <CourseFormReview formData={{ ...courses[0], modules: modules, title: "tsee", tutorId: "eee" }} />,
       state: false,
     },
   ];

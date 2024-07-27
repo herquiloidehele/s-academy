@@ -4,22 +4,13 @@ import Navbar from "@/components/Navbar/navbar";
 import Sidebar from "@/components/sidebar/sidebar";
 import { useMenuItems } from "@/hooks/useMenuItems";
 import { USER_ROLES } from "@/utils/Constants";
-import React, { useEffect } from "react";
-import useAuthStore from "@/app/complete-auth/authStore";
+import React from "react";
 import useMenuStore from "@/app/menuStore";
 
 const Layout = ({ children }) => {
   const { getMenuItemsByRole } = useMenuItems();
-  const setLoggedUser = useAuthStore((state) => state.setLoggedUser);
   const isOpened = useMenuStore((state) => state.isOpened);
 
-  useEffect(() => {
-    const asyncFunction = async () => {
-      await setLoggedUser();
-    };
-
-    asyncFunction();
-  }, []);
   return (
     <div className="flex flex-col w-full overflow-y-hidden fixed bg-neutral-100 bg-smoothBackground text-smoothForeground">
       <div className="flex w-full border-b-2 fixed bg-smoothBackground text-smoothForeground">

@@ -13,26 +13,36 @@ import * as React from "react";
 import { useMutation } from "@tanstack/react-query";
 import { createOrUpdateTutor } from "@/app/backend/actions/users";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { Constants } from "@/utils/Constants";
 
 interface ITutorCompleteSignupProps {
   user: IUser;
 }
 export default function TutorCompleteSignup(props: ITutorCompleteSignupProps) {
+  const router = useRouter();
+
   const { isPending } = useMutation({
     mutationKey: ["createOrUpdateTutor"],
-    mutationFn: (formData: ITutorSignupForm) => {
-      return createOrUpdateTutor(formData);
-    },
+    mutationFn: createOrUpdateTutor,
     onError: () => {
       toast.error("Erro ao guardar os dados, por favor tente novamente");
     },
     onSuccess: () => {
       toast.success("Dados guardados com sucesso");
+      router.replace(Constants.APP_ROUTES.TEACHER.HOME);
     },
   });
 
-  const { handleSubmit, register, formState, watch, getValues } = useForm<ITutorSignupForm>({
+  const {
+    handleSubmit,
+    register,
+    formState: { isValid, errors },
+    getValues,
+  } = useForm<ITutorSignupForm>({
     resolver: zodResolver(tutorSingnupFormSchema),
+    reValidateMode: "onChange",
+    mode: "onBlur",
     defaultValues: {
       name: "",
       phoneNumber: "",
@@ -42,8 +52,6 @@ export default function TutorCompleteSignup(props: ITutorCompleteSignupProps) {
       id: undefined,
     },
   });
-
-  const { isValid } = formState;
 
   const onSubmit: SubmitHandler<ITutorSignupForm> = (data: ITutorSignupForm) => {
     createOrUpdateTutor(data);
@@ -64,22 +72,25 @@ export default function TutorCompleteSignup(props: ITutorCompleteSignupProps) {
                 Complete o seu registo para começar a vender os seus cursos online.
               </p>
             </div>
-            <form className="grid gap-y-4" onSubmit={handleSubmit(onSubmit)}>
-              <Input
-                label={"Nome Público"}
-                placeholder={"Nome Público"}
-                {...register("name")}
-                error={formState.errors.name}
-              />
+            <form className="grid gap-y-2" onSubmit={handleSubmit(onSubmit)}>
+              <Input label={"Nome Público"} placeholder={"Nome Público"} {...register("name")} error={errors.name} />
 
               <Input
                 label={"Número de Telefone"}
                 placeholder={"Número de Telefone"}
                 inputMode={"tel"}
                 type={"number"}
-                {...register("phoneNumber")}
+                {...register("phoneNumber", { required: true, min: 10 })}
+                error={errors.phoneNumber}
               />
-              <TextArea label={"Descrição"} placeholder={"Descrição"} rows={3} {...register("description")} />
+
+              <TextArea
+                label={"Descrição"}
+                placeholder={"Descrição"}
+                rows={3}
+                {...register("description")}
+                error={errors.description}
+              />
               <ButtonElement
                 type={ButtonType.PRIMARY}
                 fillType={FillType.FILLED}

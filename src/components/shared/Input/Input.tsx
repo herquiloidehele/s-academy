@@ -9,12 +9,12 @@ interface IInputProps extends ComponentPropsWithoutRef<"input"> {
   label: string;
   error?: ErrorOption;
 }
-function Input({ label, ...props }: IInputProps, ref?: React.Ref<HTMLInputElement>) {
+function Input({ label, error, ...props }: IInputProps, ref?: React.Ref<HTMLInputElement>) {
   return (
     <div>
       <div className="relative">
         <input
-          id={`hs-floating-input-${label}`}
+          id={`hs-floating-input-${props.name}`}
           className="peer p-4 block w-full border border-gray-200 rounded-lg text-sm placeholder:text-transparent focus:border-green-500 focus:ring-green-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-900 dark:border-neutral-700 dark:text-neutral-400 dark:focus:ring-neutral-600
     focus:pt-6
     focus:pb-2
@@ -26,7 +26,7 @@ function Input({ label, ...props }: IInputProps, ref?: React.Ref<HTMLInputElemen
           {...props}
         />
         <label
-          htmlFor={`hs-floating-input-${label}`}
+          htmlFor={`hs-floating-input-${props.name}`}
           className="absolute text-gray-500 font-medium top-0 start-0 p-4 h-full text-sm truncate pointer-events-none transition ease-in-out duration-100 border border-transparent  origin-[0_0] dark:text-white peer-disabled:opacity-50 peer-disabled:pointer-events-none
       peer-focus:scale-90
       peer-focus:translate-x-0.5
@@ -42,11 +42,11 @@ function Input({ label, ...props }: IInputProps, ref?: React.Ref<HTMLInputElemen
       </div>
 
       <p
-        className={clsx("text-sm text-red-600 mt-1 ml-1", {
-          hidden: props.error?.message,
+        className={clsx("text-[10px] text-red-600 mt-1 ml-1 h-3", {
+          "opacity-0": !error?.message,
         })}
       >
-        {props.error?.message}
+        {error?.message}
       </p>
     </div>
   );

@@ -30,6 +30,23 @@ export const Constants = {
     TUTOR_SIGNUP: "/tutor-signup",
     COURSE_DETAILS: (courseId: string) => `/courses/${courseId}`,
     LESSON: (courseId: string, moduleId: string, lessonId: string) => `/courses/${courseId}/${moduleId}/${lessonId}`,
+    TEACHER: {
+      HOME: "/teacher/summary",
+      PRODUCTS: "/teacher/products",
+      COURSES: "/teacher/products/courses",
+      NEW_COURSES: "/teacher/products/courses/form",
+      EBOOKS: "/teacher/products/ebooks",
+      COURSE: (courseId: string) => `/teacher/courses/${courseId}`,
+      MODULE: (courseId: string, moduleId: string) => `/teacher/courses/${courseId}/${moduleId}`,
+      LESSON: (courseId: string, moduleId: string, lessonId: string) =>
+        `/teacher/courses/${courseId}/${moduleId}/${lessonId}`,
+      WALLET: {
+        HOME: "/teacher/wallet",
+        WITHDRAW: "/teacher/wallet/withdraw",
+        HISTORY: "/teacher/wallet/history",
+        BALANCE: "/teacher/wallet/balance",
+      },
+    },
   },
   COURSE: {
     DEFAULT_COURSE_ID: "Q0us6qiWzX00sF2IZyQL",
@@ -56,5 +73,8 @@ export enum Locales {
   PT = "pt-PT",
   EN = "en",
 }
-
+export enum USER_ROLES {
+  ADMIN = "ADMIN",
+  TEACHER = "TEACHER",
+}
 export const PHONE_PREFIX = "258";

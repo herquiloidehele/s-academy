@@ -10,6 +10,7 @@ export interface ICourse {
   promoVideoRef?: number;
   categories?: string[];
   createdAt?: Date;
+  tutorId: string;
 }
 
 export interface IModule {

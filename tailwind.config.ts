@@ -25,9 +25,15 @@ const config = {
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
+        smoothBackground: "hsl(var(--smooth-background))",
+        smoothForeground: "hsl(var(--smooth-foreground))",
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+        },
+        active: {
+          DEFAULT: "hsl(var(--active))",
+          foreground: "hsl(var(--active-foreground))",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",

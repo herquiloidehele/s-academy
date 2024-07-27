@@ -5,6 +5,7 @@ import SpinnerIcon from "@/assets/icons/spinner-icon.svg";
 
 export enum ButtonType {
   PRIMARY = "primary",
+  SUBMIT = "submit",
   SECONDARY = "secondary",
   TERTIARY = "tertiary",
 }
@@ -41,12 +42,14 @@ interface ButtonProps {
 
 export default function ButtonElement(props: ButtonProps) {
   const buttonTypeClass: Record<ButtonType, string> = {
+    [ButtonType.SUBMIT]: "bg-green-400",
     [ButtonType.PRIMARY]: "bg-green-400",
     [ButtonType.SECONDARY]: "bg-blue-950",
     [ButtonType.TERTIARY]: "bg-gray-400",
   };
 
   const buttonBorderClass: Record<ButtonType, string> = {
+    [ButtonType.SUBMIT]: "border-green-400",
     [ButtonType.PRIMARY]: "border-green-400",
     [ButtonType.SECONDARY]: "border-blue-950",
     [ButtonType.TERTIARY]: "border-gray-400",
@@ -59,8 +62,8 @@ export default function ButtonElement(props: ButtonProps) {
   };
 
   const buttonFillTypeClass: Record<FillType, string> = {
-    [FillType.FILLED]: "text-white",
-    [FillType.OUTLINE]: "bg-transparent text-white border-2 ",
+    [FillType.FILLED]: "text-primary-foreground",
+    [FillType.OUTLINE]: "bg-transparent text-card-foreground border-2 ",
   };
 
   const buttonBaseClasses = useMemo(() => {

@@ -51,6 +51,7 @@ class UsersManager {
       Logger.info(this.LOG_TAG, `Tutor created`, [tutor]);
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error creating tutor`, [tutor, error]);
+      throw error;
     }
   }
 }

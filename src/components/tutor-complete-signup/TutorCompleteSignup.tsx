@@ -22,9 +22,9 @@ interface ITutorCompleteSignupProps {
 export default function TutorCompleteSignup(props: ITutorCompleteSignupProps) {
   const router = useRouter();
 
-  const { isPending } = useMutation({
+  const { isPending, mutate } = useMutation({
     mutationKey: ["createOrUpdateTutor"],
-    mutationFn: createOrUpdateTutor,
+    mutationFn: (data: ITutorSignupForm) => createOrUpdateTutor(data),
     onError: () => {
       toast.error("Erro ao guardar os dados, por favor tente novamente");
     },
@@ -54,7 +54,7 @@ export default function TutorCompleteSignup(props: ITutorCompleteSignupProps) {
   });
 
   const onSubmit: SubmitHandler<ITutorSignupForm> = (data: ITutorSignupForm) => {
-    createOrUpdateTutor(data);
+    mutate(data);
   };
 
   return (

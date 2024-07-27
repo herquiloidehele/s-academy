@@ -88,10 +88,7 @@ export default function HeaderComponent(props: HeaderProps) {
           <div className={"flex items-center gap-6"}>
             <Link
               href={`#${Constants.UI.SECTIONS.COURSES}`}
-              className={clsx("text-stale-950 font-medium text-sm lg:text-md", {
-                "text-green-400": isSticky,
-                "text-black": !isSticky,
-              })}
+              className={clsx("text-stale-950 font-medium text-sm lg:text-md text-black", {})}
             >
               Cursos
             </Link>

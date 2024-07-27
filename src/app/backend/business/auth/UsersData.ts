@@ -1,16 +1,12 @@
 import { DocumentData } from "@firebase/firestore";
 import { firestore } from "firebase-admin";
+import { USER_ROLES } from "@/utils/Constants";
 import DocumentReference = firestore.DocumentReference;
 
-export enum UserRole {
-  ADMIN = "admin",
-  STUDENT = "student",
-  TUTOR = "tutor",
-}
 export interface IUser {
   id: string;
   email: string;
-  role: UserRole;
+  role: USER_ROLES;
   createdAt: string;
 }
 

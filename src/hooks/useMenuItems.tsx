@@ -12,7 +12,7 @@ export const useMenuItems = () => {
       key: Constants.APP_ROUTES.TEACHER.HOME,
       path: Constants.APP_ROUTES.TEACHER.HOME,
       title: "Início",
-      permissions: [USER_ROLES.TEACHER],
+      permissions: [USER_ROLES.TUTOR],
       icon: <HomeIcon className="w-3 h-3 md:w-6 md:h-6  stroke-1 text-md" />,
       onClick: () => {
         router.push(Constants.APP_ROUTES.TEACHER.HOME);
@@ -24,7 +24,7 @@ export const useMenuItems = () => {
       key: Constants.APP_ROUTES.TEACHER.COURSES,
       path: Constants.APP_ROUTES.TEACHER.COURSES,
       title: "Cursos",
-      permissions: [USER_ROLES.TEACHER],
+      permissions: [USER_ROLES.TUTOR],
       icon: <FolderIcon className="w-3 h-3 md:w-6 md:h-6  stroke-1 text-md" />,
       onClick: () => {
         router.push(Constants.APP_ROUTES.TEACHER.COURSES);
@@ -36,7 +36,7 @@ export const useMenuItems = () => {
       key: Constants.APP_ROUTES.TEACHER.WALLET.HOME,
       path: Constants.APP_ROUTES.TEACHER.WALLET.HOME,
       title: "Carteira",
-      permissions: [USER_ROLES.TEACHER],
+      permissions: [USER_ROLES.TUTOR],
       icon: <WalletIcon className="w-3 h-3 md:w-6 md:h-6  stroke-1 text-md" />,
       onClick: () => {
         router.push(Constants.APP_ROUTES.TEACHER.WALLET.HOME);

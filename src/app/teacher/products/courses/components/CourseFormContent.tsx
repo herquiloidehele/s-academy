@@ -33,7 +33,7 @@ function CourseFormContent(props) {
       </div>
       <Accordion type="single" collapsible>
         {modules.map((module, index) => (
-          <ModuleItemList module={module} index={index} />
+          <ModuleItemList module={module} index={index} key={index} />
         ))}
       </Accordion>
       <div className="flex flex-row w-full justify-end">

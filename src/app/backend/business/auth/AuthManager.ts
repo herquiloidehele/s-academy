@@ -1,19 +1,19 @@
 import Logger from "@/utils/Logger";
 import { auth } from "@/auth";
 import FirestoreService from "@/app/backend/services/FirestoreService";
-import { Constants, FirebaseCollections } from "@/utils/Constants";
-import { IUser, UserRole } from "@/app/backend/business/auth/UsersData";
+import { Constants, FirebaseCollections, USER_ROLES } from "@/utils/Constants";
+import { IUser } from "@/app/backend/business/auth/UsersData";
 import { SignupType } from "@/utils/interfaces";
 import UsersManager from "@/app/backend/business/users/UsersManager";
 
 class AuthManager {
   public readonly SIGNUP_TO_USER_ROLE_MAP = {
-    [SignupType.GENERAL_LOGIN]: UserRole.STUDENT,
-    [SignupType.TUTOR_SIGN_UP]: UserRole.TUTOR,
+    [SignupType.GENERAL_LOGIN]: USER_ROLES.STUDENT,
+    [SignupType.TUTOR_SIGN_UP]: USER_ROLES.TUTOR,
   };
   private readonly LOG_TAG = "AuthManager";
 
-  public async finalizeUserRegistration(email: string, userRole: UserRole, courseId?: string) {
+  public async finalizeUserRegistration(email: string, userRole: USER_ROLES, courseId?: string) {
     try {
       Logger.debug(this.LOG_TAG, `Finalizing auth user: ${email}`);
 
@@ -26,10 +26,10 @@ class AuthManager {
       }
 
       switch (authUser.role) {
-        case UserRole.TUTOR: {
+        case USER_ROLES.TUTOR: {
           return await this.completeTutorAuth(email);
         }
-        case UserRole.STUDENT: {
+        case USER_ROLES.STUDENT: {
           if (courseId) {
             return Constants.APP_ROUTES.CHECKOUT(courseId);
           } else {
@@ -47,15 +47,15 @@ class AuthManager {
     }
   }
 
-  public async finalizeUserLogin(email: string, role: UserRole, courseId?: string) {
+  public async finalizeUserLogin(email: string, role: USER_ROLES, courseId?: string) {
     Logger.debug(this.LOG_TAG, `Finalizing user login`, [email, role]);
 
     try {
       switch (role) {
-        case UserRole.TUTOR: {
+        case USER_ROLES.TUTOR: {
           return await this.completeTutorAuth(email);
         }
-        case UserRole.STUDENT: {
+        case USER_ROLES.STUDENT: {
           const doesUserHaveSubscription = await FirestoreService.getDocumentById(
             FirebaseCollections.SUBSCRIPTIONS,
             email,
@@ -120,7 +120,7 @@ class AuthManager {
     return Constants.APP_ROUTES.TEACHER.HOME;
   }
 
-  private async createUserAccount(email: string, role: UserRole) {
+  private async createUserAccount(email: string, role: USER_ROLES) {
     await FirestoreService.saveDocument(
       FirebaseCollections.USERS,
       {

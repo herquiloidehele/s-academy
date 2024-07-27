@@ -30,7 +30,7 @@ const Layout = ({ children }) => {
         <div
           className={`h-screen bg-gradient-to-br from-green-400 to-green-800  transition duration-300 ease-in-out ${isOpened ? "w-fit" : "w-[80px]"}`}
         >
-          <Sidebar menuItems={getMenuItemsByRole(USER_ROLES.TEACHER, [])}></Sidebar>
+          <Sidebar menuItems={getMenuItemsByRole(USER_ROLES.TUTOR, [])}></Sidebar>
         </div>
         <div className="overflow-y-auto bg-smoothBackground text-smoothForeground items-center w-full p-12">
           {children}

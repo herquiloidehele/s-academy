@@ -84,8 +84,9 @@ export enum Locales {
   EN = "en",
 }
 export enum USER_ROLES {
-  ADMIN = "ADMIN",
-  TEACHER = "TEACHER",
+  ADMIN = "admin",
+  TUTOR = "tutor",
+  STUDENT = "student",
 }
 export const PHONE_PREFIX = "258";
 

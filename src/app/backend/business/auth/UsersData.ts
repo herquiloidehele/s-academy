@@ -15,10 +15,11 @@ export interface IUser {
 }
 
 export interface ITutor {
-  id: string;
+  id?: string;
+  name: string;
   userRef: DocumentReference<DocumentData, DocumentData> | null;
   description: string;
   phone: string;
-  mpesaPhone: string;
+  mpesaPhone?: string;
   isRegistrationComplete: boolean;
 }

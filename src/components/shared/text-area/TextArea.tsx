@@ -1,10 +1,10 @@
-import { ComponentPropsWithoutRef } from "react";
+import { ComponentPropsWithoutRef, forwardRef, Ref } from "react";
 
 interface ITextAreaProps extends ComponentPropsWithoutRef<"textarea"> {
   label: string;
 }
 
-export default function TextArea({ label, ...props }: ITextAreaProps) {
+function TextArea({ label, ...props }: ITextAreaProps, ref?: Ref<HTMLTextAreaElement>) {
   return (
     <div className="relative">
       <textarea
@@ -16,6 +16,7 @@ export default function TextArea({ label, ...props }: ITextAreaProps) {
     [&:not(:placeholder-shown)]:pb-2
     autofill:pt-6
     autofill:pb-2"
+        ref={ref}
         {...props}
       ></textarea>
       <label
@@ -33,3 +34,5 @@ export default function TextArea({ label, ...props }: ITextAreaProps) {
     </div>
   );
 }
+
+export default forwardRef(TextArea);

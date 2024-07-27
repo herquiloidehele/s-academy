@@ -46,6 +46,7 @@ class FirebaseConfig {
       );
 
       this._firestoreDB = getFirestore(this.firebaseApp);
+      this._firestoreDB.settings({ ignoreUndefinedProperties: true });
 
       Logger.debug(this.LOG_TAG, "Firebase Admin initialized successfully", [this.firebaseApp, this._firestoreDB]);
     } catch (error: any) {

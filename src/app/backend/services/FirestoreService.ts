@@ -154,6 +154,25 @@ class FirestoreService {
     }
   }
 
+  public async updateDocument<T>(collection: FirebaseCollections | string, id: string, data: T) {
+    await this.waitForFirestore();
+    Logger.debug(this.LOG_TAG, `Updating document in collection: ${collection}`);
+
+    try {
+      const collectionReference = FirebaseConfig.firestoreDB.collection(collection);
+
+      await collectionReference.doc(id).update({
+        ...data,
+        updatedAt: new Date().toISOString(),
+      });
+
+      Logger.debug(this.LOG_TAG, `Document updated in collection: ${collection}`);
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error updating document in collection: ${collection}`, error);
+      return Promise.reject(error);
+    }
+  }
+
   public async getDocumentRefById(collection: FirebaseCollections, id: string | null) {
     await this.waitForFirestore();
     Logger.debug(this.LOG_TAG, `Getting document reference by id: ${id}`);

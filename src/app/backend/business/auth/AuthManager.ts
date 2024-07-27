@@ -2,8 +2,9 @@ import Logger from "@/utils/Logger";
 import { auth } from "@/auth";
 import FirestoreService from "@/app/backend/services/FirestoreService";
 import { Constants, FirebaseCollections } from "@/utils/Constants";
-import { ITutor, IUser, UserRole } from "@/app/backend/business/auth/UsersData";
+import { IUser, UserRole } from "@/app/backend/business/auth/UsersData";
 import { SignupType } from "@/utils/interfaces";
+import UsersManager from "@/app/backend/business/users/UsersManager";
 
 class AuthManager {
   public readonly SIGNUP_TO_USER_ROLE_MAP = {
@@ -107,13 +108,7 @@ class AuthManager {
   private async completeTutorAuth(email: string) {
     Logger.debug(this.LOG_TAG, `Completing tutor auth`, [email]);
 
-    const userReference = await FirestoreService.getDocumentRefById(FirebaseCollections.USERS, email);
-    const tutors = await FirestoreService.getDocumentsByQuery<ITutor>(FirebaseCollections.TUTORS, {
-      field: "userId",
-      operator: "==",
-      value: userReference,
-    });
-    const tutor = tutors[0];
+    const tutor = await UsersManager.getTutorByUserId(email);
 
     Logger.debug(this.LOG_TAG, "Tutor found", [tutor]);
 
@@ -122,7 +117,7 @@ class AuthManager {
       return Constants.APP_ROUTES.COMPLETE_TUTOR_SIGNUP;
     }
 
-    return Constants.APP_ROUTES.TUTOR_DASHBOARD;
+    return Constants.APP_ROUTES.TEACHER.HOME;
   }
 
   private async createUserAccount(email: string, role: UserRole) {

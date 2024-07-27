@@ -53,9 +53,9 @@ function FileUploader({
       {file ? (
         <div className="relative w-full h-64 border-2 border-gray-300 rounded-lg overflow-hidden">
           {file.type.startsWith("image/") ? (
-            <img src={fileUrl} alt="Preview" className="w-full h-full object-cover rounded-lg" />
+            <img src={fileUrl} alt="Preview" className="w-full h-full object-contain rounded-lg" />
           ) : file.type.startsWith("video/") ? (
-            <video controls src={fileUrl} className="w-full h-full object-cover rounded-lg">
+            <video controls src={fileUrl} className="w-full h-full object-contain rounded-lg">
               Your browser does not support the video tag.
             </video>
           ) : null}
@@ -70,7 +70,8 @@ function FileUploader({
         >
           {loading ? (
             <div className="flex flex-col items-center justify-center">
-              <div className="loader"></div> {/* Replace with a spinner or animation */}
+              <div className="loader"></div>
+              {/* Replace with a spinner or animation */}
               <p className="text-sm flex flex-grow gap-2 text-gray-500 dark:text-gray-400">
                 <Loader2Icon className="animate-spin" />
                 Uploading...

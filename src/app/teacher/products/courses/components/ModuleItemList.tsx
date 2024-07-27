@@ -19,9 +19,15 @@ function ModuleItemList({ module, index }) {
               <FolderOpen className="size-8 text-blue-700 stroke-1" />
             </div>
             <span className=" text text-green-600 ">Módulo {index + 1}:</span>
-            <span className="text-gray-500 text">{module.title}</span>
+            <span
+              className={` ${showActions ? "transition font-semibold text-blue-400 duration-250" : "transition text-gray-500 font-light duration-250"}`}
+            >
+              {module.title}
+            </span>
           </div>
-          <div className={`flex flex-row gap-2 col-span-1 justify-end ${showActions ? "block" : "hidden"}`}>
+          <div
+            className={`flex flex-row gap-2 col-span-1 justify-end ${showActions ? "transition opacity-100 duration-300" : "transition opacity-0 duration-300"}`}
+          >
             <ModuleFormDialog>
               <Edit2Icon className="w-6 h-6 stroke-1 text-blue-700" />
             </ModuleFormDialog>

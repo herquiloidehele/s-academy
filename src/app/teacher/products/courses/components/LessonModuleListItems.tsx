@@ -43,7 +43,7 @@ export function LessonModuleListItems({ lessons }: { lessons: ILesson[] }) {
         <TableBody>
           {lessons &&
             lessons.map((lesson, index) => (
-              <TableRow key={lesson.id} onMouseEnter={handleShowActions} onMouseLeave={handleHideActions}>
+              <TableRow key={index} onMouseEnter={handleShowActions} onMouseLeave={handleHideActions}>
                 <TableCell className="font-light">{lesson.id}</TableCell>
                 <TableCell>
                   <LessonFormDialog lessonID={lesson.id}>
@@ -55,7 +55,9 @@ export function LessonModuleListItems({ lessons }: { lessons: ILesson[] }) {
                 </TableCell>
                 <TableCell className="text-right">{lesson.order}</TableCell>
                 <TableCell className="text-right flex flex-row gap-2 ">
-                  <div className={`flex flex-row gap-2 ${showActions ? "block" : "hidden"} `}>
+                  <div
+                    className={`flex flex-row gap-2 ${showActions ? "transition opacity-100 duration-300" : "transition opacity-0 duration-300"} `}
+                  >
                     <LessonFormDialog lessonID={lesson.id}>
                       <Edit2Icon className="w-6 h-6 stroke-1 text-blue-700 cursor-pointer" />
                     </LessonFormDialog>

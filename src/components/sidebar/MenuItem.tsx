@@ -40,11 +40,18 @@ function MenuItem({ menu }: { menu: ISidebarMenu }) {
   const CategoryTitle = () => (
     <div
       onClick={onClickMenuHandle}
-      className={`flex flex-row cursor-pointer px-4  py-3 gap-6 ${isOpened ? "pr-16" : "px-3"}  ${isSingleMenuActive(menu.path) && menu.items.length == 0 ? "bg-active text-active-foreground" : ""}  `}
+      className={`menu-item flex flex-row cursor-pointer px-4 py-3 gap-6 
+  ${isOpened ? "pr-16" : "px-3"} 
+          ${isSingleMenuActive(menu.path) && menu.items.length === 0 ? "bg-active text-active-foreground scale-102 " : "bg-transparent text-primary-foreground opacity-85"}  transition-all duration-500`}
     >
       <div>{menu.icon}</div>
 
-      <span className={` text-textOnPrimary  text-md font-semibold ${isOpened ? "block" : "hidden"}`}>
+      <span
+        className={` text-textOnPrimary  text-md font-semibold 
+                  ${isSingleMenuActive(menu.path) && menu.items.length === 0 ? "text-active-foreground scale-105 " : " text-primary-foreground"}  transition-all duration-500\`}
+
+        ${isOpened ? " block " : " hidden "}  transition-all duration-500`}
+      >
         {menu.title}
       </span>
 

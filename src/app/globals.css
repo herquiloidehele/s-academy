@@ -4,8 +4,11 @@
 
   @layer base {
     :root {
-      --background: 0 0% 100%;
+      --background: 0, 0%, 100%;
       --foreground: 222.2 84% 4.9%;
+
+      --smooth-background: 0, 0%, 96%;
+      --smooth-foreground: 222.2 84% 4.9%;
 
       --card: 0 0% 100%;
       --card-foreground: 222.2 84% 4.9%;
@@ -13,8 +16,11 @@
       --popover: 0 0% 100%;
       --popover-foreground: 222.2 84% 4.9%;
 
-      --primary: 222.2 47.4% 11.2%;
+      --primary: 141.6, 72.3%, 58.0%;
       --primary-foreground: 210 40% 98%;
+
+      --active: 150, 3.1%, 25.1%, 0.18;
+      --active-foreground: 210 40% 98%;
 
       --secondary: 210 40% 96.1%;
       --secondary-foreground: 222.2 47.4% 11.2%;

@@ -1,7 +1,6 @@
 "use client";
 import { motion } from "framer-motion";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
-import { useRouter } from "next/navigation";
 import { Constants } from "@/utils/Constants";
 import Image from "next/image";
 import Link from "next/link";
@@ -10,6 +9,9 @@ import AvatarImage1 from "@/assets/images/avatar1.png";
 import AvatarImage2 from "@/assets/images/avatar2.png";
 import AvatarImage3 from "@/assets/images/avatar3.png";
 import AvatarImage4 from "@/assets/images/avatar4.png";
+import { SignupType } from "@/utils/interfaces";
+import GenericSignupModal from "@/components/generic-signup-modal/GenericSignupModal";
+import { useState } from "react";
 
 const TESTIMONIALS_AVATARS_DATA = [
   {
@@ -33,7 +35,7 @@ const TESTIMONIALS_AVATARS_DATA = [
 ];
 
 export default function CallToActionSection() {
-  const router = useRouter();
+  const [isOpenTutorSignupModal, setIsOpenTutorSignupModal] = useState(false);
 
   return (
     <div className="relative py-8 lg:py-16">
@@ -119,7 +121,13 @@ export default function CallToActionSection() {
                   Comprar Cursos
                 </ButtonElement>
               </Link>
-              <Link href={Constants.APP_ROUTES.TUTOR_SIGNUP}>
+              <Link
+                href={"#"}
+                onClick={(event) => {
+                  event.preventDefault();
+                  setIsOpenTutorSignupModal(true);
+                }}
+              >
                 <ButtonElement
                   size={ButtonSize.SMALL}
                   shape={ButtonShape.ROUNDED}
@@ -134,6 +142,14 @@ export default function CallToActionSection() {
           </div>
         </div>
       </div>
+
+      <GenericSignupModal
+        open={isOpenTutorSignupModal}
+        onChange={(value) => {
+          setIsOpenTutorSignupModal(value);
+        }}
+        signupModalType={SignupType.TUTOR_SIGN_UP}
+      />
     </div>
   );
 }

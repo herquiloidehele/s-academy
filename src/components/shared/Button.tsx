@@ -38,9 +38,10 @@ interface ButtonProps {
   onClick?: () => void;
   disabled?: boolean;
   isLoading?: boolean;
+  inputType?: "button" | "submit" | "reset";
 }
 
-export default function ButtonElement(props: ButtonProps) {
+export default function ButtonElement({ inputType = "button", ...props }: ButtonProps) {
   const buttonTypeClass: Record<ButtonType, string> = {
     [ButtonType.SUBMIT]: "bg-green-400",
     [ButtonType.PRIMARY]: "bg-green-400",
@@ -86,9 +87,11 @@ export default function ButtonElement(props: ButtonProps) {
         {
           "animate-blurred-fade-in animate-delay-800": props.animate,
           "shadow-2xl shadow-green-400  shadow-[5px_3px_60px_-8px] hover:bg-green-300": props.shadow,
+          "cursor-not-allowed opacity-60": props.disabled,
         },
       )}
       disabled={props.disabled}
+      type={inputType}
     >
       {props.isLoading ? (
         <div className="flex items-center justify-center">

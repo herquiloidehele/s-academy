@@ -4,12 +4,13 @@ import { useMemo, useState } from "react";
 import AppLogo from "@/assets/icons/logo.svg";
 import { useScrollPosition } from "@/utils/customHooks";
 import { clsx } from "clsx";
-import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 import { Constants } from "@/utils/Constants";
 import { useRouter } from "next/navigation";
-import LoginModal from "@/components/login-modal/LoginModal";
-import Link from "next/link";
 import { handleLogout } from "@/app/backend/actions/auth";
+import GenericSignupModal from "@/components/generic-signup-modal/GenericSignupModal";
+import { SignupType } from "@/utils/interfaces";
+import { authActions, authSelectors, useAuthStore } from "@/app/store/authStore";
+import MenuItem, { IMenuItem, MenuActionType } from "@/components/header/MenuItem";
 
 const START_STICKY_POSITION = 10;
 
@@ -18,7 +19,13 @@ interface HeaderProps {
   isAuthenticated?: any;
 }
 export default function HeaderComponent(props: HeaderProps) {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [isOpenTutorSignupModal, setIsOpenTutorSignupModal] = useState(false);
+  const [signInType, setSignInType] = useState<SignupType>();
+
+  const isTutor = useAuthStore(authSelectors.isTutor);
+  const isStudent = useAuthStore(authSelectors.isStudent);
+  const isGuest = useAuthStore(authSelectors.isGuest);
+  const resetAuthUser = useAuthStore(authActions.resetAuthUser);
 
   const { y: scrollPosition } = useScrollPosition();
 
@@ -28,9 +35,74 @@ export default function HeaderComponent(props: HeaderProps) {
     return scrollPosition > START_STICKY_POSITION;
   }, [scrollPosition]);
 
+  const onClickLogout = () => {
+    handleLogout().then(() => {
+      resetAuthUser();
+      router.push(Constants.APP_ROUTES.HOME);
+    });
+  };
+
+  const menuItems = useMemo((): IMenuItem[] => {
+    if (isGuest) {
+      return [
+        { text: "Cursos", actionType: MenuActionType.LINK, href: `#${Constants.UI.SECTIONS.COURSES}` },
+        {
+          text: "Vender meu curso",
+          actionType: MenuActionType.ACTION,
+          action: () => {
+            setSignInType(SignupType.TUTOR_SIGN_UP);
+            setIsOpenTutorSignupModal(true);
+          },
+        },
+        {
+          text: "Entrar",
+          actionType: MenuActionType.BUTTON,
+          action: () => {
+            setSignInType(SignupType.GENERAL_LOGIN);
+            setIsOpenTutorSignupModal(true);
+          },
+        },
+      ];
+    }
+
+    if (isTutor) {
+      return [
+        { text: "Cursos", actionType: MenuActionType.LINK, href: `#${Constants.UI.SECTIONS.COURSES}` },
+        {
+          text: "Meus Cursos",
+          actionType: MenuActionType.LINK,
+          href: Constants.APP_ROUTES.TEACHER.HOME,
+        },
+        {
+          text: "Sair",
+          actionType: MenuActionType.BUTTON,
+          action: onClickLogout,
+        },
+      ];
+    }
+
+    if (isStudent) {
+      return [
+        { text: "Cursos", actionType: MenuActionType.LINK, href: `#${Constants.UI.SECTIONS.COURSES}` },
+        {
+          text: "Minha conta",
+          actionType: MenuActionType.LINK,
+          href: Constants.APP_ROUTES.COURSES,
+        },
+        {
+          text: "Sair",
+          actionType: MenuActionType.BUTTON,
+          action: onClickLogout,
+        },
+      ];
+    }
+
+    return [];
+  }, [isGuest, isTutor, isStudent, onClickLogout]);
+
   return (
     <header
-      className={clsx(`fixed top-0 left-0 w-full z-[200] flex justify-center px-4 py-4 lg:px-8 lg:py-6`, {
+      className={clsx(`fixed top-0 left-0 w-full z-[10] flex justify-center px-4 py-4 lg:px-8 lg:py-6`, {
         "shadow-sm bg-white": isSticky,
         "bg-white border border-b-gray-100": props.solidBg,
       })}
@@ -43,67 +115,21 @@ export default function HeaderComponent(props: HeaderProps) {
           }}
         />
 
-        {!props.isAuthenticated ? (
-          <ul className="flex items-center gap-6">
-            <li className={"hidden md:inline-block"}>
-              <a
-                href={`#${Constants.UI.SECTIONS.COURSES}`}
-                className={clsx("text-stale-950 font-medium text-sm lg:text-md hover:text-green-400 text-black")}
-              >
-                Cursos
-              </a>
-            </li>
-
-            <li className={"hidden md:inline-block"}>
-              <Link
-                href={Constants.APP_ROUTES.TUTOR_SIGNUP}
-                className={clsx("text-stale-950 font-medium text-sm lg:text-md hover:text-green-400 text-black")}
-              >
-                Vender meu curso
-              </Link>
-            </li>
-
-            <li>
-              <ButtonElement
-                type={ButtonType.PRIMARY}
-                fillType={FillType.FILLED}
-                size={ButtonSize.SMALL}
-                shape={ButtonShape.ROUNDED}
-                shadow
-                onClick={() => {
-                  setModalOpen(true);
-                }}
-              >
-                Entrar
-              </ButtonElement>
-            </li>
-          </ul>
-        ) : (
-          <div className={"flex items-center gap-6"}>
-            <Link
-              href={`#${Constants.UI.SECTIONS.COURSES}`}
-              className={clsx("text-stale-950 font-medium text-sm lg:text-md", {
-                "text-green-400": isSticky,
-                "text-black": !isSticky,
-              })}
-            >
-              Cursos
-            </Link>
-
-            <a
-              className="py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-medium rounded-lg border border-transparent bg-green-400 text-white hover:bg-green-300 focus:outline-none focus:bg-green-700 disabled:opacity-50 disabled:pointer-events-none"
-              href={`#`}
-              onClick={async () => {
-                await handleLogout();
-              }}
-            >
-              Sair
-            </a>
-          </div>
-        )}
+        <ul className="flex items-center gap-6">
+          {menuItems.map((menuItem, index) => (
+            <MenuItem key={index} menuItem={menuItem} />
+          ))}
+        </ul>
       </div>
 
-      <LoginModal open={modalOpen} onChange={setModalOpen} />
+      <GenericSignupModal
+        open={isOpenTutorSignupModal}
+        onChange={(value) => {
+          setSignInType(undefined);
+          setIsOpenTutorSignupModal(value);
+        }}
+        signupModalType={signInType}
+      />
     </header>
   );
 }

@@ -5,8 +5,12 @@ import GoogleIco from "@/assets/icons/google-icon.svg";
 import { handleSocialLogin } from "@/app/backend/actions/auth";
 import { Constants } from "@/utils/Constants";
 import { auth } from "@/auth";
+import { SignupType } from "@/utils/interfaces";
 
-export async function SignupForm() {
+interface SignupFormProps {
+  courseId?: string;
+}
+export async function SignupForm(props: SignupFormProps) {
   const session = await auth();
   const user = session?.user;
 
@@ -27,6 +31,8 @@ export async function SignupForm() {
             <p className={"text-sm md:text-md text-gray-500 max-w-lg"}>
               Crie uma conta para ter acesso a todos os cursos disponíveis na nossa plataforma.
             </p>
+            <input type={"hidden"} name={Constants.AUTH_ATTRIBUTES.SINGNUP_TYPE} value={SignupType.GENERAL_LOGIN} />
+            <input type={"hidden"} name={Constants.AUTH_ATTRIBUTES.COURSE_ID} value={props.courseId} />
             <div className="flex justify-center">
               <button
                 aria-label="Sign in with Google"

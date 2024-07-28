@@ -1,3 +1,5 @@
+import { SignupType } from "@/utils/interfaces";
+
 export const Constants = {
   UI: {
     HEADER_HEIGHT: "80px",
@@ -18,16 +20,22 @@ export const Constants = {
   AUTH_PROVIDER: {
     GOOGLE: "google",
   },
+  AUTH_ATTRIBUTES: {
+    SINGNUP_TYPE: "authType",
+    COURSE_ID: "courseId",
+  },
   ACTIONS: {
     LOGIN: "LOGIN",
   },
   APP_ROUTES: {
     HOME: "/",
     CHECKOUT: (courseId: string) => `/checkout/${courseId}`,
-    COMPLETE_AUTH: "/complete-auth",
+    COMPLETE_AUTH: (authType: SignupType, courseId: string) =>
+      `/complete-auth/?authType=${authType}${courseId ? `&courseId=${courseId}` : ""}`,
     COURSES: "/courses",
+    COURSES_LIST: "/#courseSection",
     COURSE_DETAILS_PUBLIC: (courseId: string) => `/course/${courseId}`,
-    TUTOR_SIGNUP: "/tutor-signup",
+    COMPLETE_TUTOR_SIGNUP: "/complete-tutor-signup",
     COURSE_DETAILS: (courseId: string) => `/courses/${courseId}`,
     LESSON: (courseId: string, moduleId: string, lessonId: string) => `/courses/${courseId}/${moduleId}/${lessonId}`,
     TEACHER: {
@@ -48,14 +56,14 @@ export const Constants = {
       },
     },
   },
-  COURSE: {
-    DEFAULT_COURSE_ID: "Q0us6qiWzX00sF2IZyQL",
-  },
 };
 
 export const PROTECTED_ROUTES = [Constants.APP_ROUTES.COURSES];
 
 export enum FirebaseCollections {
+  TUTORS = "tutors",
+  STUDENTS = "students",
+  WITHDRAWALS = "withdrawals",
   USERS = "users",
   SUBSCRIPTIONS = "subscriptions",
   COURSES = "courses",
@@ -74,7 +82,18 @@ export enum Locales {
   EN = "en",
 }
 export enum USER_ROLES {
-  ADMIN = "ADMIN",
-  TEACHER = "TEACHER",
+  ADMIN = "admin",
+  TUTOR = "tutor",
+  STUDENT = "student",
 }
 export const PHONE_PREFIX = "258";
+
+export abstract class RegexPatterns {
+  public static M_PESA_PHONE_NUMBER = /^(84|85)[0-9]{7}$/;
+  public static PHONE_NUMBER = /^(82|83|84|85|86|87)[0-9]{7}$/;
+}
+
+export enum CourseCardType {
+  DEFAULT = "DEFAULT",
+  MY_COURSES = "MY_COURSES",
+}

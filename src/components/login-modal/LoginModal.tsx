@@ -11,7 +11,7 @@ interface LoginModalProps {
 export default function LoginModal(props: LoginModalProps) {
   return (
     <Dialog open={props.open} onOpenChange={props.onChange} modal={true}>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="max-w-[90vw] md:max-w-[70vw]">
         <DialogHeader>
           <DialogTitle>Entrar</DialogTitle>
           <DialogDescription>Para aceder aos cursos, faça login com a sua conta.</DialogDescription>

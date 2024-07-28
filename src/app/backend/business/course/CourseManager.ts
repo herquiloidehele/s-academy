@@ -1,18 +1,16 @@
 import { ICourse, ILesson, IModule } from "@/app/backend/business/course/CourseData";
 import Logger from "@/utils/Logger";
 import FirestoreService from "@/app/backend/services/FirestoreService";
-import { Constants, FirebaseCollections } from "@/utils/Constants";
+import { FirebaseCollections } from "@/utils/Constants";
 import * as _ from "lodash";
 import { CourseMock } from "@/mock/CourseMock";
+import SubscriptionManager from "@/app/backend/business/subscription/SubscriptionManager";
+import AuthManager from "@/app/backend/business/auth/AuthManager";
+import { firestore } from "firebase-admin";
+import FieldPath = firestore.FieldPath;
 
 class CourseManager {
-  private readonly DEFAULT_COURSE_ID = Constants.COURSE.DEFAULT_COURSE_ID;
-
   private readonly LOG_TAG = "CourseManager";
-
-  public get defaultCourseId() {
-    return this.DEFAULT_COURSE_ID;
-  }
 
   public getTotalPrice(course: ICourse) {
     return course.price - course.discount;
@@ -177,6 +175,36 @@ class CourseManager {
       return [...courses, ...mockCourses];
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error getting all courses`, error);
+      return [];
+    }
+  }
+
+  public async getSubscribedCourses(): Promise<ICourse[]> {
+    Logger.debug(this.LOG_TAG, `Getting subscribed courses for user`);
+
+    try {
+      const authUser = await AuthManager.getAuthUser();
+
+      if (!authUser) {
+        Logger.error(this.LOG_TAG, `User not found by user`);
+        return Promise.reject("User not found");
+      }
+
+      const subscriptions = await SubscriptionManager.getSubscriptionByUserId(authUser.id);
+
+      Logger.debug(this.LOG_TAG, `Subscriptions found for user: ${authUser.id}`, [subscriptions]);
+
+      const courses = await FirestoreService.getDocumentsByQuery<ICourse>(FirebaseCollections.COURSES, {
+        field: FieldPath.documentId(),
+        operator: "in",
+        value: subscriptions.map((sub) => sub.courseId),
+      });
+
+      Logger.debug(this.LOG_TAG, `Courses found for user: ${authUser.id}`, [courses]);
+
+      return courses;
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error getting subscribed courses for user`, error);
       return [];
     }
   }

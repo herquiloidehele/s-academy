@@ -12,13 +12,13 @@ import AppLogo from "../../assets/icons/logo.svg";
 import { useRouter } from "next/navigation";
 import UserMenu, { IUserMenuItem } from "@/components/navbar/UserMenu";
 import { User2Icon } from "lucide-react";
-import useAuthStore from "@/app/complete-auth/authStore";
+import { authSelectors, useAuthStore } from "@/app/store/authStore";
 
 function Navbar() {
   const isOpened = useMenuStore((state) => state.isOpened);
   const setIsOpen = useMenuStore((state) => state.setIsOpen);
   const router = useRouter();
-  const loggedUser = useAuthStore((state) => state.user);
+  const loggedUser = useAuthStore(authSelectors.getUser);
   const userMenuItems: IUserMenuItem[] = [
     {
       title: "Minha Conta",
@@ -53,11 +53,7 @@ function Navbar() {
       </div>
 
       <div className="ml-auto self-center">
-        <UserMenu
-          menuItems={userMenuItems}
-          email={loggedUser?.email || "erciliomarquesmanhica@gmail.com"}
-          userName={loggedUser?.email || "Ercilio Marques Manhica"}
-        >
+        <UserMenu menuItems={userMenuItems} email={loggedUser?.email || ""} userName={loggedUser?.email || ""}>
           <User2Icon className="size-10 font-light self-center ml-auto stroke-1 text-xm mr-3 rounded-full border-2 border-green-600" />
         </UserMenu>
       </div>

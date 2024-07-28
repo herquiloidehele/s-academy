@@ -11,7 +11,7 @@ interface AppComponentProps {
 export default function QueryClientWrapper({ children }: AppComponentProps) {
   return (
     <QueryClientProvider client={queryClient}>
-      <ReactQueryDevtools initialIsOpen={false} />
+      <ReactQueryDevtools client={queryClient} initialIsOpen={false} />
       {children}
     </QueryClientProvider>
   );

@@ -5,6 +5,8 @@ import QueryClientWrapper from "@/components/shared/QueryClientWrapper";
 import FirebaseConfig from "@/app/backend/services/FirebaseConfig";
 import { Toaster } from "@/components/ui/sonner";
 import PrelineScript from "@/components/preline/PrelineScript";
+import { ReactNode } from "react";
+import AuthProvider from "@/components/auth-provider/AuthProvider";
 
 const font = Inter({ subsets: ["latin"] });
 
@@ -16,14 +18,16 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: ReactNode;
 }>) {
   await FirebaseConfig.initialize();
 
   return (
     <html className={"scroll-smooth"} lang="en">
       <body className={font.className}>
-        <QueryClientWrapper>{children}</QueryClientWrapper>
+        <QueryClientWrapper>
+          <AuthProvider>{children}</AuthProvider>
+        </QueryClientWrapper>
         <Toaster />
       </body>
 

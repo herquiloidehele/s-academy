@@ -2,50 +2,39 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { Constants, FirebaseCollections } from "@/utils/Constants";
 import FirestoreService from "@/app/backend/services/FirestoreService";
-import { UserRole } from "@/app/backend/business/auth/UsersData";
 import Logger from "@/utils/Logger";
-import { IRouteParams } from "@/utils/interfaces";
+import { IRouteParams, SignupType } from "@/utils/interfaces";
+import AuthManager from "@/app/backend/business/auth/AuthManager";
+import { IUser } from "@/app/backend/business/auth/UsersData";
 
-export default async function page({ params: { courseId } }: IRouteParams) {
+const LOG_TAG = "CompleteAuthPage";
+
+export default async function page({ searchParams: { courseId, authType } }: IRouteParams) {
   const session = await auth();
   const user = session?.user;
 
   if (!user?.email) {
-    Logger.error("CompleteAuthPage", "User not found in session", [user]);
-    redirect(`${Constants.APP_ROUTES.CHECKOUT}?error=auth`);
+    Logger.error(LOG_TAG, "User not found in session", [user]);
+    return redirect(Constants.APP_ROUTES.HOME);
   }
 
-  const storedUser = await FirestoreService.getDocumentById(FirebaseCollections.USERS, user.email);
+  const storedUser = await FirestoreService.getDocumentById<IUser>(FirebaseCollections.USERS, user.email);
+
+  Logger.info(LOG_TAG, `User found in session: ${user.email}`, [storedUser]);
 
   if (!storedUser) {
-    await FirestoreService.saveDocument(
-      FirebaseCollections.USERS,
-      {
-        email: user.email,
-        role: UserRole.USER,
-      },
+    const finalRedirect = await AuthManager.finalizeUserRegistration(
       user.email,
+      AuthManager.SIGNUP_TO_USER_ROLE_MAP[authType as SignupType],
+      courseId,
     );
 
-    if (courseId) {
-      redirect(Constants.APP_ROUTES.CHECKOUT(courseId));
-    } else {
-      redirect(Constants.APP_ROUTES.COURSES);
-    }
+    Logger.info(LOG_TAG, `Redirecting to: ${finalRedirect}`);
+
+    redirect(finalRedirect);
   } else {
-    const doesUserHaveSubscription = await FirestoreService.getDocumentById(
-      FirebaseCollections.SUBSCRIPTIONS,
-      user.email,
-    );
-
-    if (doesUserHaveSubscription) {
-      return redirect(Constants.APP_ROUTES.COURSES);
-    }
-
-    if (courseId) {
-      redirect(Constants.APP_ROUTES.CHECKOUT(courseId));
-    } else {
-      redirect(Constants.APP_ROUTES.COURSES);
-    }
+    const finalRedirect = await AuthManager.finalizeUserLogin(user.email, storedUser.role, courseId);
+    Logger.info(LOG_TAG, `Redirecting to: ${finalRedirect}`);
+    return redirect(finalRedirect);
   }
 }

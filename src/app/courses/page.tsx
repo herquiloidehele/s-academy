@@ -5,13 +5,13 @@ import CourseListLoadingState from "@/components/sections/courses-list/CourseLis
 import AwaitFetch from "@/components/shared/await-fetch/AwaitFetch";
 import { ICourse } from "@/app/backend/business/course/CourseData";
 import CoursesList from "@/components/sections/courses-list/CoursesList";
-import { fetchCourses } from "@/app/backend/actions/course";
+import { getSubscribedCourses } from "@/app/backend/actions/course";
 import { CourseCardType } from "@/utils/Constants";
 
 export const dynamic = "force-dynamic";
 
 export default async function page() {
-  const fetchCoursePromise = fetchCourses();
+  const fetchCoursePromise = getSubscribedCourses();
 
   return (
     <div className={"py-20 md:pt-28 px-5 xl:px-0 md:max-w-[1300px] mx-auto space-y-5 w-full h-full"}>

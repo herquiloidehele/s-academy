@@ -50,23 +50,26 @@ class SubscriptionManager {
     }
   }
 
-  public async getSubscriptionByUserId(userId: string): Promise<ISubscription | undefined> {
+  public async getSubscriptionByUserId(userId: string): Promise<ISubscription[]> {
     Logger.debug(this.LOG_TAG, `Getting subscriptions for user: ${userId}`);
 
     try {
-      const subscriptions = await FirestoreService.getDocumentsByQuery(FirebaseCollections.SUBSCRIPTIONS, {
-        field: "userId",
-        operator: "==",
-        value: userId,
-      });
+      const subscriptions = await FirestoreService.getDocumentsByQuery<ISubscription>(
+        FirebaseCollections.SUBSCRIPTIONS,
+        {
+          field: "userId",
+          operator: "==",
+          value: userId,
+        },
+      );
 
       Logger.debug(this.LOG_TAG, `Subscriptions found`, [subscriptions]);
 
       if (!subscriptions?.length) {
-        return undefined;
+        return [];
       }
 
-      return subscriptions.pop() as ISubscription;
+      return subscriptions as ISubscription[];
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error getting subscriptions`, error);
       return Promise.reject(error);
@@ -85,7 +88,7 @@ class SubscriptionManager {
       const subscription = await this.getSubscriptionByUserId(userId);
 
       Logger.debug(this.LOG_TAG, `Subscription expire date`, [subscription]);
-      const isActive = !!subscription;
+      const isActive = !!subscription.length;
 
       Logger.debug(this.LOG_TAG, `Active subscription found`, [isActive]);
       return isActive;

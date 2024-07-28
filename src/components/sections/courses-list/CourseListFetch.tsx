@@ -6,7 +6,7 @@ import ErrorCourseListState from "@/components/sections/courses-list/ErrorCourse
 import AwaitFetch from "@/components/shared/await-fetch/AwaitFetch";
 import { ICourse } from "@/app/backend/business/course/CourseData";
 import CoursesList from "@/components/sections/courses-list/CoursesList";
-import { Constants } from "@/utils/Constants";
+import { Constants, CourseCardType } from "@/utils/Constants";
 
 export default async function CourseListFetch() {
   const fetchCoursePromise = fetchCourses();
@@ -28,7 +28,7 @@ export default async function CourseListFetch() {
               <ErrorBoundary FallbackComponent={ErrorCourseListState}>
                 <Suspense fallback={<CourseListLoadingState />}>
                   <AwaitFetch promise={fetchCoursePromise}>
-                    {(courses: ICourse[]) => <CoursesList courses={courses} />}
+                    {(courses: ICourse[]) => <CoursesList courses={courses} cardType={CourseCardType.DEFAULT} />}
                   </AwaitFetch>
                 </Suspense>
               </ErrorBoundary>

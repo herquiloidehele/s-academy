@@ -4,6 +4,7 @@ import SubscriptionManager from "@/app/backend/business/subscription/Subscriptio
 import Logger from "@/utils/Logger";
 import { redirect } from "next/navigation";
 import AuthManager from "@/app/backend/business/auth/AuthManager";
+import Header from "@/components/header/Header";
 
 const LOG_TAG = "CourseLayout";
 
@@ -21,5 +22,10 @@ export default async function layout({ children }) {
     return redirect(Constants.APP_ROUTES.COURSES_LIST);
   }
 
-  return <ProtectedRoutes allowedRoles={[USER_ROLES.STUDENT]}>{children}</ProtectedRoutes>;
+  return (
+    <>
+      <Header solidBg />
+      <ProtectedRoutes allowedRoles={[USER_ROLES.STUDENT]}>{children}</ProtectedRoutes>
+    </>
+  );
 }

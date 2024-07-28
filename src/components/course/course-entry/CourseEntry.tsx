@@ -4,17 +4,23 @@ import { ICourse } from "@/app/backend/business/course/CourseData";
 import Image from "next/image";
 import { formatCurrency } from "@/lib/utils";
 import Link from "next/link";
-import { Constants } from "@/utils/Constants";
+import { Constants, CourseCardType } from "@/utils/Constants";
 
 interface ICourseEntryProps {
   course: ICourse;
+  cardType: CourseCardType;
 }
 export default function CourseEntry(props: ICourseEntryProps) {
   const { course } = props;
   const category = course.categories?.[0] || "Sem Categoria";
 
+  const linkTo: Record<CourseCardType, string> = {
+    [CourseCardType.DEFAULT]: Constants.APP_ROUTES.COURSE_DETAILS_PUBLIC(course.id),
+    [CourseCardType.MY_COURSES]: Constants.APP_ROUTES.COURSE_DETAILS(course.id),
+  };
+
   return (
-    <Link href={Constants.APP_ROUTES.COURSE_DETAILS_PUBLIC(props.course.id)} className="flex flex-col gap-1">
+    <Link href={linkTo[props.cardType]} className="flex flex-col gap-1">
       <div className="block relative h-80 rounded overflow-hidden aspect-square">
         <Image
           alt="ecommerce"

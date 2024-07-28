@@ -92,3 +92,8 @@ export abstract class RegexPatterns {
   public static M_PESA_PHONE_NUMBER = /^(84|85)[0-9]{7}$/;
   public static PHONE_NUMBER = /^(82|83|84|85|86|87)[0-9]{7}$/;
 }
+
+export enum CourseCardType {
+  DEFAULT = "DEFAULT",
+  MY_COURSES = "MY_COURSES",
+}

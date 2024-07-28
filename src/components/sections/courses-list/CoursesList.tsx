@@ -3,9 +3,11 @@
 import { motion } from "framer-motion";
 import CourseEntry from "@/components/course/course-entry/CourseEntry";
 import { ICourse } from "@/app/backend/business/course/CourseData";
+import { CourseCardType } from "@/utils/Constants";
 
 interface ICCourseListProps {
   courses: ICourse[];
+  cardType: CourseCardType;
 }
 export default function CoursesList(props: ICCourseListProps) {
   return (
@@ -17,7 +19,7 @@ export default function CoursesList(props: ICCourseListProps) {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, delay: index * 0.1 }}
         >
-          <CourseEntry course={course} />
+          <CourseEntry course={course} cardType={props.cardType} />
         </motion.div>
       ))}
     </div>

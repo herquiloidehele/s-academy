@@ -1,4 +1,3 @@
-import Header from "@/components/header/Header";
 import React, { Suspense } from "react";
 import VideoSideListError from "@/components/course/video-side-list/VideoSideListError";
 import VideoSideList from "@/components/course/video-side-list/VideoSideList";
@@ -20,7 +19,6 @@ export default async function CourseLayout({ children, params: { courseId } }: I
 
   return (
     <div className={"pt-20 md:pt-28 px-5 xl:px-0 md:max-w-[1300px] mx-auto"}>
-      <Header solidBg />
       <div className="w-full">
         <div className="grid grid-cols-1 md:grid-cols-[4fr_1fr] gap-7">
           {children}

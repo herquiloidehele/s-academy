@@ -32,10 +32,12 @@ export async function VideoPlayerWrapper(props: VideoPlayerWrapperProps) {
 
 const EmptyVideoPlayer = () => {
   return (
-    <div className={"flex gap-3 flex-col justify-center items-center bg-gray-800 rounded-2xl h-[60vh]"}>
-      <h1 className={"text-2xl text-white"}>Selecione uma aula para começar a assistir</h1>
-      <p className={"text-white text-md max-w-[360px] text-center"}>
-        Comece a assistir as aulas do curso selecionando uma aula na lista ao lado.
+    <div className={"flex gap-3 flex-col justify-center items-center bg-gray-800 rounded-2xl h-[60vh] p-6"}>
+      <h1 className={"font-bold text-xl md:text-2xl text-white text-center "}>
+        Selecione uma aula para começar a assistir
+      </h1>
+      <p className={"text-gray-400 text-sm md:text-md max-w-[360px] text-center"}>
+        Comece a assistir as aulas do curso selecionando uma aula na lista.
       </p>
     </div>
   );

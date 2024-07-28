@@ -3,7 +3,7 @@ import { handleSocialLogin } from "@/app/backend/actions/auth";
 import { Constants } from "@/utils/Constants";
 import GoogleIco from "@/assets/icons/google-icon.svg";
 import HeroImage4 from "@/assets/images/hero4.jpg";
-import HeroImage5 from "@/assets/images/hero5.jpg";
+import HeroImage6 from "@/assets/images/hero6.jpg";
 import * as React from "react";
 import Image from "next/image";
 import { SignupType } from "@/utils/interfaces";
@@ -29,9 +29,13 @@ export default function GenericSignupModal(props: TutorSignupModalProps) {
       image: HeroImage4.src,
     },
     [SignupType.GENERAL_LOGIN]: {
-      title: "Encontre os melhores cursos online",
+      title: (
+        <span>
+          Encontre os melhores <span className={"text-green-400"}>cursos</span> online
+        </span>
+      ),
       description: "Encontre os melhores cursos online e comece a aprender hoje mesmo.",
-      image: HeroImage5.src,
+      image: HeroImage6.src,
     },
   };
 

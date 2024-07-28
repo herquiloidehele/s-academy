@@ -33,7 +33,7 @@ class AuthManager {
           if (courseId) {
             return Constants.APP_ROUTES.CHECKOUT(courseId);
           } else {
-            return Constants.APP_ROUTES.COURSES;
+            return Constants.APP_ROUTES.COURSES_LIST;
           }
         }
         default: {
@@ -68,7 +68,7 @@ class AuthManager {
           if (courseId) {
             return Constants.APP_ROUTES.CHECKOUT(courseId);
           } else {
-            return Constants.APP_ROUTES.COURSES;
+            return Constants.APP_ROUTES.COURSES_LIST;
           }
         }
         default: {

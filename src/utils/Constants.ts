@@ -33,6 +33,7 @@ export const Constants = {
     COMPLETE_AUTH: (authType: SignupType, courseId: string) =>
       `/complete-auth/?authType=${authType}${courseId ? `&courseId=${courseId}` : ""}`,
     COURSES: "/courses",
+    COURSES_LIST: "/#courseSection",
     COURSE_DETAILS_PUBLIC: (courseId: string) => `/course/${courseId}`,
     COMPLETE_TUTOR_SIGNUP: "/complete-tutor-signup",
     COURSE_DETAILS: (courseId: string) => `/courses/${courseId}`,
@@ -54,9 +55,6 @@ export const Constants = {
         BALANCE: "/teacher/wallet/balance",
       },
     },
-  },
-  COURSE: {
-    DEFAULT_COURSE_ID: "Q0us6qiWzX00sF2IZyQL",
   },
 };
 

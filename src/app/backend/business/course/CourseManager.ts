@@ -1,18 +1,12 @@
 import { ICourse, ILesson, IModule } from "@/app/backend/business/course/CourseData";
 import Logger from "@/utils/Logger";
 import FirestoreService from "@/app/backend/services/FirestoreService";
-import { Constants, FirebaseCollections } from "@/utils/Constants";
+import { FirebaseCollections } from "@/utils/Constants";
 import * as _ from "lodash";
 import { CourseMock } from "@/mock/CourseMock";
 
 class CourseManager {
-  private readonly DEFAULT_COURSE_ID = Constants.COURSE.DEFAULT_COURSE_ID;
-
   private readonly LOG_TAG = "CourseManager";
-
-  public get defaultCourseId() {
-    return this.DEFAULT_COURSE_ID;
-  }
 
   public getTotalPrice(course: ICourse) {
     return course.price - course.discount;

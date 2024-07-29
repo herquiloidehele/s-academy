@@ -13,26 +13,26 @@ export interface ICourse {
   tutorId: string;
 }
 export interface ICourseDto {
-  title: string;
+  title?: string;
   description?: string;
-  price: number;
-  duration: string;
-  discount: number;
-  modules: IModuleDto[];
+  price?: number;
+  duration?: string;
+  discount?: number;
+  modules?: IModuleDto[];
   coverUrl?: string;
   coverFile?: File;
   promoVideoFile?: File;
   promoVideoRef?: number;
   categories?: string[];
   createdAt?: Date;
-  tutorId: string;
+  tutorId?: string;
 }
 
 export interface IModuleDto {
   order: number;
   title: string;
   description?: string;
-  lessons: ILessonDto[];
+  lessons?: ILessonDto[];
 }
 export interface ILessonDto {
   order: number;

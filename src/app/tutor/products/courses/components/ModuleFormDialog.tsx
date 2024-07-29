@@ -6,37 +6,34 @@ import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
-import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
 import useCourseStore from "@/app/tutor/products/courses/courseStore";
-import ButtonElement, { ButtonShape, ButtonSize, FillType } from "@/components/shared/Button";
+import { IModuleDto } from "@/app/backend/business/course/CourseData";
+import { Button } from "@/components/ui/button";
+import { IModuleSchema } from "@/app/tutor/products/courses/components/CourseSchemas";
 
-export const IModuleSchema = z.object({
-  order: z.number(),
-  name: z.string(),
-  description: z.string().optional(),
-});
 export function ModuleFormDialog(props: { children: React.ReactNode; productID?: number }) {
-  const { toast } = useToast();
   const [open, setOpen] = useState(false);
-  const [openModulesCombobox, setOpenModulesCombobox] = React.useState(false);
-  const modules = useCourseStore((state) => state.modules);
-  const [value, setValue] = React.useState("");
+  const addModule = useCourseStore((state) => state.addModule);
 
   const form = useForm<z.infer<typeof IModuleSchema>>({
     resolver: zodResolver(IModuleSchema),
     defaultValues: {
       order: 0,
-      name: "",
+      title: "",
       description: "",
     },
   });
 
   async function onSubmit(values) {
-    if (props.productID) {
-      return;
-    } else {
-    }
+    const moduleValues: IModuleDto = {
+      order: values.order,
+      title: values.title,
+      description: values.description,
+    };
+    addModule(moduleValues);
+
+    setOpen(false);
   }
 
   return (
@@ -51,12 +48,12 @@ export function ModuleFormDialog(props: { children: React.ReactNode; productID?:
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <FormField
                 control={form.control}
-                name="name"
+                name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="font-light leading-tight">Nome</FormLabel>
+                    <FormLabel className="font-light leading-tight">Título</FormLabel>
                     <FormControl>
-                      <Input placeholder="Nome do módulo" {...field} />
+                      <Input placeholder="Título do módulo" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -83,7 +80,12 @@ export function ModuleFormDialog(props: { children: React.ReactNode; productID?:
                     <FormLabel className="font-light leading-tight">Posição</FormLabel>
                     <div className="flex flex-row gap-2 items-center">
                       <FormControl>
-                        <Input type="number" placeholder="posição da aula" {...field} />
+                        <Input
+                          type="number"
+                          placeholder="posição da aula"
+                          {...field}
+                          onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                        />
                       </FormControl>
                     </div>
                     <FormMessage />
@@ -92,14 +94,9 @@ export function ModuleFormDialog(props: { children: React.ReactNode; productID?:
               />
 
               <DialogFooter>
-                <ButtonElement
-                  type="submit"
-                  fillType={FillType.FILLED}
-                  shape={ButtonShape.SQUARE}
-                  size={ButtonSize.SMALL}
-                >
+                <Button type="submit" className="hover:bg-active hover:text-active-foreground">
                   Gravar
-                </ButtonElement>
+                </Button>
               </DialogFooter>
             </form>
           </Form>

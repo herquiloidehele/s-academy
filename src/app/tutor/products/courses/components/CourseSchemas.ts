@@ -29,3 +29,9 @@ export const courseBasicInformationformSchema = z.object({
   promoVideoFile: z.union([fileSchema, urlSchema], { message: "Deve ser um arquivo válido ou uma URL" }),
   categories: z.array(z.string()).nonempty({ message: "Selecione pelo menos uma categoria." }),
 });
+
+export const IModuleSchema = z.object({
+  order: z.number(),
+  title: z.string(),
+  description: z.string().optional(),
+});

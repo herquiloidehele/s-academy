@@ -1,9 +1,7 @@
 import { create } from "zustand";
 import Logger from "@/utils/Logger";
-import { ICourse, ICourseDto, ILesson, IModule } from "@/app/backend/business/course/CourseData";
+import { ICourse, ICourseDto, ILesson, IModule, IModuleDto } from "@/app/backend/business/course/CourseData";
 import { fetchCoursesByTutorsID, saveCourse } from "@/app/backend/actions/course";
-import { z } from "zod";
-import { courseBasicInformationformSchema } from "@/app/tutor/products/courses/components/CourseSchemas";
 import { IOptionType } from "@/components/multi-selector/MultiSelect";
 
 const moduleList = [
@@ -66,7 +64,9 @@ interface ICourseStoreState {
   setCurrentStepIndex: (index: number) => void;
   setCoursesByTeacherId: (id: string) => Promise<void>;
   saveCourse: (course: ICourseDto) => Promise<void>;
-  saveCourseDtoInfo: (course: z.infer<typeof courseBasicInformationformSchema>) => void;
+  saveCourseDtoInfo: (course: ICourseDto) => void;
+  addModule: (module: IModuleDto) => void;
+  removeModule: (module: IModuleDto) => void;
 }
 
 const useCourseStore = create<ICourseStoreState>((set) => ({
@@ -78,6 +78,36 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   selectedCategories: [],
   categoriesOptions: categoriesOptions,
   currentStepIndex: 0,
+  addModule: (module: IModuleDto) => {
+    set((state: ICourseStoreState) => {
+      const { courseDto } = state;
+      let updatedModules = [];
+      if ("modules" in courseDto) {
+        updatedModules = Array.isArray(courseDto.modules) ? [...courseDto.modules, module] : [module];
+      } else {
+        updatedModules = [module];
+      }
+
+      return {
+        courseDto: { ...courseDto, modules: updatedModules },
+      };
+    });
+  },
+  removeModule: (moduleToRemove: IModuleDto) => {
+    set((state: ICourseStoreState) => {
+      const { courseDto } = state;
+
+      const updatedModules = Array.isArray(courseDto?.modules)
+        ? courseDto?.modules.filter(
+            (module) => module.title !== moduleToRemove.title && module.order !== moduleToRemove.order,
+          )
+        : [];
+
+      return {
+        courseDto: { ...courseDto, modules: updatedModules },
+      };
+    });
+  },
   goToNextStep: () => {
     set((state) => {
       if (state.currentStepIndex < 2) {
@@ -119,7 +149,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       Logger.error("CourseStore", "Error saving course", error);
     }
   },
-  saveCourseDtoInfo: (course: any) => {
+  saveCourseDtoInfo: (course: ICourseDto) => {
     set((state) => ({
       courseDto: state.courseDto ? { ...state.courseDto, ...course, modules: [] } : (course as ICourseDto),
     }));

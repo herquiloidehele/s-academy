@@ -4,12 +4,16 @@ import { Edit2Icon, FolderOpen, Trash2Icon } from "lucide-react";
 import { EyeIcon } from "@heroicons/react/24/outline";
 import { LessonModuleListItems } from "@/app/tutor/products/courses/components/LessonModuleListItems";
 import { ModuleFormDialog } from "@/app/tutor/products/courses/components/ModuleFormDialog";
+import useCourseStore from "@/app/tutor/products/courses/courseStore";
+import { CustomAlertDialog } from "@/components/alert-dialog/AlertDialog";
 
 function ModuleItemList({ module, index }) {
   const [showActions, setShowActions] = React.useState(false);
   const handleShowActions = () => setShowActions(true);
   const handleHideActions = () => setShowActions(false);
+  const removeModule = useCourseStore((state) => state.removeModule);
 
+  const [isAlertDialogOpen, setIsAlertDialogOpen] = React.useState(false);
   return (
     <AccordionItem key={module.id} value={module.id} onMouseEnter={handleShowActions} onMouseLeave={handleHideActions}>
       <AccordionTrigger>
@@ -26,18 +30,32 @@ function ModuleItemList({ module, index }) {
             </span>
           </div>
           <div
-            className={`flex flex-row gap-2 col-span-1 justify-end ${showActions ? "transition opacity-100 duration-300" : "transition opacity-0 duration-300"}`}
+            className={`flex flex-row gap-2 col-span-1 justify-end items-center ${showActions ? "transition opacity-100 duration-300" : "transition opacity-0 duration-300"}`}
           >
             <ModuleFormDialog>
               <Edit2Icon className="w-6 h-6 stroke-1 text-blue-700" />
             </ModuleFormDialog>
-            <Trash2Icon
-              className="w-6 h-6 stroke-1 text-red-700"
-              onClick={(event) => {
-                event.preventDefault();
-                alert("hey delete");
+
+            <CustomAlertDialog
+              key={index}
+              open={isAlertDialogOpen}
+              setOpen={setIsAlertDialogOpen}
+              title={`Tem certeza que deseja excluir o módulo ${module.title}?`}
+              description="Esta ação não pode ser desfeita. Isso excluirá permanentemente o módulo e as aulas nele."
+              onAction={() => {
+                removeModule(module);
               }}
-            />
+              onCancel={() => setIsAlertDialogOpen(false)}
+            >
+              <Trash2Icon
+                className="w-6 h-6 stroke-1 text-red-700"
+                onClick={(event) => {
+                  event.preventDefault();
+                  setIsAlertDialogOpen(true);
+                }}
+              />
+            </CustomAlertDialog>
+
             <EyeIcon
               className="w-6 h-6 stroke-1 text-green-700 mr-3"
               onClick={(event) => {

@@ -17,23 +17,25 @@ function CourseFormInformation() {
   const courseDto = useCourseStore((state) => state.courseDto);
   const categoriesOptions = useCourseStore((state) => state.categoriesOptions);
   const selectedCategories = useCourseStore((state) => state.selectedCategories);
-  const setSelectedSelectedCategories = useCourseStore((state) => state.setSelectedSelectedCategories);
+  const setSelectedSelectedCategories = useCourseStore((state) => state.setSelectedCategories);
+  const goToNextStep = useCourseStore((state) => state.goToNextStep);
 
   const form = useForm<z.infer<typeof courseBasicInformationformSchema>>({
     resolver: zodResolver(courseBasicInformationformSchema),
     defaultValues: {
-      title: courseDto.title,
-      description: courseDto.description,
-      price: courseDto.price,
-      discount: courseDto.discount,
-      categories: courseDto.categories || [],
-      coverFile: courseDto.coverUrl,
-      promoVideoFile: courseDto.promoVideoRef?.toString(),
+      title: courseDto?.title,
+      description: courseDto?.description,
+      price: courseDto?.price,
+      discount: courseDto?.discount,
+      categories: courseDto?.categories || [],
+      coverFile: courseDto?.coverFile,
+      promoVideoFile: courseDto?.promoVideoFile,
     },
   });
 
   async function onSubmit(values: z.infer<typeof courseBasicInformationformSchema>) {
     saveCourseDtoInfo(values);
+    goToNextStep();
   }
 
   return (
@@ -138,7 +140,7 @@ function CourseFormInformation() {
                   <FormLabel className="font-light leading-tight">Capa</FormLabel>
                   <FormControl>
                     <FileUploader
-                      defaultFile={courseDto.coverFile}
+                      defaultFile={courseDto?.coverFile}
                       id="coverFile"
                       mimeType="image/*"
                       fileTypes={["SVG", "PNG", "JPG"]}
@@ -159,7 +161,7 @@ function CourseFormInformation() {
                   <FormLabel className="font-light leading-tight">Vídeo Promoção</FormLabel>
                   <FormControl>
                     <FileUploader
-                      defaultFile={courseDto.promoVideoFile}
+                      defaultFile={courseDto?.promoVideoFile}
                       id="promoVideoFile"
                       mimeType="video/*"
                       fileTypes={["MP4"]}

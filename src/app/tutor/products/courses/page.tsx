@@ -8,20 +8,12 @@ import { useRouter } from "next/navigation";
 import { Constants } from "@/utils/Constants";
 import { motion } from "framer-motion";
 import EmptyAnimation from "@/assets/animation/empty.json";
-import Lottie from "react-lottie";
+import EmptyState from "@/components/empty-list/EmptyState";
+import { ModuleFormDialog } from "@/app/tutor/products/courses/components/ModuleFormDialog";
 
 function CoursePage() {
   const router = useRouter();
   const [coursesData, setCoursesData] = React.useState([]);
-
-  const lottieDefaultOptions = {
-    loop: true,
-    autoplay: true,
-    animationData: EmptyAnimation,
-    rendererSettings: {
-      preserveAspectRatio: "xMidYMid slice",
-    },
-  };
 
   return (
     <div>
@@ -71,23 +63,26 @@ function CoursePage() {
           ))}
       </div>
       {coursesData.length === 0 && (
-        <div className="w-full flex flex-col gap-2 justify-center items-center py-8 bg-white shadow-md rounded-md">
-          <Lottie options={lottieDefaultOptions} height={400} width={400} />
-          <span className="text-gray-600 font-semibold text-lg mt-4">Nenhum curso encontrado</span>
-          <p className="text-gray-400 text-sm mt-2">Crie um novo curso ou explore outras categorias</p>
-          <ButtonElement
-            shape={ButtonShape.SQUARE}
-            size={ButtonSize.SMALL}
-            fillType={FillType.FILLED}
-            type={ButtonType.PRIMARY}
-            onClick={() => router.push(Constants.APP_ROUTES.TEACHER.NEW_COURSES)}
-          >
-            <div className="flex flex-row gap-2 justify-center items-center">
-              <PlusIcon className="size-8" />
-              <span>Adicionar Curso</span>
-            </div>
-          </ButtonElement>
-        </div>
+        <EmptyState
+          animationData={EmptyAnimation}
+          title={"Nenhum curso encontrado"}
+          description={"Crie um novo curso ou explore outras categorias"}
+        >
+          <ModuleFormDialog>
+            <ButtonElement
+              shape={ButtonShape.SQUARE}
+              size={ButtonSize.SMALL}
+              fillType={FillType.FILLED}
+              type={ButtonType.PRIMARY}
+              onClick={() => router.push(Constants.APP_ROUTES.TEACHER.NEW_COURSES)}
+            >
+              <div className="flex flex-row gap-2 justify-center items-center">
+                <PlusIcon className="size-8" />
+                <span>Adicionar Curso</span>
+              </div>
+            </ButtonElement>
+          </ModuleFormDialog>
+        </EmptyState>
       )}
     </div>
   );

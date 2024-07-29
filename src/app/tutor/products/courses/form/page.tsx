@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import FormStepper from "@/app/tutor/products/courses/components/FormStepper";
 import CourseFormInformation from "@/app/tutor/products/courses/components/CourseFormInformation";
 import { EyeIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
@@ -11,7 +11,7 @@ import CourseFormReview from "@/app/tutor/products/courses/components/CourseForm
 import { ICourse } from "@/app/backend/business/course/CourseData";
 
 function FormPage() {
-  const modules = useCourseStore((state) => state.modules);
+  const courseDto = useCourseStore((state) => state.courseDto);
 
   const formSteps: IFormStep[] = [
     {
@@ -37,13 +37,22 @@ function FormPage() {
       icon: <EyeIcon className="w-3 h-3 md:w-6 md:h-6 font-light stroke-1 text-md" />,
       page: (
         <CourseFormReview
-          formData={{ ...({} as ICourse), modules: modules, title: "Metódo Educação Intensiva", tutorId: "1233" }}
+          formData={{
+            ...({} as ICourse),
+            modules: courseDto?.modules || [],
+          }}
         />
       ),
       state: false,
     },
   ];
-  const currentFormStep = useCourseStore((state) => state.currentFormStep);
+  const currentStepIndex = useCourseStore((state) => state.currentStepIndex);
+  const [currentFormStep, setCurrentFormStep] = React.useState<IFormStep>(formSteps[0]);
+
+  useEffect(() => {
+    setCurrentFormStep(formSteps[currentStepIndex]);
+  }, [currentStepIndex]);
+
   const router = useRouter();
   return (
     <div className="flex flex-row gap-3 ">

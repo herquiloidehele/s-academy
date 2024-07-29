@@ -1,23 +1,9 @@
 "use client";
 import React from "react";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
-import useCourseStore from "@/app/tutor/products/courses/courseStore";
-import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import CourseFormInformation from "@/app/tutor/products/courses/components/CourseFormInformation";
 
 function CourseFormPreview({ formData }: { formData: any }) {
-  const setCurrentFormStep = useCourseStore((state) => state.setCurrentFormStep);
-
-  const handleEdit = () => {
-    setCurrentFormStep({
-      title: "Course Information",
-      key: "course-information",
-      description: "Fill in the course information",
-      icon: <InformationCircleIcon className="w-3 h-3 md:w-6 md:h-6 font-light stroke-1 text-md" />,
-      page: <CourseFormInformation />,
-      state: false,
-    });
-  };
+  const handleEdit = () => {};
 
   return (
     <div className="container mx-auto p-4">

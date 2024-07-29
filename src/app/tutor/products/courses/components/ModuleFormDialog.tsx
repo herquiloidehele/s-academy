@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { useToast } from "@/components/ui/use-toast";
 import { Textarea } from "@/components/ui/textarea";
-import useCourseStore from "@/app/teacher/products/courses/courseStore";
+import useCourseStore from "@/app/tutor/products/courses/courseStore";
 import ButtonElement, { ButtonShape, ButtonSize, FillType } from "@/components/shared/Button";
 
 export const IModuleSchema = z.object({

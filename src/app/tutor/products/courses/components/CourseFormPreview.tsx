@@ -1,9 +1,9 @@
 "use client";
 import React from "react";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
-import useCourseStore from "@/app/teacher/products/courses/courseStore";
+import useCourseStore from "@/app/tutor/products/courses/courseStore";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
-import CourseFormInformation from "@/app/teacher/products/courses/components/CourseFormInformation";
+import CourseFormInformation from "@/app/tutor/products/courses/components/CourseFormInformation";
 
 function CourseFormPreview({ formData }: { formData: any }) {
   const setCurrentFormStep = useCourseStore((state) => state.setCurrentFormStep);

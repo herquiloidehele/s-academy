@@ -8,14 +8,15 @@ function FileUploader({
   instructions = "ou arraste e solte um arquivo",
   mimeType,
   fileTypes = "SVG, PNG, JPG or MP4 (MAX. 800x400px)",
+  defaultFile,
 }) {
-  const [file, setFile] = useState(null);
+  const [file, setFile] = useState(defaultFile);
   const [loading, setLoading] = useState(false);
   const inputRef = useRef(null);
 
   useEffect(() => {
-    setFile(null);
-  }, [mimeType]);
+    setFile(defaultFile);
+  }, [defaultFile]);
 
   const handleDragOver = (event) => {
     event.preventDefault();
@@ -71,7 +72,6 @@ function FileUploader({
           {loading ? (
             <div className="flex flex-col items-center justify-center">
               <div className="loader"></div>
-              {/* Replace with a spinner or animation */}
               <p className="text-sm flex flex-grow gap-2 text-gray-500 dark:text-gray-400">
                 <Loader2Icon className="animate-spin" />
                 Uploading...

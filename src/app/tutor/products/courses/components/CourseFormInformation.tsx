@@ -8,39 +8,34 @@ import { DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import FileUploader from "@/components/file-uploader/FileUploader";
+import useCourseStore from "@/app/tutor/products/courses/courseStore";
+import { courseBasicInformationformSchema } from "@/app/tutor/products/courses/components/CourseSchemas";
+import { MultiSelect } from "@/components/multi-selector/MultiSelect";
 
 function CourseFormInformation() {
-  const formSchema = z.object({
-    name: z.string().min(1, { message: "O nome do curso é obrigatório." }),
-    description: z
-      .string()
-      .min(1, { message: "A descrição do curso é obrigatória." })
-      .max(500, { message: "A descrição não pode exceder 500 caracteres." }),
-    price: z.number().min(0, { message: "O preço deve ser um número positivo." }),
-    discount: z
-      .number()
-      .min(0, { message: "O desconto deve ser um número positivo." })
-      .max(100, { message: "O desconto não pode exceder 100%." }),
-    cover: z.string().url({ message: "A URL da imagem de capa deve ser válida." }),
-    promo_video: z.string().url({ message: "A URL do vídeo promocional deve ser válida." }),
-  });
+  const saveCourseDtoInfo = useCourseStore((state) => state.saveCourseDtoInfo);
+  const courseDto = useCourseStore((state) => state.courseDto);
+  const categoriesOptions = useCourseStore((state) => state.categoriesOptions);
+  const selectedCategories = useCourseStore((state) => state.selectedCategories);
+  const setSelectedSelectedCategories = useCourseStore((state) => state.setSelectedSelectedCategories);
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof courseBasicInformationformSchema>>({
+    resolver: zodResolver(courseBasicInformationformSchema),
     defaultValues: {
-      name: "",
-      description: "",
-      price: 0,
-      discount: 0,
-      categories: [],
-      cover: "",
-      promo_video: "",
+      title: courseDto.title,
+      description: courseDto.description,
+      price: courseDto.price,
+      discount: courseDto.discount,
+      categories: courseDto.categories || [],
+      coverFile: courseDto.coverUrl,
+      promoVideoFile: courseDto.promoVideoRef?.toString(),
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values);
+  async function onSubmit(values: z.infer<typeof courseBasicInformationformSchema>) {
+    saveCourseDtoInfo(values);
   }
+
   return (
     <div>
       <Form {...form}>
@@ -48,12 +43,12 @@ function CourseFormInformation() {
           <div className="grid grid-cols-2 gap-3">
             <FormField
               control={form.control}
-              name="name"
+              name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-light leading-tight">Nome</FormLabel>
+                  <FormLabel className="font-light leading-tight">Título</FormLabel>
                   <FormControl>
-                    <Input placeholder="name" className="bg-smoothBackground" {...field} />
+                    <Input placeholder="Título" className="bg-smoothBackground" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -67,7 +62,7 @@ function CourseFormInformation() {
                 <FormItem>
                   <FormLabel className="font-light leading-tight">Descrição</FormLabel>
                   <FormControl>
-                    <Textarea placeholder="description" className="bg-smoothBackground" {...field} />
+                    <Textarea placeholder="Descrição" className="bg-smoothBackground" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -84,7 +79,7 @@ function CourseFormInformation() {
                     <FormControl>
                       <Input
                         type="number"
-                        placeholder="price"
+                        placeholder="Preço"
                         className="bg-smoothBackground"
                         {...field}
                         onChange={(e) => field.onChange(e.target.valueAsNumber)}
@@ -105,7 +100,7 @@ function CourseFormInformation() {
                   <FormControl>
                     <Input
                       type="number"
-                      placeholder="disconto"
+                      placeholder="Desconto"
                       className="bg-smoothBackground"
                       {...field}
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
@@ -117,17 +112,38 @@ function CourseFormInformation() {
             />
             <FormField
               control={form.control}
-              name="cover"
+              name="categories"
+              render={({ field }) => (
+                <FormItem className="col-span-2">
+                  <FormLabel className="font-light leading-tight">Categorias</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      selectedOptions={selectedCategories}
+                      options={categoriesOptions}
+                      onChange={(selected) => {
+                        setSelectedSelectedCategories(selected);
+                        field.onChange(selected.map((s) => s.value));
+                      }}
+                    ></MultiSelect>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="coverFile"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="font-light leading-tight">Capa</FormLabel>
                   <FormControl>
                     <FileUploader
-                      id="cover"
+                      defaultFile={courseDto.coverFile}
+                      id="coverFile"
                       mimeType="image/*"
-                      fileTypes={["SVG, PNG, JPG"]}
+                      fileTypes={["SVG", "PNG", "JPG"]}
                       onFileChange={(file) => {
-                        console.log("file", file);
+                        field.onChange(file);
                       }}
                     />
                   </FormControl>
@@ -137,17 +153,18 @@ function CourseFormInformation() {
             />
             <FormField
               control={form.control}
-              name="promo_video"
+              name="promoVideoFile"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-light leading-tight">Video Promoção</FormLabel>
+                  <FormLabel className="font-light leading-tight">Vídeo Promoção</FormLabel>
                   <FormControl>
                     <FileUploader
-                      id="promo_video"
+                      defaultFile={courseDto.promoVideoFile}
+                      id="promoVideoFile"
                       mimeType="video/*"
                       fileTypes={["MP4"]}
                       onFileChange={(file) => {
-                        console.log("file", file);
+                        field.onChange(file);
                       }}
                     />
                   </FormControl>
@@ -157,7 +174,9 @@ function CourseFormInformation() {
             />
           </div>
           <DialogFooter>
-            <Button type="submit">Próximo</Button>
+            <Button className="hover:bg-green-600" type="submit">
+              Próximo
+            </Button>
           </DialogFooter>
         </form>
       </Form>

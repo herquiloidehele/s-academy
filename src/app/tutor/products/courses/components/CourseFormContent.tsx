@@ -1,13 +1,13 @@
 "use client";
 import React from "react";
 import { Accordion } from "@/components/ui/accordion";
-import useCourseStore from "@/app/teacher/products/courses/courseStore";
+import useCourseStore from "@/app/tutor/products/courses/courseStore";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 import { Constants } from "@/utils/Constants";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
-import { ModuleFormDialog } from "@/app/teacher/products/courses/components/ModuleFormDialog";
-import ModuleItemList from "@/app/teacher/products/courses/components/ModuleItemList";
+import { ModuleFormDialog } from "@/app/tutor/products/courses/components/ModuleFormDialog";
+import ModuleItemList from "@/app/tutor/products/courses/components/ModuleItemList";
 
 function CourseFormContent(props) {
   const modules = useCourseStore((state) => state.modules);

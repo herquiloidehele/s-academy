@@ -1,14 +1,14 @@
 "use client";
 import React from "react";
-import FormStepper from "@/app/teacher/products/courses/components/FormStepper";
-import CourseFormInformation from "@/app/teacher/products/courses/components/CourseFormInformation";
+import FormStepper from "@/app/tutor/products/courses/components/FormStepper";
+import CourseFormInformation from "@/app/tutor/products/courses/components/CourseFormInformation";
 import { EyeIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
-import useCourseStore, { IFormStep } from "@/app/teacher/products/courses/courseStore";
+import useCourseStore, { IFormStep } from "@/app/tutor/products/courses/courseStore";
 import { FolderOpen } from "lucide-react";
-import CourseFormContent from "@/app/teacher/products/courses/components/CourseFormContent";
+import CourseFormContent from "@/app/tutor/products/courses/components/CourseFormContent";
 import { useRouter } from "next/navigation";
-import CourseFormReview from "@/app/teacher/products/courses/components/CourseFormPreview";
-import { courses } from "@/app/teacher/products/courses/page";
+import CourseFormReview from "@/app/tutor/products/courses/components/CourseFormPreview";
+import { ICourse } from "@/app/backend/business/course/CourseData";
 
 function FormPage() {
   const modules = useCourseStore((state) => state.modules);
@@ -37,7 +37,7 @@ function FormPage() {
       icon: <EyeIcon className="w-3 h-3 md:w-6 md:h-6 font-light stroke-1 text-md" />,
       page: (
         <CourseFormReview
-          formData={{ ...courses[0], modules: modules, title: "Metódo Educação Intensiva", tutorId: "1233" }}
+          formData={{ ...({} as ICourse), modules: modules, title: "Metódo Educação Intensiva", tutorId: "1233" }}
         />
       ),
       state: false,

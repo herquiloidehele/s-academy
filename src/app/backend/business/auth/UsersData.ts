@@ -8,6 +8,7 @@ export interface IUser {
   email: string;
   role: USER_ROLES;
   createdAt: string;
+  imageUrl?: string;
 }
 
 export interface ITutor {

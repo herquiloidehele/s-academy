@@ -1,4 +1,11 @@
-import { ICourse, ILesson, IModule } from "@/app/backend/business/course/CourseData";
+import {
+  ICourse,
+  ICourseDto,
+  ILesson,
+  ILessonDto,
+  IModule,
+  IModuleDto,
+} from "@/app/backend/business/course/CourseData";
 import Logger from "@/utils/Logger";
 import FirestoreService from "@/app/backend/services/FirestoreService";
 import { FirebaseCollections } from "@/utils/Constants";
@@ -137,30 +144,30 @@ class CourseManager {
     }
   }
 
-  public async addLessonToModule(lesson: ILesson, courseId: string, moduleId: string): Promise<void> {
-    Logger.debug(this.LOG_TAG, `Adding lesson to module:`, [lesson, moduleId, courseId]);
-
-    try {
-      const lessonCollectionName = FirebaseCollections.LESSONS.replace("{courseId}", courseId).replace(
-        "{moduleId}",
-        moduleId,
-      );
-
-      const hasLesson = await FirestoreService.getDocumentById(lessonCollectionName, lesson.id);
-
-      if (hasLesson) {
-        Logger.warn(this.LOG_TAG, `Lesson already exists in module:`, [hasLesson, lessonCollectionName]);
-        return;
-      }
-
-      await FirestoreService.saveDocument(lessonCollectionName, lesson, lesson.id);
-
-      Logger.debug(this.LOG_TAG, `Lesson added to module:`, [lesson, moduleId, courseId]);
-    } catch (error) {
-      Logger.error(this.LOG_TAG, `Error adding lesson to module:`, [lesson, moduleId, courseId]);
-      return Promise.reject(error);
-    }
-  }
+  // public async addLessonToModule(lesson: ILesson, courseId: string, moduleId: string): Promise<void> {
+  //   Logger.debug(this.LOG_TAG, `Adding lesson to module:`, [lesson, moduleId, courseId]);
+  //
+  //   try {
+  //     const lessonCollectionName = FirebaseCollections.LESSONS.replace("{courseId}", courseId).replace(
+  //       "{moduleId}",
+  //       moduleId,
+  //     );
+  //
+  //     const hasLesson = await FirestoreService.getDocumentById(lessonCollectionName, lesson.id);
+  //
+  //     if (hasLesson) {
+  //       Logger.warn(this.LOG_TAG, `Lesson already exists in module:`, [hasLesson, lessonCollectionName]);
+  //       return;
+  //     }
+  //
+  //     await FirestoreService.saveDocument(lessonCollectionName, lesson, lesson.id);
+  //
+  //     Logger.debug(this.LOG_TAG, `Lesson added to module:`, [lesson, moduleId, courseId]);
+  //   } catch (error) {
+  //     Logger.error(this.LOG_TAG, `Error adding lesson to module:`, [lesson, moduleId, courseId]);
+  //     return Promise.reject(error);
+  //   }
+  // }
 
   public async getAllCourses(): Promise<ICourse[]> {
     Logger.debug(this.LOG_TAG, `Getting all courses`);
@@ -173,6 +180,29 @@ class CourseManager {
       const mockCourses = Array.from({ length: 8 }).map(() => CourseMock);
 
       return [...courses, ...mockCourses];
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error getting all courses`, error);
+      return [];
+    }
+  }
+
+  public async getCoursesByTutorId(tutorId: string): Promise<ICourse[]> {
+    Logger.debug(this.LOG_TAG, `Getting courses by tutor ID`);
+
+    try {
+      const courses = await FirestoreService.getDocumentsByQuery<ICourse>(FirebaseCollections.COURSES, {
+        field: "tutorId",
+        operator: "==",
+        value: tutorId,
+      });
+
+      Logger.debug(this.LOG_TAG, `Subscriptions found`, [courses]);
+
+      if (!courses?.length) {
+        return [];
+      }
+
+      return courses as ICourse[];
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error getting all courses`, error);
       return [];
@@ -206,6 +236,72 @@ class CourseManager {
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error getting subscribed courses for user`, error);
       return [];
+    }
+  }
+  public async saveCourse(courseDto: ICourseDto): Promise<ICourse> {
+    Logger.debug(this.LOG_TAG, `Saving course:`, [courseDto]);
+
+    try {
+      // Salvar o curso
+      const savedCourse = await FirestoreService.saveDocument(FirebaseCollections.COURSES, courseDto);
+
+      if (!savedCourse) {
+        Logger.error(this.LOG_TAG, `Course not saved:`, [courseDto]);
+        return Promise.reject("Course not saved");
+      }
+
+      const courseId = savedCourse.id;
+
+      // Salvar os módulos e lições
+      for (const moduleDto of courseDto.modules) {
+        await this.addModuleToCourse(courseId, moduleDto);
+      }
+
+      Logger.debug(this.LOG_TAG, `Course saved:`, [savedCourse]);
+      return savedCourse as ICourse;
+    } catch (e) {
+      Logger.error(this.LOG_TAG, `Error saving course:`, [courseDto]);
+      return Promise.reject(e);
+    }
+  }
+
+  public async addModuleToCourse(courseId: string, moduleDto: IModuleDto): Promise<void> {
+    Logger.debug(this.LOG_TAG, `Adding module to course:`, [moduleDto, courseId]);
+
+    try {
+      const moduleCollectionName = `${FirebaseCollections.COURSES}/${courseId}/${FirebaseCollections.MODULES}`;
+      const savedModule = await FirestoreService.saveDocument(moduleCollectionName, moduleDto);
+
+      if (!savedModule) {
+        Logger.error(this.LOG_TAG, `Module not saved:`, [moduleDto]);
+        return Promise.reject("Module not saved");
+      }
+
+      const moduleId = savedModule.id;
+
+      // Salvar as lições do módulo
+      for (const lessonDto of moduleDto.lessons) {
+        await this.addLessonToModule(lessonDto, courseId, moduleId);
+      }
+
+      Logger.debug(this.LOG_TAG, `Module added to course:`, [savedModule, courseId]);
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error adding module to course:`, [moduleDto, courseId]);
+      return Promise.reject(error);
+    }
+  }
+
+  public async addLessonToModule(lessonDto: ILessonDto, courseId: string, moduleId: string): Promise<void> {
+    Logger.debug(this.LOG_TAG, `Adding lesson to module:`, [lessonDto, moduleId, courseId]);
+
+    try {
+      const lessonCollectionName = `${FirebaseCollections.COURSES}/${courseId}/${FirebaseCollections.MODULES}/${moduleId}/${FirebaseCollections.LESSONS}`;
+      await FirestoreService.saveDocument(lessonCollectionName, lessonDto);
+
+      Logger.debug(this.LOG_TAG, `Lesson added to module:`, [lessonDto, moduleId, courseId]);
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error adding lesson to module:`, [lessonDto, moduleId, courseId]);
+      return Promise.reject(error);
     }
   }
 }

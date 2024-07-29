@@ -1,6 +1,6 @@
 "use client";
 import React, { useEffect } from "react";
-import useCourseStore, { IFormStep } from "@/app/teacher/products/courses/courseStore";
+import useCourseStore, { IFormStep } from "@/app/tutor/products/courses/courseStore";
 import { ArrowLeft } from "lucide-react";
 
 function FormStepper({ steps, onBackClick, title }: { steps: IFormStep[]; onBackClick?: () => void; title: string }) {

@@ -2,8 +2,8 @@ import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Edit2Icon, FolderOpen, Trash2Icon } from "lucide-react";
 import { EyeIcon } from "@heroicons/react/24/outline";
-import { LessonModuleListItems } from "@/app/teacher/products/courses/components/LessonModuleListItems";
-import { ModuleFormDialog } from "@/app/teacher/products/courses/components/ModuleFormDialog";
+import { LessonModuleListItems } from "@/app/tutor/products/courses/components/LessonModuleListItems";
+import { ModuleFormDialog } from "@/app/tutor/products/courses/components/ModuleFormDialog";
 
 function ModuleItemList({ module, index }) {
   const [showActions, setShowActions] = React.useState(false);

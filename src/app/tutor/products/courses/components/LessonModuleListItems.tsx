@@ -1,7 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Edit2Icon, Trash2Icon } from "lucide-react";
 import { ILesson } from "@/app/backend/business/course/CourseData";
-import { LessonFormDialog } from "@/app/teacher/products/courses/components/LessonFormDialog";
+import { LessonFormDialog } from "@/app/tutor/products/courses/components/LessonFormDialog";
 import React from "react";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 import { Constants } from "@/utils/Constants";

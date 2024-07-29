@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import useCourseStore from "@/app/teacher/products/courses/courseStore";
+import useCourseStore from "@/app/tutor/products/courses/courseStore";
 import ButtonElement, { ButtonShape, ButtonSize, FillType } from "@/components/shared/Button";
 import FileUploader from "@/components/file-uploader/FileUploader";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";

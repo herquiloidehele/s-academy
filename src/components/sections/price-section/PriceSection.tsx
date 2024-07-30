@@ -91,7 +91,7 @@ export default function PriceSection(props: IPriceSectionProps) {
 
             <p className={"text-sm text-gray-500"}>
               <span className={"text-blue-950 font-bold"}>Garantia:</span> Até o final do curso conseguirá fazer a sua
-              própria loja Shopify, caso contrário, comprometemo-nos a ajudar com o desenvolcimento.
+              própria loja Shopify, caso contrário, comprometemo-nos a ajudar com o desenvolvimento.
             </p>
           </motion.div>
         </div>

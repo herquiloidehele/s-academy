@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Loader2Icon, XIcon } from "lucide-react";
+import { DocumentIcon } from "@heroicons/react/24/outline";
 
 function FileUploader({
   id,
@@ -7,7 +8,7 @@ function FileUploader({
   label = "Clique para fazer upload",
   instructions = "ou arraste e solte um arquivo",
   mimeType,
-  fileTypes = "SVG, PNG, JPG or MP4 (MAX. 800x400px)",
+  fileTypes = "PDF, DOCX, PPTX",
   defaultFile,
 }) {
   const [file, setFile] = useState(defaultFile);
@@ -48,18 +49,31 @@ function FileUploader({
   };
 
   const fileUrl = file ? URL.createObjectURL(file) : null;
+  const fileType = file ? file.type : "";
 
   return (
     <div id={id} className="flex items-center justify-center w-full" onDragOver={handleDragOver} onDrop={handleDrop}>
       {file ? (
         <div className="relative w-full h-64 border-2 border-gray-300 rounded-lg overflow-hidden">
-          {file.type.startsWith("image/") ? (
+          {fileType.startsWith("image/") ? (
             <img src={fileUrl} alt="Preview" className="w-full h-full object-contain rounded-lg" />
-          ) : file.type.startsWith("video/") ? (
+          ) : fileType.startsWith("video/") ? (
             <video controls src={fileUrl} className="w-full h-full object-contain rounded-lg">
               Your browser does not support the video tag.
             </video>
-          ) : null}
+          ) : (
+            <a
+              href={fileUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center justify-center w-full h-full bg-gray-100"
+            >
+              <div className="flex flex-col items-center justify-center w-full h-full bg-gray-100">
+                <DocumentIcon className="h-16 w-16 text-blue-600" />
+                <p className="text-sm text-blue-600 mt-2">{file.name}</p>
+              </div>
+            </a>
+          )}
           <button onClick={handleRemoveFile} className="absolute top-2 right-2 rounded-full p-1 hover:bg-gray-200">
             <XIcon className="h-6 w-6 text-red-600" />
           </button>

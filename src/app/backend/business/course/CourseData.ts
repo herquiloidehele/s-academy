@@ -36,13 +36,17 @@ export interface IModuleDto {
   lessons?: ILessonDto[];
 }
 export interface ILessonDto {
+  id: string;
   order: number;
-  videoRef: number;
+  videoRef?: number;
   title: string;
-  duration: string;
+  moduleId: string;
+  duration?: string;
   description?: string;
-  thumbnailUrl: string;
+  thumbnailUrl?: string;
   materialUrl?: string;
+  materialFile?: string;
+  videoFile?: File;
 }
 
 export interface IModule {

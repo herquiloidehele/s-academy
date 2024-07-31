@@ -1,6 +1,13 @@
 import { create } from "zustand";
 import Logger from "@/utils/Logger";
-import { ICourse, ICourseDto, ILesson, IModule, IModuleDto } from "@/app/backend/business/course/CourseData";
+import {
+  ICourse,
+  ICourseDto,
+  ILesson,
+  ILessonDto,
+  IModule,
+  IModuleDto,
+} from "@/app/backend/business/course/CourseData";
 import { fetchCoursesByTutorsID, saveCourse } from "@/app/backend/actions/course";
 import { IOptionType } from "@/components/multi-selector/MultiSelect";
 
@@ -68,6 +75,9 @@ interface ICourseStoreState {
   addModule: (module: IModuleDto) => void;
   removeModule: (module: IModuleDto) => void;
   updateModule: (module: IModuleDto) => void;
+  addLesson: (lesson: ILessonDto) => void;
+  removeLesson: (lessonId: string) => void;
+  updateLesson: (lesson: ILessonDto) => void;
 }
 
 const useCourseStore = create<ICourseStoreState>((set) => ({
@@ -117,6 +127,36 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       return {
         courseDto: { ...courseDto, modules: updatedModules },
       };
+    });
+  },
+  addLesson: (lesson: ILessonDto) => {
+    set((state: ICourseStoreState) => {
+      const { courseDto } = state;
+
+      const updatedModules = courseDto?.modules?.map((module) => {
+        if (module.id === lesson.moduleId) {
+          const updatedLessons = Array.isArray(module.lessons) ? [...module.lessons, lesson] : [lesson];
+          return { ...module, lessons: updatedLessons };
+        }
+        return module;
+      });
+      return {
+        courseDto: { ...courseDto, modules: updatedModules },
+      };
+    });
+  },
+  updateLesson: (lesson: ILessonDto) => {
+    set((state: ICourseStoreState) => {
+      const { lessons } = state;
+      const updatedLessons = lessons.map((l) => (l.id === lesson.id ? lesson : l));
+      return { lessons: updatedLessons };
+    });
+  },
+  removeLesson: (lessonId: string) => {
+    set((state: ICourseStoreState) => {
+      const { lessons } = state;
+      const updatedLessons = lessons.filter((lesson) => lesson.id !== lessonId);
+      return { lessons: updatedLessons };
     });
   },
   goToNextStep: () => {

@@ -2,43 +2,89 @@
 
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
 import useCourseStore from "@/app/tutor/products/courses/courseStore";
-import ButtonElement, { ButtonShape, ButtonSize, FillType } from "@/components/shared/Button";
 import FileUploader from "@/components/file-uploader/FileUploader";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Check, ChevronsUpDown } from "lucide-react";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { cn } from "@/lib/utils";
+import { ILessonSchema } from "@/app/tutor/products/courses/components/CourseSchemas";
+import { v4 as uuidv4 } from "uuid";
 
-export const ILessonSchema = z.object({
-  order: z.number(),
-  title: z.string(),
-  description: z.string().optional(),
-});
-
-export function LessonFormDialog(props: { children: React.ReactNode; productID?: number }) {
+export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: string; moduleId: string }) {
   const [open, setOpen] = useState(false);
-  const [openModulesCombobox, setOpenModulesCombobox] = React.useState(false);
-  const modules = useCourseStore((state) => state.modules);
-  const [value, setValue] = React.useState("");
+  const [openModulesCombobox, setOpenModulesCombobox] = useState(false);
+  const addLesson = useCourseStore((state) => state.addLesson);
+  const updateLesson = useCourseStore((state) => state.updateLesson);
+  const courseDto = useCourseStore((state) => state.courseDto);
+  const modules = courseDto?.modules || [];
 
   const form = useForm<z.infer<typeof ILessonSchema>>({
     resolver: zodResolver(ILessonSchema),
     defaultValues: {
-      order: 0,
+      order: 1,
       title: "",
       description: "",
+      moduleId: props.moduleId,
+      materialFile: "",
+      videoFile: "",
     },
   });
 
-  async function onSubmit() {}
+  useEffect(() => {
+    if (props.lessonId && courseDto) {
+      if (courseDto.modules) {
+        const moduleData = courseDto.modules.find((module) => module.id === props.moduleId);
+        const lessonData = moduleData?.lessons?.find((lesson) => lesson.id === props.lessonId);
+        if (moduleData) {
+          if (moduleData.lessons) {
+            form.reset({
+              order: lessonData?.order || moduleData.lessons.length + 1 || 1,
+              moduleId: moduleData.id,
+            });
+          }
+        }
+
+        if (lessonData) {
+          form.reset({
+            order: lessonData.order,
+            title: lessonData.title,
+            description: lessonData.description,
+            moduleId: lessonData.moduleId,
+            materialFile: lessonData.materialFile,
+            videoFile: lessonData.videoFile,
+          });
+        }
+      }
+    }
+  }, [props.lessonId, courseDto]);
+
+  async function onSubmit(values: z.infer<typeof ILessonSchema>) {
+    const lessonValues = {
+      id: props.lessonId || uuidv4(),
+      order: values.order,
+      title: values.title,
+      description: values.description,
+      moduleId: values.moduleId,
+      materialFile: values.materialFile,
+      videoFile: values.videoFile,
+    };
+
+    if (props.lessonId) {
+      updateLesson(lessonValues);
+    } else {
+      addLesson(lessonValues);
+    }
+
+    setOpen(false);
+  }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -88,7 +134,8 @@ export function LessonFormDialog(props: { children: React.ReactNode; productID?:
                           aria-expanded={openModulesCombobox}
                           className="w-full justify-between"
                         >
-                          {value ? modules.find((module) => module.id === value)?.title : "Selecione um módulo"}
+                          {modules.find((module) => module.id === form.watch("moduleId"))?.title ||
+                            "Selecione um módulo"}
                           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                         </Button>
                       </PopoverTrigger>
@@ -104,12 +151,15 @@ export function LessonFormDialog(props: { children: React.ReactNode; productID?:
                                     key={module.id}
                                     value={module.id}
                                     onSelect={() => {
-                                      setValue(module.id.toString());
+                                      form.setValue("moduleId", module.id);
                                       setOpenModulesCombobox(false); // Fecha o popover
                                     }}
                                   >
                                     <Check
-                                      className={cn("mr-2 h-4 w-4", value === module.id ? "opacity-100" : "opacity-0")}
+                                      className={cn(
+                                        "mr-2 h-4 w-4",
+                                        form.watch("moduleId") === module.id ? "opacity-100" : "opacity-0",
+                                      )}
                                     />
                                     <span className="text-gray-500 font-light">{module.title}</span>
                                   </CommandItem>
@@ -136,9 +186,10 @@ export function LessonFormDialog(props: { children: React.ReactNode; productID?:
                     </FormItem>
                   )}
                 />
+
                 <FormField
                   control={form.control}
-                  name="video"
+                  name="videoFile"
                   render={({ field }) => (
                     <FormItem className="col-span-2">
                       <FormLabel className="font-light leading-tight">Video Aula</FormLabel>
@@ -147,7 +198,27 @@ export function LessonFormDialog(props: { children: React.ReactNode; productID?:
                           mimeType="video/*"
                           fileTypes={["MP4"]}
                           onFileChange={(file) => {
-                            console.log("file", file);
+                            field.onChange(file);
+                          }}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="materialFile"
+                  render={({ field }) => (
+                    <FormItem className="col-span-2">
+                      <FormLabel className="font-light leading-tight">Material da aula</FormLabel>
+                      <FormControl>
+                        <FileUploader
+                          mimeType="application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.presentationml.presentation"
+                          fileTypes={["PDF", "DOCX", "PPTX"]}
+                          onFileChange={(file) => {
+                            field.onChange(file);
                           }}
                         />
                       </FormControl>
@@ -157,14 +228,9 @@ export function LessonFormDialog(props: { children: React.ReactNode; productID?:
                 />
               </div>
               <DialogFooter>
-                <ButtonElement
-                  type="submit"
-                  fillType={FillType.FILLED}
-                  shape={ButtonShape.SQUARE}
-                  size={ButtonSize.SMALL}
-                >
+                <Button type="submit" className="hover:bg-active hover:text-active-foreground">
                   Gravar
-                </ButtonElement>
+                </Button>
               </DialogFooter>
             </form>
           </Form>

@@ -1,19 +1,23 @@
 import { z } from "zod";
 
-// Define um esquema para validação de URL
 const urlSchema = z.string().url({ message: "Deve ser uma URL válida." });
 
 // Define um esquema para validação de arquivos (só para tipos de arquivo específicos)
-// Você pode precisar ajustar a validação conforme necessário para os tipos de arquivo aceitos
 const fileSchema = z.instanceof(File).refine(
   (file) => {
-    const allowedTypes = ["image/jpeg", "image/png", "video/mp4"];
+    const allowedTypes = [
+      "image/jpeg",
+      "image/png",
+      "video/mp4",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // docx
+      "application/pdf", // pdf
+      "application/vnd.openxmlformats-officedocument.presentationml.presentation", // pptx
+    ];
     return allowedTypes.includes(file.type);
   },
   { message: "Tipo de arquivo não suportado." },
 );
 
-// Define o esquema de validação para o formulário
 export const courseBasicInformationformSchema = z.object({
   title: z.string().min(1, { message: "O nome do curso é obrigatório." }),
   description: z
@@ -34,4 +38,13 @@ export const IModuleSchema = z.object({
   order: z.number(),
   title: z.string(),
   description: z.string().optional(),
+});
+
+export const ILessonSchema = z.object({
+  order: z.number(),
+  title: z.string(),
+  moduleId: z.string(),
+  description: z.string().optional(),
+  materialFile: z.union([fileSchema, urlSchema], { message: "Deve ser um arquivo válido ou uma URL válida." }),
+  videoFile: z.union([fileSchema, urlSchema], { message: "Deve ser um arquivo de video ou uma URL válida." }),
 });

@@ -1,7 +1,6 @@
 import React from "react";
 import { AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { Edit2Icon, FolderOpen, Trash2Icon } from "lucide-react";
-import { EyeIcon } from "@heroicons/react/24/outline";
 import { LessonModuleListItems } from "@/app/tutor/products/courses/components/LessonModuleListItems";
 import { ModuleFormDialog } from "@/app/tutor/products/courses/components/ModuleFormDialog";
 import useCourseStore from "@/app/tutor/products/courses/courseStore";
@@ -32,7 +31,7 @@ function ModuleItemList({ module, index }) {
           <div
             className={`flex flex-row gap-2 col-span-1 justify-end items-center ${showActions ? "transition opacity-100 duration-300" : "transition opacity-0 duration-300"}`}
           >
-            <ModuleFormDialog>
+            <ModuleFormDialog moduleId={module.id}>
               <Edit2Icon className="w-6 h-6 stroke-1 text-blue-700" />
             </ModuleFormDialog>
 
@@ -43,26 +42,18 @@ function ModuleItemList({ module, index }) {
               title={`Tem certeza que deseja excluir o módulo ${module.title}?`}
               description="Esta ação não pode ser desfeita. Isso excluirá permanentemente o módulo e as aulas nele."
               onAction={() => {
-                removeModule(module);
+                removeModule(module.id);
               }}
               onCancel={() => setIsAlertDialogOpen(false)}
             >
               <Trash2Icon
-                className="w-6 h-6 stroke-1 text-red-700"
+                className="w-6 h-6 stroke-1 text-red-700 mr-2"
                 onClick={(event) => {
                   event.preventDefault();
                   setIsAlertDialogOpen(true);
                 }}
               />
             </CustomAlertDialog>
-
-            <EyeIcon
-              className="w-6 h-6 stroke-1 text-green-700 mr-3"
-              onClick={(event) => {
-                event.preventDefault();
-                alert("hey view");
-              }}
-            />
           </div>
         </div>
       </AccordionTrigger>

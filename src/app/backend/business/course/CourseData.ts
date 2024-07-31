@@ -29,6 +29,7 @@ export interface ICourseDto {
 }
 
 export interface IModuleDto {
+  id: string;
   order: number;
   title: string;
   description?: string;

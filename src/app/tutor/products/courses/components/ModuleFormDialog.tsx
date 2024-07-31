@@ -1,7 +1,7 @@
 "use client";
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -11,30 +11,54 @@ import useCourseStore from "@/app/tutor/products/courses/courseStore";
 import { IModuleDto } from "@/app/backend/business/course/CourseData";
 import { Button } from "@/components/ui/button";
 import { IModuleSchema } from "@/app/tutor/products/courses/components/CourseSchemas";
+import { v4 as uuidv4 } from "uuid";
 
-export function ModuleFormDialog(props: { children: React.ReactNode; productID?: number }) {
+export function ModuleFormDialog(props: { children: React.ReactNode; moduleId?: string }) {
   const [open, setOpen] = useState(false);
   const addModule = useCourseStore((state) => state.addModule);
+  const updateModule = useCourseStore((state) => state.updateModule);
+  const courseDto = useCourseStore((state) => state.courseDto);
+  const [moduleData, setModuleData] = useState<IModuleDto | undefined>({} as IModuleDto);
 
   const form = useForm<z.infer<typeof IModuleSchema>>({
     resolver: zodResolver(IModuleSchema),
     defaultValues: {
-      order: 0,
-      title: "",
-      description: "",
+      order: moduleData?.order || courseDto?.modules?.length + 1 || 1,
+      title: moduleData?.title || "",
+      description: moduleData?.description || "",
     },
   });
 
   async function onSubmit(values) {
-    const moduleValues: IModuleDto = {
+    const moduleValues = {
+      id: props.moduleId || uuidv4(),
       order: values.order,
       title: values.title,
       description: values.description,
     };
-    addModule(moduleValues);
+
+    if (props.moduleId !== undefined) {
+      updateModule(moduleValues);
+    } else {
+      addModule(moduleValues);
+    }
 
     setOpen(false);
   }
+
+  useEffect(() => {
+    if (props.moduleId !== undefined) {
+      const moduleData = courseDto?.modules?.find((module) => module.id === props.moduleId);
+      if (moduleData) {
+        setModuleData(moduleData);
+        form.reset({
+          order: moduleData.order,
+          title: moduleData.title,
+          description: moduleData.description,
+        });
+      }
+    }
+  }, [props.moduleId, courseDto, form]);
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

@@ -67,6 +67,7 @@ interface ICourseStoreState {
   saveCourseDtoInfo: (course: ICourseDto) => void;
   addModule: (module: IModuleDto) => void;
   removeModule: (module: IModuleDto) => void;
+  updateModule: (module: IModuleDto) => void;
 }
 
 const useCourseStore = create<ICourseStoreState>((set) => ({
@@ -93,14 +94,24 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       };
     });
   },
-  removeModule: (moduleToRemove: IModuleDto) => {
+  updateModule: (module: IModuleDto) => {
+    set((state: ICourseStoreState) => {
+      const { courseDto } = state;
+      const updatedModules = Array.isArray(courseDto?.modules)
+        ? courseDto?.modules.map((m) => (m.id === module.id ? module : m))
+        : [];
+
+      return {
+        courseDto: { ...courseDto, modules: updatedModules },
+      };
+    });
+  },
+  removeModule: (moduleId: string) => {
     set((state: ICourseStoreState) => {
       const { courseDto } = state;
 
       const updatedModules = Array.isArray(courseDto?.modules)
-        ? courseDto?.modules.filter(
-            (module) => module.title !== moduleToRemove.title && module.order !== moduleToRemove.order,
-          )
+        ? courseDto?.modules.filter((module) => module.id !== moduleId)
         : [];
 
       return {

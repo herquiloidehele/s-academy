@@ -13,7 +13,9 @@ import EmptyState from "@/components/empty-list/EmptyState";
 
 function CourseFormContent() {
   const courseDto = useCourseStore((state) => state.courseDto);
+  const canCourseBeSaved = useCourseStore((state) => state.canCourseBeSaved);
   const router = useRouter();
+  const goToNextStep = useCourseStore((state) => state.goToNextStep);
 
   if (!courseDto || !courseDto.modules || courseDto.modules.length === 0) {
     return (
@@ -67,8 +69,9 @@ function CourseFormContent() {
           shape={ButtonShape.SQUARE}
           size={ButtonSize.SMALL}
           fillType={FillType.FILLED}
-          type={ButtonType.TERTIARY}
-          onClick={() => router.push(Constants.APP_ROUTES.TEACHER.NEW_COURSES)}
+          type={ButtonType.PRIMARY}
+          disabled={!canCourseBeSaved}
+          onClick={() => goToNextStep()}
         >
           <div className="flex flex-row gap-2 justify-center items-center">
             <span>Próximo</span>

@@ -78,6 +78,8 @@ interface ICourseStoreState {
   addLesson: (lesson: ILessonDto) => void;
   removeLesson: (lessonId: string, moduleId: string) => void;
   updateLesson: (lesson: ILessonDto) => void;
+  canCourseBeSaved: boolean;
+  setCanCourseBeSaved: (value: boolean) => void;
 }
 
 const useCourseStore = create<ICourseStoreState>((set) => ({
@@ -89,6 +91,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   selectedCategories: [],
   categoriesOptions: categoriesOptions,
   currentStepIndex: 0,
+  canCourseBeSaved: false,
   addModule: (module: IModuleDto) => {
     set((state: ICourseStoreState) => {
       const { courseDto } = state;
@@ -101,6 +104,8 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
       return {
         courseDto: { ...courseDto, modules: updatedModules },
+        canCourseBeSaved:
+          updatedModules.length > 0 && updatedModules.some((mod) => mod.lessons && mod.lessons.length > 0),
       };
     });
   },
@@ -113,6 +118,8 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
       return {
         courseDto: { ...courseDto, modules: updatedModules },
+        canCourseBeSaved:
+          updatedModules?.length > 0 && updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
       };
     });
   },
@@ -126,6 +133,8 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
       return {
         courseDto: { ...courseDto, modules: updatedModules },
+        canCourseBeSaved:
+          updatedModules?.length > 0 && updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
       };
     });
   },
@@ -140,8 +149,10 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
         }
         return module;
       });
+
       return {
         courseDto: { ...courseDto, modules: updatedModules },
+        canCourseBeSaved: updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
       };
     });
   },
@@ -159,6 +170,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
       return {
         courseDto: { ...courseDto, modules: updatedModules },
+        canCourseBeSaved: updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
       };
     });
   },
@@ -176,6 +188,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
       return {
         courseDto: { ...courseDto, modules: updatedModules },
+        canCourseBeSaved: updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
       };
     });
   },
@@ -224,6 +237,9 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     set((state) => ({
       courseDto: state.courseDto ? { ...state.courseDto, ...course, modules: [] } : (course as ICourseDto),
     }));
+  },
+  setCanCourseBeSaved: (value: boolean) => {
+    set({ canCourseBeSaved: value });
   },
 }));
 

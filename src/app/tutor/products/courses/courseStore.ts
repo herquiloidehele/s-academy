@@ -76,7 +76,7 @@ interface ICourseStoreState {
   removeModule: (module: IModuleDto) => void;
   updateModule: (module: IModuleDto) => void;
   addLesson: (lesson: ILessonDto) => void;
-  removeLesson: (lessonId: string) => void;
+  removeLesson: (lessonId: string, moduleId: string) => void;
   updateLesson: (lesson: ILessonDto) => void;
 }
 
@@ -147,16 +147,36 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   },
   updateLesson: (lesson: ILessonDto) => {
     set((state: ICourseStoreState) => {
-      const { lessons } = state;
-      const updatedLessons = lessons.map((l) => (l.id === lesson.id ? lesson : l));
-      return { lessons: updatedLessons };
+      const { courseDto } = state;
+
+      const updatedModules = courseDto?.modules?.map((module) => {
+        if (module.id === lesson.moduleId) {
+          const updatedLessons = module.lessons?.map((l) => (l.id === lesson.id ? lesson : l));
+          return { ...module, lessons: updatedLessons };
+        }
+        return module;
+      });
+
+      return {
+        courseDto: { ...courseDto, modules: updatedModules },
+      };
     });
   },
-  removeLesson: (lessonId: string) => {
+  removeLesson: (lessonId: string, moduleId: string) => {
     set((state: ICourseStoreState) => {
-      const { lessons } = state;
-      const updatedLessons = lessons.filter((lesson) => lesson.id !== lessonId);
-      return { lessons: updatedLessons };
+      const { courseDto } = state;
+
+      const updatedModules = courseDto?.modules?.map((module) => {
+        if (module.id === moduleId) {
+          const updatedLessons = module.lessons?.filter((lesson) => lesson.id !== lessonId);
+          return { ...module, lessons: updatedLessons };
+        }
+        return module;
+      });
+
+      return {
+        courseDto: { ...courseDto, modules: updatedModules },
+      };
     });
   },
   goToNextStep: () => {

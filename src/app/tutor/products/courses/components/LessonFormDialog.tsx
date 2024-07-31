@@ -33,7 +33,7 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
       title: "",
       description: "",
       moduleId: props.moduleId,
-      materialFile: "",
+      materialFile: undefined,
       videoFile: "",
     },
   });
@@ -179,7 +179,12 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
                       <FormLabel className="font-light leading-tight">Posição</FormLabel>
                       <div className="flex flex-row gap-2 items-center">
                         <FormControl>
-                          <Input type="number" placeholder="posição da aula" {...field} />
+                          <Input
+                            type="number"
+                            placeholder="posição da aula"
+                            {...field}
+                            onChange={(e) => field.onChange(e.target.valueAsNumber)}
+                          />
                         </FormControl>
                       </div>
                       <FormMessage />

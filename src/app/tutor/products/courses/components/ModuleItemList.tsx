@@ -59,7 +59,7 @@ function ModuleItemList({ module, index }) {
       </AccordionTrigger>
       <AccordionContent className="p-4">
         <div className="">
-          <LessonModuleListItems lessons={module.lessons} />
+          <LessonModuleListItems lessons={module.lessons} moduleId={module.id} />
         </div>
       </AccordionContent>
     </AccordionItem>

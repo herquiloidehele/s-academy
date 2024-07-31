@@ -9,6 +9,7 @@ const fileSchema = z.instanceof(File).refine(
       "image/jpeg",
       "image/png",
       "video/mp4",
+      "video/quicktime",
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // docx
       "application/pdf", // pdf
       "application/vnd.openxmlformats-officedocument.presentationml.presentation", // pptx
@@ -45,6 +46,9 @@ export const ILessonSchema = z.object({
   title: z.string(),
   moduleId: z.string(),
   description: z.string().optional(),
-  materialFile: z.union([fileSchema, urlSchema], { message: "Deve ser um arquivo válido ou uma URL válida." }),
+  materialFile: z
+    .union([fileSchema, urlSchema], { message: "Deve ser um arquivo válido ou uma URL válida." })
+    .optional()
+    .nullable(),
   videoFile: z.union([fileSchema, urlSchema], { message: "Deve ser um arquivo de video ou uma URL válida." }),
 });

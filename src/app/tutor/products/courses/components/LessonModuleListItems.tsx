@@ -72,7 +72,7 @@ export function LessonModuleListItems({ lessons, moduleId }: { lessons: ILesson[
       <Table className="mb-12">
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px]">ID</TableHead>
+            <TableHead className="w-[100px]">#</TableHead>
             <TableHead>Nome</TableHead>
             <TableHead>Descrição</TableHead>
             <TableHead className="text-right">Posição</TableHead>
@@ -82,9 +82,9 @@ export function LessonModuleListItems({ lessons, moduleId }: { lessons: ILesson[
         <TableBody>
           {lessons.map((lesson, index) => (
             <TableRow key={index} onMouseEnter={() => handleShowActions(index)} onMouseLeave={handleHideActions}>
-              <TableCell className="font-light">{lesson.id}</TableCell>
+              <TableCell className="font-light">{index}</TableCell>
               <TableCell>
-                <LessonFormDialog lessonID={lesson.id} moduleId={moduleId}>
+                <LessonFormDialog lessonId={lesson.id} moduleId={moduleId}>
                   <span className="text-primary font-semibold cursor-pointer">{lesson.title}</span>
                 </LessonFormDialog>
               </TableCell>
@@ -96,7 +96,7 @@ export function LessonModuleListItems({ lessons, moduleId }: { lessons: ILesson[
                 <div
                   className={`flex flex-row gap-2 items-center ${showActions === index ? "opacity-100" : "opacity-0"} transition-opacity duration-300`}
                 >
-                  <LessonFormDialog lessonID={lesson.id} moduleId={moduleId}>
+                  <LessonFormDialog lessonId={lesson.id} moduleId={moduleId}>
                     <Edit2Icon className="w-6 h-6 stroke-1 text-blue-700 cursor-pointer" />
                   </LessonFormDialog>
                   <CustomAlertDialog

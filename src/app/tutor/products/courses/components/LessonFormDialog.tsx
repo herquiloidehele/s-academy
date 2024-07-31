@@ -17,6 +17,7 @@ import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, Command
 import { cn } from "@/lib/utils";
 import { ILessonSchema } from "@/app/tutor/products/courses/components/CourseSchemas";
 import { v4 as uuidv4 } from "uuid";
+import { ILessonDto } from "@/app/backend/business/course/CourseData";
 
 export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: string; moduleId: string }) {
   const [open, setOpen] = useState(false);
@@ -25,7 +26,7 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
   const updateLesson = useCourseStore((state) => state.updateLesson);
   const courseDto = useCourseStore((state) => state.courseDto);
   const modules = courseDto?.modules || [];
-
+  const [lessonData, setLessonData] = useState<ILessonDto | undefined>({} as ILessonDto);
   const form = useForm<z.infer<typeof ILessonSchema>>({
     resolver: zodResolver(ILessonSchema),
     defaultValues: {
@@ -39,32 +40,29 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
   });
 
   useEffect(() => {
-    if (props.lessonId && courseDto) {
-      if (courseDto.modules) {
-        const moduleData = courseDto.modules.find((module) => module.id === props.moduleId);
-        const lessonData = moduleData?.lessons?.find((lesson) => lesson.id === props.lessonId);
-        if (moduleData) {
-          if (moduleData.lessons) {
-            form.reset({
-              order: lessonData?.order || moduleData.lessons.length + 1 || 1,
-              moduleId: moduleData.id,
-            });
-          }
-        }
+    const moduleData = courseDto?.modules?.find((module) => module.id === props.moduleId);
+    if (moduleData) {
+      form.reset({
+        order: (moduleData.lessons?.length || 0) + 1,
+        moduleId: props.moduleId,
+      });
+    }
 
-        if (lessonData) {
-          form.reset({
-            order: lessonData.order,
-            title: lessonData.title,
-            description: lessonData.description,
-            moduleId: lessonData.moduleId,
-            materialFile: lessonData.materialFile,
-            videoFile: lessonData.videoFile,
-          });
-        }
+    if (props.lessonId) {
+      const lessonData = moduleData?.lessons?.find((lesson) => lesson.id === props.lessonId);
+      if (lessonData) {
+        setLessonData(lessonData);
+        form.reset({
+          order: lessonData.order,
+          title: lessonData.title,
+          description: lessonData.description,
+          moduleId: lessonData.moduleId,
+          materialFile: lessonData.materialFile,
+          videoFile: lessonData.videoFile,
+        });
       }
     }
-  }, [props.lessonId, courseDto]);
+  }, [props.lessonId, courseDto, props.moduleId, form]);
 
   async function onSubmit(values: z.infer<typeof ILessonSchema>) {
     const lessonValues = {
@@ -78,9 +76,9 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
     };
 
     if (props.lessonId) {
-      updateLesson(lessonValues);
+      updateLesson(lessonValues as ILessonDto);
     } else {
-      addLesson(lessonValues);
+      addLesson(lessonValues as ILessonDto);
     }
 
     setOpen(false);
@@ -145,25 +143,24 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
                           <CommandEmpty>Sem módulos registados.</CommandEmpty>
                           <CommandGroup>
                             <CommandList>
-                              {modules &&
-                                modules.map((module) => (
-                                  <CommandItem
-                                    key={module.id}
-                                    value={module.id}
-                                    onSelect={() => {
-                                      form.setValue("moduleId", module.id);
-                                      setOpenModulesCombobox(false); // Fecha o popover
-                                    }}
-                                  >
-                                    <Check
-                                      className={cn(
-                                        "mr-2 h-4 w-4",
-                                        form.watch("moduleId") === module.id ? "opacity-100" : "opacity-0",
-                                      )}
-                                    />
-                                    <span className="text-gray-500 font-light">{module.title}</span>
-                                  </CommandItem>
-                                ))}
+                              {modules.map((module) => (
+                                <CommandItem
+                                  key={module.id}
+                                  value={module.id}
+                                  onSelect={() => {
+                                    form.setValue("moduleId", module.id);
+                                    setOpenModulesCombobox(false); // Fecha o popover
+                                  }}
+                                >
+                                  <Check
+                                    className={cn(
+                                      "mr-2 h-4 w-4",
+                                      form.watch("moduleId") === module.id ? "opacity-100" : "opacity-0",
+                                    )}
+                                  />
+                                  <span className="text-gray-500 font-light">{module.title}</span>
+                                </CommandItem>
+                              ))}
                             </CommandList>
                           </CommandGroup>
                         </Command>
@@ -200,6 +197,7 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
                       <FormLabel className="font-light leading-tight">Video Aula</FormLabel>
                       <FormControl>
                         <FileUploader
+                          defaultFile={lessonData?.videoFile}
                           mimeType="video/*"
                           fileTypes={["MP4"]}
                           onFileChange={(file) => {
@@ -220,6 +218,7 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
                       <FormLabel className="font-light leading-tight">Material da aula</FormLabel>
                       <FormControl>
                         <FileUploader
+                          defaultFile={lessonData?.materialFile}
                           mimeType="application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.presentationml.presentation"
                           fileTypes={["PDF", "DOCX", "PPTX"]}
                           onFileChange={(file) => {

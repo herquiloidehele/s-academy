@@ -9,7 +9,6 @@ import { Constants } from "@/utils/Constants";
 import { motion } from "framer-motion";
 import EmptyAnimation from "@/assets/animation/empty.json";
 import EmptyState from "@/components/empty-list/EmptyState";
-import { ModuleFormDialog } from "@/app/tutor/products/courses/components/ModuleFormDialog";
 
 function CoursePage() {
   const router = useRouter();
@@ -68,20 +67,18 @@ function CoursePage() {
           title={"Nenhum curso encontrado"}
           description={"Crie um novo curso ou explore outras categorias"}
         >
-          <ModuleFormDialog>
-            <ButtonElement
-              shape={ButtonShape.SQUARE}
-              size={ButtonSize.SMALL}
-              fillType={FillType.FILLED}
-              type={ButtonType.PRIMARY}
-              onClick={() => router.push(Constants.APP_ROUTES.TEACHER.NEW_COURSES)}
-            >
-              <div className="flex flex-row gap-2 justify-center items-center">
-                <PlusIcon className="size-8" />
-                <span>Adicionar Curso</span>
-              </div>
-            </ButtonElement>
-          </ModuleFormDialog>
+          <ButtonElement
+            shape={ButtonShape.SQUARE}
+            size={ButtonSize.SMALL}
+            fillType={FillType.FILLED}
+            type={ButtonType.PRIMARY}
+            onClick={() => router.push(Constants.APP_ROUTES.TEACHER.NEW_COURSES)}
+          >
+            <div className="flex flex-row gap-2 justify-center items-center">
+              <PlusIcon className="size-8" />
+              <span>Adicionar Curso</span>
+            </div>
+          </ButtonElement>
         </EmptyState>
       )}
     </div>

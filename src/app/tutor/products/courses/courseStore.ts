@@ -235,7 +235,9 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   },
   saveCourseDtoInfo: (course: ICourseDto) => {
     set((state) => ({
-      courseDto: state.courseDto ? { ...state.courseDto, ...course, modules: [] } : (course as ICourseDto),
+      courseDto: state.courseDto
+        ? { ...state.courseDto, ...course, modules: state.courseDto.modules || [] }
+        : (course as ICourseDto),
     }));
   },
   setCanCourseBeSaved: (value: boolean) => {

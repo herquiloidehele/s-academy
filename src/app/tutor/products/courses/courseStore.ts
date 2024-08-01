@@ -10,6 +10,7 @@ import {
 } from "@/app/backend/business/course/CourseData";
 import { fetchCoursesByTutorsID, saveCourse } from "@/app/backend/actions/course";
 import { IOptionType } from "@/components/multi-selector/MultiSelect";
+import getAuthUser from "@/app/backend/actions/auth";
 
 const moduleList = [
   // ... (seu conteúdo de moduleList aqui)
@@ -238,7 +239,9 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   },
   saveCourse: async () => {
     try {
-      set((state) => ({ ...state, isLoading: true }));
+      const loggedTutor = await getAuthUser();
+
+      set((state) => ({ ...state, isLoading: true, courseDto: { ...state.courseDto, tutorId: loggedTutor?.email } }));
 
       set(async (state) => {
         const { courseDto } = state;

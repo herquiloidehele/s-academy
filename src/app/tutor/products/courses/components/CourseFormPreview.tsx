@@ -8,6 +8,7 @@ function CourseFormPreview() {
   const courseDto = useCourseStore((state) => state.courseDto);
   const setCurrentStepIndex = useCourseStore((state) => state.setCurrentStepIndex);
   const canCourseBeSaved = useCourseStore((state) => state.canCourseBeSaved);
+  const saveCourse = useCourseStore((state) => state.saveCourse);
   const [loading, setLoading] = React.useState(false);
 
   const handleEdit = () => {
@@ -17,6 +18,7 @@ function CourseFormPreview() {
   const handleSaveCourse = async () => {
     setLoading(true);
     try {
+      await saveCourse();
     } catch (e) {
     } finally {
       setLoading(false);

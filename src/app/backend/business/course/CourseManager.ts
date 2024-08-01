@@ -241,12 +241,22 @@ class CourseManager {
   public async saveCourse(courseDto: ICourseDto): Promise<ICourse> {
     Logger.debug(this.LOG_TAG, `Saving course:`, [courseDto]);
 
+    const courseDataObject = {
+      duration: "",
+      price: courseDto.price,
+      title: courseDto.title,
+      categories: courseDto.categories,
+      discount: courseDto.discount,
+      createdAt: new Date(),
+      tutorId: courseDto.tutorId,
+    };
+
     try {
       // Salvar o curso
-      const savedCourse = await FirestoreService.saveDocument(FirebaseCollections.COURSES, courseDto);
+      const savedCourse = await FirestoreService.saveDocument(FirebaseCollections.COURSES, courseDataObject);
 
       if (!savedCourse) {
-        Logger.error(this.LOG_TAG, `Course not saved:`, [courseDto]);
+        Logger.error(this.LOG_TAG, `Course not saved:`, [courseDataObject]);
         return Promise.reject("Course not saved");
       }
 
@@ -260,7 +270,7 @@ class CourseManager {
       Logger.debug(this.LOG_TAG, `Course saved:`, [savedCourse]);
       return savedCourse as ICourse;
     } catch (e) {
-      Logger.error(this.LOG_TAG, `Error saving course:`, [courseDto]);
+      Logger.error(this.LOG_TAG, `Error saving course:`, [courseDataObject]);
       return Promise.reject(e);
     }
   }

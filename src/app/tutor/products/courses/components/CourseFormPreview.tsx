@@ -2,16 +2,26 @@
 import React from "react";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 import useCourseStore from "@/app/tutor/products/courses/courseStore";
+import { Loader2Icon } from "lucide-react";
 
 function CourseFormPreview() {
   const courseDto = useCourseStore((state) => state.courseDto);
   const setCurrentStepIndex = useCourseStore((state) => state.setCurrentStepIndex);
   const canCourseBeSaved = useCourseStore((state) => state.canCourseBeSaved);
+  const [loading, setLoading] = React.useState(false);
 
   const handleEdit = () => {
     setCurrentStepIndex(0);
   };
 
+  const handleSaveCourse = async () => {
+    setLoading(true);
+    try {
+    } catch (e) {
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="container mx-auto p-4">
       <div className="grid grid-cols-2 gap-2 p-4 rounded-md shadow-md space-y-4">
@@ -65,9 +75,15 @@ function CourseFormPreview() {
           size={ButtonSize.MEDIUM}
           type={ButtonType.PRIMARY}
           disabled={!canCourseBeSaved}
-          onClick={() => alert("Form submitted successfully!")}
+          onClick={() => handleSaveCourse()}
         >
-          Gravar
+          {loading ? (
+            <div className="flex flex-row gap-2">
+              <Loader2Icon className="size-6 animate-spin" /> <span>A gravar</span>
+            </div>
+          ) : (
+            "Gravar"
+          )}
         </ButtonElement>
       </div>
     </div>

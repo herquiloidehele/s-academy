@@ -64,13 +64,17 @@ interface ICourseStoreState {
   lessons: ILesson[];
   modules: IModule[];
   selectedCategories: IOptionType[];
+  loading: boolean;
+  error: string;
+  setLoading: (value: boolean) => void;
+  setError: (value: string) => void;
   setSelectedCategories: (categories: IOptionType[]) => void;
   currentStepIndex: number;
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   setCurrentStepIndex: (index: number) => void;
   setCoursesByTeacherId: (id: string) => Promise<void>;
-  saveCourse: (course: ICourseDto) => Promise<void>;
+  saveCourse: () => Promise<void>;
   saveCourseDtoInfo: (course: ICourseDto) => void;
   addModule: (module: IModuleDto) => void;
   removeModule: (module: IModuleDto) => void;
@@ -92,6 +96,14 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   categoriesOptions: categoriesOptions,
   currentStepIndex: 0,
   canCourseBeSaved: false,
+  loading: false,
+  error: "",
+  setLoading: (value: boolean) => {
+    set({ loading: value });
+  },
+  setError: (value: string) => {
+    set({ error: value });
+  },
   addModule: (module: IModuleDto) => {
     set((state: ICourseStoreState) => {
       const { courseDto } = state;
@@ -224,15 +236,33 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       Logger.error("CourseStore", "Error fetching courses", error);
     }
   },
-  saveCourse: async (course: ICourseDto) => {
+  saveCourse: async () => {
     try {
-      const response = await saveCourse(course);
-      const newCourse = response as ICourse;
-      set((state) => ({ ...state, courses: [...state.courses, newCourse] }));
+      set((state) => ({ ...state, isLoading: true }));
+
+      set(async (state) => {
+        const { courseDto } = state;
+
+        if (!courseDto) {
+          throw new Error("Course data is missing");
+        }
+
+        const plainCourseDto = JSON.parse(JSON.stringify(courseDto));
+
+        const response = await saveCourse(plainCourseDto);
+
+        Logger.debug("CourseStore", "Course saved", response);
+
+        const newCourse = response as ICourse;
+        return { ...state, courses: [...state.courses, newCourse] };
+      });
     } catch (error) {
-      Logger.error("CourseStore", "Error saving course", error);
+      Logger.error("CourseStore", "Unexpected error", error);
+    } finally {
+      set((state) => ({ ...state, isLoading: false }));
     }
   },
+
   saveCourseDtoInfo: (course: ICourseDto) => {
     set((state) => ({
       courseDto: state.courseDto

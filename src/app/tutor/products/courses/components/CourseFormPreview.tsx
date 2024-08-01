@@ -61,7 +61,7 @@ function CourseFormPreview() {
           </video>
         </div>
       </div>
-      <div className="my-6 flex justify-end gap-2">
+      <div className="my-2 flex justify-end gap-2">
         <ButtonElement
           onClick={handleEdit}
           fillType={FillType.FILLED}

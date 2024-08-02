@@ -3,6 +3,8 @@ import React from "react";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 import useCourseStore from "@/app/tutor/products/courses/courseStore";
 import { Loader2Icon } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 function CourseFormPreview() {
   const courseDto = useCourseStore((state) => state.courseDto);
@@ -10,6 +12,7 @@ function CourseFormPreview() {
   const canCourseBeSaved = useCourseStore((state) => state.canCourseBeSaved);
   const saveCourse = useCourseStore((state) => state.saveCourse);
   const [loading, setLoading] = React.useState(false);
+  const router = useRouter();
 
   const handleEdit = () => {
     setCurrentStepIndex(0);
@@ -18,7 +21,13 @@ function CourseFormPreview() {
   const handleSaveCourse = async () => {
     setLoading(true);
     try {
-      await saveCourse();
+      try {
+        await saveCourse();
+        toast.success("Curso criado com sucesso");
+        router.push("/tutor/products/courses");
+      } catch (e) {
+        toast.success("Erro ao criar curso");
+      }
     } catch (e) {
     } finally {
       setLoading(false);
@@ -76,7 +85,7 @@ function CourseFormPreview() {
           shape={ButtonShape.SQUARE}
           size={ButtonSize.MEDIUM}
           type={ButtonType.PRIMARY}
-          disabled={!canCourseBeSaved}
+          disabled={!canCourseBeSaved || loading}
           onClick={() => handleSaveCourse()}
         >
           {loading ? (

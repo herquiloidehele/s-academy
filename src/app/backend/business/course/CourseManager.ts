@@ -249,7 +249,7 @@ class CourseManager {
       createdAt: new Date(),
       tutorId: courseDto.tutorId,
       description: courseDto.description,
-      coverUrl: courseDto.coverUrl || "",
+      coverUrl: courseDto.coverUrl,
       promoVideoRef: courseDto.promoVideoRef || "",
     };
 

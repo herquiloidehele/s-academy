@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -26,7 +27,7 @@ function CourseFormInformation() {
       title: courseDto?.title,
       description: courseDto?.description,
       price: courseDto?.price,
-      discount: courseDto?.discount,
+      discount: courseDto?.discount || 0,
       categories: courseDto?.categories || [],
       coverFile: courseDto?.coverFile,
       promoVideoFile: courseDto?.promoVideoFile,

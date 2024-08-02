@@ -11,6 +11,7 @@ import {
 import { fetchCoursesByTutorsID, saveCourse } from "@/app/backend/actions/course";
 import { IOptionType } from "@/components/multi-selector/MultiSelect";
 import getAuthUser from "@/app/backend/actions/auth";
+import { saveCourseAndFilesPrepareTheCourseObjectToBeSaved } from "@/utils/functions";
 
 const moduleList = [
   // ... (seu conteúdo de moduleList aqui)
@@ -246,12 +247,12 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       set(async (state) => {
         const { courseDto } = state;
 
+        Logger.debug("CourseStore", "Saving course", courseDto.coverFile);
         if (!courseDto) {
           throw new Error("Course data is missing");
         }
 
-        const plainCourseDto = JSON.parse(JSON.stringify(courseDto));
-
+        const plainCourseDto = await saveCourseAndFilesPrepareTheCourseObjectToBeSaved(courseDto);
         const response = await saveCourse(plainCourseDto);
 
         Logger.debug("CourseStore", "Course saved", response);

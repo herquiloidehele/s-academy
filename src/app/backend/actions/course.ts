@@ -9,7 +9,6 @@ import {
   IModule,
   IModuleDto,
 } from "@/app/backend/business/course/CourseData";
-import VimeoClientService from "@/app/backend/services/VimeoClientService";
 
 export async function fetchCourses(): Promise<ICourse[]> {
   return CourseManager.getAllCourses();
@@ -59,6 +58,6 @@ export async function deleteLesson(courseId: string, moduleId: string, lessonId:
   return CourseManager.removeLesson(courseId, moduleId, lessonId);
 }
 
-export async function uploadVideo(videoFile: File, description: string) {
-  return VimeoClientService.uploadVideo(videoFile, description);
-}
+// export async function uploadVideo(videoFile: File, description: string) {
+//   return VimeoClientService.uploadVideo(videoFile, description);
+// }

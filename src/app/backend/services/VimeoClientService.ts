@@ -9,6 +9,7 @@ class VimeoClientService {
   }
 
   public async uploadVideo(videoFile: File, description: string): Promise<any> {
+    if (true) return 4;
     try {
       const response = await axios.post(`${this.API_BASE_URL}/me/videos`, {
         upload: {

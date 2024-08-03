@@ -59,7 +59,7 @@ export interface ILessonDto {
   description?: string;
   thumbnailUrl?: string;
   materialUrl?: string;
-  materialFile?: string;
+  materialFile?: File;
   videoFile?: File;
   moduleRef: DocumentReference<DocumentData> | null;
 }

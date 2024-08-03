@@ -18,11 +18,11 @@ import {
   saveModule,
   updateLesson,
   updateModule,
-  uploadVideo,
 } from "@/app/backend/actions/course";
 import { IOptionType } from "@/components/multi-selector/MultiSelect";
 import getAuthUser from "@/app/backend/actions/auth";
 import FirebaseClientService from "@/app/backend/services/FirebaseClientService";
+import VimeoClientService from "@/app/backend/services/VimeoClientService";
 
 const moduleList = [
   // ... (seu conteúdo de moduleList aqui)
@@ -148,48 +148,51 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       set({ loading: false });
     }
   },
-  updateModule: (module: IModuleDto) => {
-    set(async (state: ICourseStoreState) => {
-      const { courseDto } = state;
-      const updatedModule = await updateModule(courseDto?.id!, module.id, module);
+  updateModule: async (module: IModuleDto) => {
+    const courseDto = useCourseStore.getState?.().courseDto;
+    const updatedModule = await updateModule(courseDto?.id!, module.id!, module);
 
-      const updatedModules = Array.isArray(courseDto?.modules)
-        ? courseDto?.modules.map((m) => (m.id === updatedModule.id ? updatedModule : m))
-        : [];
+    const updatedModules = Array.isArray(courseDto?.modules)
+      ? courseDto?.modules.map((m) => (m.id === updatedModule.id ? updatedModule : m))
+      : [];
 
-      return {
-        courseDto: { ...courseDto, modules: updatedModules },
-        canCourseBeSaved:
-          updatedModules?.length > 0 && updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
-      };
+    set({
+      courseDto: { ...courseDto, modules: updatedModules },
+      canCourseBeSaved:
+        updatedModules?.length > 0 && updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
     });
   },
-  removeModule: (moduleId: string) => {
-    set(async (state: ICourseStoreState) => {
-      const { courseDto } = state;
+  removeModule: async (moduleId: string) => {
+    const courseDto = useCourseStore.getState?.().courseDto;
 
-      await removeModule(courseDto?.id!, moduleId);
-      const updatedModules = Array.isArray(courseDto?.modules)
-        ? courseDto?.modules.filter((module) => module.id !== moduleId)
-        : [];
+    await removeModule(courseDto?.id!, moduleId);
+    const updatedModules = Array.isArray(courseDto?.modules)
+      ? courseDto?.modules.filter((module) => module.id !== moduleId)
+      : [];
 
-      return {
-        courseDto: { ...courseDto, modules: updatedModules },
-        canCourseBeSaved:
-          updatedModules?.length > 0 && updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
-      };
+    set({
+      courseDto: { ...courseDto, modules: updatedModules },
+      canCourseBeSaved:
+        updatedModules?.length > 0 && updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
     });
   },
-  addLesson: (lesson: ILessonDto) => {
-    set(async (state: ICourseStoreState) => {
-      const { courseDto } = state;
+  addLesson: async (lesson: ILessonDto) => {
+    try {
+      set({ loading: true });
 
-      const videoLesson = await uploadVideo(lesson.videoFile!, lesson.title);
+      const courseDto = useCourseStore.getState?.().courseDto;
 
-      const savedLesson = await saveLesson(courseDto?.id!, lesson.moduleId, {
-        ...lesson,
-        videoRef: videoLesson.videoId,
-      });
+      const videoLesson = await VimeoClientService.uploadVideo(lesson.videoFile!, lesson.title);
+      const materialUrl = await FirebaseClientService.uploadFile(lesson.materialFile!);
+
+      const plainLesson = JSON.parse(
+        JSON.stringify({
+          ...lesson,
+          videoRef: videoLesson.videoId,
+          materialUrl: materialUrl,
+        }),
+      ) as ILessonDto;
+      const savedLesson = await saveLesson(courseDto?.id!, lesson.moduleId, plainLesson);
 
       const updatedModules = courseDto?.modules?.map((module) => {
         if (module.id === savedLesson.moduleId) {
@@ -198,12 +201,15 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
         }
         return module;
       });
-
-      return {
+      set({
         courseDto: { ...courseDto, modules: updatedModules },
         canCourseBeSaved: updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
-      };
-    });
+      });
+    } catch (e) {
+      Logger.error("CourseStore", "Unexpected error", e);
+    } finally {
+      set({ loading: false });
+    }
   },
   updateLesson: async (lesson: ILessonDto) => {
     await set(async (state: ICourseStoreState) => {
@@ -280,25 +286,21 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       const loggedTutor = await getAuthUser();
 
       set((state) => ({ ...state, loading: true, courseDto: { ...course, tutorId: loggedTutor?.id } as ICourseDto }));
+      const courseDto = useCourseStore.getState?.().courseDto;
 
-      set(async (state) => {
-        const { courseDto } = state;
+      if (!courseDto) {
+        throw new Error("Course data is missing");
+      }
 
-        if (!courseDto) {
-          throw new Error("Course data is missing");
-        }
+      const coverUrl = await FirebaseClientService.uploadFile(courseDto.coverFile!);
+      const plainCourseDto = JSON.parse(
+        JSON.stringify({ ...courseDto, status: COURSE_STATUS.DRAFT, coverUrl }),
+      ) as ICourseDto;
 
-        const coverUrl = await FirebaseClientService.uploadFile(courseDto.coverFile!);
-        const plainCourseDto = JSON.parse(
-          JSON.stringify({ ...courseDto, status: COURSE_STATUS.DRAFT, coverUrl }),
-        ) as ICourseDto;
+      const response = await saveCourse(plainCourseDto);
 
-        const response = await saveCourse(plainCourseDto);
-
-        Logger.debug("CourseStore", "Course saved response", response);
-
-        state.saveCourseDtoInfo(response);
-      });
+      Logger.debug("CourseStore", "Course saved response", response);
+      set({ courseDto: response, loading: false });
     } catch (error) {
       Logger.error("CourseStore", "Unexpected error", error);
     } finally {

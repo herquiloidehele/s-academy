@@ -310,7 +310,7 @@ class CourseManager {
       }
       Logger.debug(this.LOG_TAG, `Lesson added to module:`, [savedLesson, moduleId, courseId]);
 
-      return savedLesson as ILesson;
+      return JSON.parse(JSON.stringify(savedLesson)) as ILesson;
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error adding lesson to module:`, [lessonDto, moduleId, courseId]);
       return Promise.reject(error);

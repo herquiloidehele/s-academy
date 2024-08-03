@@ -256,30 +256,32 @@ class CourseManager {
   public async addModuleToCourse(courseId: string, moduleDto: IModuleDto): Promise<IModule> {
     Logger.debug(this.LOG_TAG, `Adding module to course:`, [moduleDto, courseId]);
 
-    const courseRef = await FirestoreService.getDocumentRefById(FirebaseCollections.COURSES, courseId);
-    const moduleDataObject = {
-      courseRef: courseRef,
-      courseId: courseId,
-      title: moduleDto.title,
-      order: moduleDto.order,
-      description: moduleDto.description,
-    };
+    return new Promise(async (resolve, reject) => {
+      const courseRef = await FirestoreService.getDocumentRefById(FirebaseCollections.COURSES, courseId);
+      const moduleDataObject = {
+        courseRef: courseRef,
+        courseId: courseId,
+        title: moduleDto.title,
+        order: moduleDto.order,
+        description: moduleDto.description,
+      };
 
-    try {
-      const moduleCollectionName = `${FirebaseCollections.COURSES}/${courseId}/${FirebaseCollections.MODULES}`;
-      const savedModule = await FirestoreService.saveDocument(moduleCollectionName, moduleDataObject);
+      try {
+        const moduleCollectionName = `${FirebaseCollections.COURSES}/${courseId}/${FirebaseCollections.MODULES}`;
+        const savedModule = await FirestoreService.saveDocument(moduleCollectionName, moduleDataObject);
 
-      if (!savedModule) {
-        Logger.error(this.LOG_TAG, `Module not saved:`, [moduleDataObject]);
-        return Promise.reject("Module not saved");
+        if (!savedModule) {
+          Logger.error(this.LOG_TAG, `Module not saved:`, [moduleDataObject]);
+          return Promise.reject("Module not saved");
+        }
+        Logger.debug(this.LOG_TAG, `Module added to course:`, [savedModule, courseId]);
+
+        return resolve(JSON.parse(JSON.stringify(savedModule)));
+      } catch (error) {
+        Logger.error(this.LOG_TAG, `Error adding module to course:`, [moduleDto, courseId]);
+        return reject(error);
       }
-      Logger.debug(this.LOG_TAG, `Module added to course:`, [savedModule, courseId]);
-
-      return JSON.parse(JSON.stringify(savedModule));
-    } catch (error) {
-      Logger.error(this.LOG_TAG, `Error adding module to course:`, [moduleDto, courseId]);
-      return Promise.reject(error);
-    }
+    });
   }
 
   public async addLessonToModule(lessonDto: ILessonDto, courseId: string, moduleId: string): Promise<ILesson> {

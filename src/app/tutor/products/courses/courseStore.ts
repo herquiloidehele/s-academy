@@ -117,26 +117,36 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   setError: (value: string) => {
     set({ error: value });
   },
-  addModule: (module: IModuleDto) => {
-    set(async (state: ICourseStoreState) => {
-      const { courseDto } = state;
-      let updatedModules = [];
+  addModule: async (module: IModuleDto) => {
+    set({ loading: true });
+    try {
+      const courseDto = useCourseStore.getState?.().courseDto;
+      if (!courseDto) throw new Error("No courseDto found");
+
       Logger.debug("CourseStore", "Adding module", courseDto);
-      const savedModule = await saveModule(courseDto?.id!, module);
+
+      const savedModule = await saveModule(courseDto.id!, module);
 
       Logger.debug("CourseStore", "Saved module", savedModule);
+
+      let updatedModules = [];
       if ("modules" in courseDto) {
         updatedModules = Array.isArray(courseDto.modules) ? [...courseDto.modules, savedModule] : [savedModule];
       } else {
         updatedModules = [savedModule];
       }
 
-      return {
-        courseDto: { ...courseDto, modules: updatedModules },
+      set((state) => ({
+        courseDto: { ...state.courseDto, modules: updatedModules },
         canCourseBeSaved:
           updatedModules.length > 0 && updatedModules.some((mod) => mod.lessons && mod.lessons.length > 0),
-      };
-    });
+      }));
+    } catch (error) {
+      Logger.error("CourseStore", "Unexpected error", error);
+      set({ error: error.message });
+    } finally {
+      set({ loading: false });
+    }
   },
   updateModule: (module: IModuleDto) => {
     set(async (state: ICourseStoreState) => {

@@ -18,6 +18,7 @@ import { cn } from "@/lib/utils";
 import { ILessonSchema } from "@/app/tutor/products/courses/components/CourseSchemas";
 import { v4 as uuidv4 } from "uuid";
 import { ILessonDto } from "@/app/backend/business/course/CourseData";
+import { toast } from "sonner";
 
 export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: string; moduleId: string }) {
   const [open, setOpen] = useState(false);
@@ -76,9 +77,11 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
     };
 
     if (props.lessonId) {
-      updateLesson(lessonValues as ILessonDto);
+      await updateLesson(lessonValues as ILessonDto);
+      toast.success("Aula atualizada com sucesso!");
     } else {
-      addLesson(lessonValues as ILessonDto);
+      await addLesson(lessonValues as ILessonDto);
+      toast.success("Aula adicionada com sucesso!");
     }
 
     setOpen(false);

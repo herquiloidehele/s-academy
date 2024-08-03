@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import Logger from "@/utils/Logger";
 import {
+  COURSE_STATUS,
   ICourse,
   ICourseDto,
   ILesson,
@@ -8,10 +9,20 @@ import {
   IModule,
   IModuleDto,
 } from "@/app/backend/business/course/CourseData";
-import { fetchCoursesByTutorsID, saveCourse } from "@/app/backend/actions/course";
+import {
+  deleteLesson,
+  fetchCoursesByTutorsID,
+  removeModule,
+  saveCourse,
+  saveLesson,
+  saveModule,
+  updateLesson,
+  updateModule,
+  uploadVideo,
+} from "@/app/backend/actions/course";
 import { IOptionType } from "@/components/multi-selector/MultiSelect";
 import getAuthUser from "@/app/backend/actions/auth";
-import { saveCourseAndFilesPrepareTheCourseObjectToBeSaved } from "@/utils/functions";
+import FirebaseClientService from "@/app/backend/services/FirebaseClientService";
 
 const moduleList = [
   // ... (seu conteúdo de moduleList aqui)
@@ -76,7 +87,7 @@ interface ICourseStoreState {
   goToPreviousStep: () => void;
   setCurrentStepIndex: (index: number) => void;
   setCoursesByTeacherId: (id: string) => Promise<void>;
-  saveCourse: () => Promise<void>;
+  saveCourse: (course: ICourseDto) => Promise<ICourse>;
   saveCourseDtoInfo: (course: ICourseDto) => void;
   addModule: (module: IModuleDto) => void;
   removeModule: (module: IModuleDto) => void;
@@ -107,13 +118,17 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     set({ error: value });
   },
   addModule: (module: IModuleDto) => {
-    set((state: ICourseStoreState) => {
+    set(async (state: ICourseStoreState) => {
       const { courseDto } = state;
       let updatedModules = [];
+      Logger.debug("CourseStore", "Adding module", courseDto);
+      const savedModule = await saveModule(courseDto?.id!, module);
+
+      Logger.debug("CourseStore", "Saved module", savedModule);
       if ("modules" in courseDto) {
-        updatedModules = Array.isArray(courseDto.modules) ? [...courseDto.modules, module] : [module];
+        updatedModules = Array.isArray(courseDto.modules) ? [...courseDto.modules, savedModule] : [savedModule];
       } else {
-        updatedModules = [module];
+        updatedModules = [savedModule];
       }
 
       return {
@@ -124,10 +139,12 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     });
   },
   updateModule: (module: IModuleDto) => {
-    set((state: ICourseStoreState) => {
+    set(async (state: ICourseStoreState) => {
       const { courseDto } = state;
+      const updatedModule = await updateModule(courseDto?.id!, module.id, module);
+
       const updatedModules = Array.isArray(courseDto?.modules)
-        ? courseDto?.modules.map((m) => (m.id === module.id ? module : m))
+        ? courseDto?.modules.map((m) => (m.id === updatedModule.id ? updatedModule : m))
         : [];
 
       return {
@@ -138,9 +155,10 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     });
   },
   removeModule: (moduleId: string) => {
-    set((state: ICourseStoreState) => {
+    set(async (state: ICourseStoreState) => {
       const { courseDto } = state;
 
+      await removeModule(courseDto?.id!, moduleId);
       const updatedModules = Array.isArray(courseDto?.modules)
         ? courseDto?.modules.filter((module) => module.id !== moduleId)
         : [];
@@ -153,12 +171,19 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     });
   },
   addLesson: (lesson: ILessonDto) => {
-    set((state: ICourseStoreState) => {
+    set(async (state: ICourseStoreState) => {
       const { courseDto } = state;
 
+      const videoLesson = await uploadVideo(lesson.videoFile!, lesson.title);
+
+      const savedLesson = await saveLesson(courseDto?.id!, lesson.moduleId, {
+        ...lesson,
+        videoRef: videoLesson.videoId,
+      });
+
       const updatedModules = courseDto?.modules?.map((module) => {
-        if (module.id === lesson.moduleId) {
-          const updatedLessons = Array.isArray(module.lessons) ? [...module.lessons, lesson] : [lesson];
+        if (module.id === savedLesson.moduleId) {
+          const updatedLessons = Array.isArray(module.lessons) ? [...module.lessons, savedLesson] : [savedLesson];
           return { ...module, lessons: updatedLessons };
         }
         return module;
@@ -170,13 +195,14 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       };
     });
   },
-  updateLesson: (lesson: ILessonDto) => {
-    set((state: ICourseStoreState) => {
+  updateLesson: async (lesson: ILessonDto) => {
+    await set(async (state: ICourseStoreState) => {
       const { courseDto } = state;
+      const updatedLesson = await updateLesson(courseDto?.id!, lesson.moduleId, lesson.id, lesson);
 
       const updatedModules = courseDto?.modules?.map((module) => {
-        if (module.id === lesson.moduleId) {
-          const updatedLessons = module.lessons?.map((l) => (l.id === lesson.id ? lesson : l));
+        if (module.id === updatedLesson.moduleId) {
+          const updatedLessons = module.lessons?.map((l) => (l.id === updatedLesson.id ? updatedLesson : l));
           return { ...module, lessons: updatedLessons };
         }
         return module;
@@ -189,9 +215,10 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     });
   },
   removeLesson: (lessonId: string, moduleId: string) => {
-    set((state: ICourseStoreState) => {
+    set(async (state: ICourseStoreState) => {
       const { courseDto } = state;
 
+      await deleteLesson(courseDto?.id!, moduleId, lessonId);
       const updatedModules = courseDto?.modules?.map((module) => {
         if (module.id === moduleId) {
           const updatedLessons = module.lessons?.filter((lesson) => lesson.id !== lessonId);
@@ -238,27 +265,29 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       Logger.error("CourseStore", "Error fetching courses", error);
     }
   },
-  saveCourse: async () => {
+  saveCourse: async (course: ICourseDto) => {
     try {
       const loggedTutor = await getAuthUser();
 
-      set((state) => ({ ...state, isLoading: true, courseDto: { ...state.courseDto, tutorId: loggedTutor?.email } }));
+      set((state) => ({ ...state, loading: true, courseDto: { ...course, tutorId: loggedTutor?.id } as ICourseDto }));
 
       set(async (state) => {
         const { courseDto } = state;
 
-        Logger.debug("CourseStore", "Saving course", courseDto.coverFile);
         if (!courseDto) {
           throw new Error("Course data is missing");
         }
 
-        const plainCourseDto = await saveCourseAndFilesPrepareTheCourseObjectToBeSaved(courseDto);
+        const coverUrl = await FirebaseClientService.uploadFile(courseDto.coverFile!);
+        const plainCourseDto = JSON.parse(
+          JSON.stringify({ ...courseDto, status: COURSE_STATUS.DRAFT, coverUrl }),
+        ) as ICourseDto;
+
         const response = await saveCourse(plainCourseDto);
 
-        Logger.debug("CourseStore", "Course saved", response);
+        Logger.debug("CourseStore", "Course saved response", response);
 
-        const newCourse = response as ICourse;
-        return { ...state, courses: [...state.courses, newCourse] };
+        state.saveCourseDtoInfo(response);
       });
     } catch (error) {
       Logger.error("CourseStore", "Unexpected error", error);
@@ -268,11 +297,8 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   },
 
   saveCourseDtoInfo: (course: ICourseDto) => {
-    set((state) => ({
-      courseDto: state.courseDto
-        ? { ...state.courseDto, ...course, modules: state.courseDto.modules || [] }
-        : (course as ICourseDto),
-    }));
+    Logger.debug("CourseStore", "Saving course info", course);
+    set((state) => ({ ...state, courseDto: course, loading: false }));
   },
   setCanCourseBeSaved: (value: boolean) => {
     set({ canCourseBeSaved: value });

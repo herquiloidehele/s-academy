@@ -6,20 +6,22 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { DialogFooter } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import FileUploader from "@/components/file-uploader/FileUploader";
 import useCourseStore from "@/app/tutor/products/courses/courseStore";
 import { courseBasicInformationformSchema } from "@/app/tutor/products/courses/components/CourseSchemas";
 import { MultiSelect } from "@/components/multi-selector/MultiSelect";
+import { toast } from "sonner";
+import FormButtonWithLoader from "@/components/FormButton/FormButtonWithLoader";
 
 function CourseFormInformation() {
-  const saveCourseDtoInfo = useCourseStore((state) => state.saveCourseDtoInfo);
+  const saveCourseDtoInfo = useCourseStore((state) => state.saveCourse);
   const courseDto = useCourseStore((state) => state.courseDto);
   const categoriesOptions = useCourseStore((state) => state.categoriesOptions);
   const selectedCategories = useCourseStore((state) => state.selectedCategories);
   const setSelectedSelectedCategories = useCourseStore((state) => state.setSelectedCategories);
   const goToNextStep = useCourseStore((state) => state.goToNextStep);
+  const loading = useCourseStore((state) => state.loading);
 
   const form = useForm<z.infer<typeof courseBasicInformationformSchema>>({
     resolver: zodResolver(courseBasicInformationformSchema),
@@ -35,8 +37,13 @@ function CourseFormInformation() {
   });
 
   async function onSubmit(values: z.infer<typeof courseBasicInformationformSchema>) {
-    saveCourseDtoInfo(values);
-    goToNextStep();
+    try {
+      await saveCourseDtoInfo(values);
+      toast.success("Informações do curso salvas com sucesso!");
+      if (!loading) goToNextStep();
+    } catch (e) {
+      console.error(e);
+    }
   }
 
   return (
@@ -177,9 +184,7 @@ function CourseFormInformation() {
             />
           </div>
           <DialogFooter>
-            <Button className="hover:bg-green-600" type="submit">
-              Próximo
-            </Button>
+            <FormButtonWithLoader label={"Próximo"} loading={loading} loadingLabel={"A gravar"} />
           </DialogFooter>
         </form>
       </Form>

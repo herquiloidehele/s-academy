@@ -9,9 +9,9 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { Textarea } from "@/components/ui/textarea";
 import useCourseStore from "@/app/tutor/products/courses/courseStore";
 import { IModuleDto } from "@/app/backend/business/course/CourseData";
-import { Button } from "@/components/ui/button";
 import { IModuleSchema } from "@/app/tutor/products/courses/components/CourseSchemas";
-import { v4 as uuidv4 } from "uuid";
+import { toast } from "sonner";
+import FormButtonWithLoader from "@/components/FormButton/FormButtonWithLoader";
 
 export function ModuleFormDialog(props: { children: React.ReactNode; moduleId?: string }) {
   const [open, setOpen] = useState(false);
@@ -19,6 +19,7 @@ export function ModuleFormDialog(props: { children: React.ReactNode; moduleId?: 
   const updateModule = useCourseStore((state) => state.updateModule);
   const courseDto = useCourseStore((state) => state.courseDto);
   const [moduleData, setModuleData] = useState<IModuleDto | undefined>({} as IModuleDto);
+  const loading = useCourseStore((state) => state.loading);
 
   const form = useForm<z.infer<typeof IModuleSchema>>({
     resolver: zodResolver(IModuleSchema),
@@ -30,17 +31,20 @@ export function ModuleFormDialog(props: { children: React.ReactNode; moduleId?: 
   });
 
   async function onSubmit(values) {
+    console.log("values", courseDto);
     const moduleValues = {
-      id: props.moduleId || uuidv4(),
+      id: props.moduleId,
       order: values.order,
       title: values.title,
       description: values.description,
     };
 
     if (props.moduleId !== undefined) {
-      updateModule(moduleValues);
+      await updateModule(moduleValues);
+      toast.success("Módulo atualizado com sucesso!");
     } else {
-      addModule(moduleValues);
+      await addModule(moduleValues);
+      toast.success("Módulo adicionado com sucesso!");
     }
 
     setOpen(false);
@@ -118,9 +122,9 @@ export function ModuleFormDialog(props: { children: React.ReactNode; moduleId?: 
               />
 
               <DialogFooter>
-                <Button type="submit" className="hover:bg-active hover:text-active-foreground">
-                  Gravar
-                </Button>
+                <DialogFooter>
+                  <FormButtonWithLoader loading={loading} label={"Gravar"} loadingLabel={"A gravar"} />
+                </DialogFooter>
               </DialogFooter>
             </form>
           </Form>

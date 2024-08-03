@@ -14,6 +14,7 @@ import { CourseMock } from "@/mock/CourseMock";
 import SubscriptionManager from "@/app/backend/business/subscription/SubscriptionManager";
 import AuthManager from "@/app/backend/business/auth/AuthManager";
 import { firestore } from "firebase-admin";
+import { undefined } from "zod";
 import FieldPath = firestore.FieldPath;
 
 class CourseManager {
@@ -144,31 +145,6 @@ class CourseManager {
     }
   }
 
-  // public async addLessonToModule(lesson: ILesson, courseId: string, moduleId: string): Promise<void> {
-  //   Logger.debug(this.LOG_TAG, `Adding lesson to module:`, [lesson, moduleId, courseId]);
-  //
-  //   try {
-  //     const lessonCollectionName = FirebaseCollections.LESSONS.replace("{courseId}", courseId).replace(
-  //       "{moduleId}",
-  //       moduleId,
-  //     );
-  //
-  //     const hasLesson = await FirestoreService.getDocumentById(lessonCollectionName, lesson.id);
-  //
-  //     if (hasLesson) {
-  //       Logger.warn(this.LOG_TAG, `Lesson already exists in module:`, [hasLesson, lessonCollectionName]);
-  //       return;
-  //     }
-  //
-  //     await FirestoreService.saveDocument(lessonCollectionName, lesson, lesson.id);
-  //
-  //     Logger.debug(this.LOG_TAG, `Lesson added to module:`, [lesson, moduleId, courseId]);
-  //   } catch (error) {
-  //     Logger.error(this.LOG_TAG, `Error adding lesson to module:`, [lesson, moduleId, courseId]);
-  //     return Promise.reject(error);
-  //   }
-  // }
-
   public async getAllCourses(): Promise<ICourse[]> {
     Logger.debug(this.LOG_TAG, `Getting all courses`);
 
@@ -238,19 +214,26 @@ class CourseManager {
       return [];
     }
   }
+
   public async saveCourse(courseDto: ICourseDto): Promise<ICourse> {
     Logger.debug(this.LOG_TAG, `Saving course:`, [courseDto]);
 
+    const tutorRef = await FirestoreService.getDocumentRefById(FirebaseCollections.USERS, courseDto.tutorId!);
+    if (!tutorRef) throw new Error("Tutor not found");
+
     const courseDataObject = {
-      price: courseDto.price,
       title: courseDto.title,
-      categories: courseDto.categories,
+      status: courseDto.status,
+      price: courseDto.price,
+      duration: courseDto.duration,
       discount: courseDto.discount,
-      createdAt: new Date(),
       tutorId: courseDto.tutorId,
-      description: courseDto.description,
+      categories: courseDto.categories || [],
+      createdAt: new Date(),
       coverUrl: courseDto.coverUrl,
-      promoVideoRef: courseDto.promoVideoRef || "",
+      description: courseDto.description,
+      promoVideoRef: courseDto.promoVideoRef || 0,
+      tutorRef: courseDto.tutorRef,
     };
 
     try {
@@ -258,27 +241,25 @@ class CourseManager {
 
       if (!savedCourse) {
         Logger.error(this.LOG_TAG, `Course not saved:`, [courseDataObject]);
-        throw new Error("Course not saved");
-      }
-
-      const courseId = savedCourse.id;
-
-      // Saving the modules and lessons
-      for (const moduleDto of courseDto.modules) {
-        await this.addModuleToCourse(courseId, moduleDto);
+        return Promise.reject("Course not saved");
       }
 
       Logger.debug(this.LOG_TAG, `Course saved:`, [savedCourse]);
-      return savedCourse as ICourse;
-    } catch (e) {
+
+      return JSON.parse(JSON.stringify(savedCourse));
+    } catch (error) {
       Logger.error(this.LOG_TAG, `Error saving course:`, [courseDataObject]);
-      return Promise.reject(e);
+      return Promise.reject(error);
     }
   }
-  public async addModuleToCourse(courseId: string, moduleDto: IModuleDto): Promise<void> {
+
+  public async addModuleToCourse(courseId: string, moduleDto: IModuleDto): Promise<IModule> {
     Logger.debug(this.LOG_TAG, `Adding module to course:`, [moduleDto, courseId]);
 
+    const courseRef = await FirestoreService.getDocumentRefById(FirebaseCollections.COURSES, courseId);
     const moduleDataObject = {
+      courseRef: courseRef,
+      courseId: courseId,
       title: moduleDto.title,
       order: moduleDto.order,
       description: moduleDto.description,
@@ -292,39 +273,132 @@ class CourseManager {
         Logger.error(this.LOG_TAG, `Module not saved:`, [moduleDataObject]);
         return Promise.reject("Module not saved");
       }
-
-      const moduleId = savedModule.id;
-
-      // Saving the lessons
-      for (const lessonDto of moduleDto.lessons) {
-        await this.addLessonToModule(lessonDto, courseId, moduleId);
-      }
-
       Logger.debug(this.LOG_TAG, `Module added to course:`, [savedModule, courseId]);
+
+      return JSON.parse(JSON.stringify(savedModule));
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error adding module to course:`, [moduleDto, courseId]);
       return Promise.reject(error);
     }
   }
 
-  public async addLessonToModule(lessonDto: ILessonDto, courseId: string, moduleId: string): Promise<void> {
+  public async addLessonToModule(lessonDto: ILessonDto, courseId: string, moduleId: string): Promise<ILesson> {
     Logger.debug(this.LOG_TAG, `Adding lesson to module:`, [lessonDto, moduleId, courseId]);
-    const lessonDataObject = {
-      duration: lessonDto.duration || 0,
-      thumbnailUrl: lessonDto.thumbnailUrl || "",
-      videoRef: lessonDto.videoRef || "",
+
+    const moduleRef = await FirestoreService.getDocumentRefById(FirebaseCollections.COURSES, courseId);
+    const lessonObject = {
+      duration: lessonDto.duration,
+      thumbnailUrl: lessonDto.thumbnailUrl,
+      materialUrl: lessonDto.materialUrl,
+      videoRef: lessonDto.videoRef,
+      moduleId: moduleId,
+      moduleRef: moduleRef,
       title: lessonDto.title,
       order: lessonDto.order,
       description: lessonDto.description,
-      materialUrl: lessonDto.materialUrl,
+    };
+
+    try {
+      const lessonsCollectionName = `${FirebaseCollections.COURSES}/${courseId}/${FirebaseCollections.MODULES}/${moduleId}/${FirebaseCollections.LESSONS}`;
+      const savedLesson = await FirestoreService.saveDocument(lessonsCollectionName, lessonObject);
+
+      if (!savedLesson) {
+        Logger.error(this.LOG_TAG, `Lesson not saved:`, [lessonDto]);
+        return Promise.reject("Lesson not saved");
+      }
+      Logger.debug(this.LOG_TAG, `Lesson added to module:`, [savedLesson, moduleId, courseId]);
+
+      return savedLesson as ILesson;
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error adding lesson to module:`, [lessonDto, moduleId, courseId]);
+      return Promise.reject(error);
+    }
+  }
+
+  public async updateModule(courseId: string, moduleId: string, moduleDto: IModuleDto): Promise<IModule> {
+    Logger.debug(this.LOG_TAG, `Updating module in course:`, [moduleDto, moduleId, courseId]);
+    const courseRef = await FirestoreService.getDocumentRefById(FirebaseCollections.COURSES, courseId);
+    const moduleDataObject = {
+      courseRef: courseRef,
+      courseId: courseId,
+      title: moduleDto.title,
+      order: moduleDto.order,
+      description: moduleDto.description,
     };
     try {
-      const lessonCollectionName = `${FirebaseCollections.COURSES}/${courseId}/${FirebaseCollections.MODULES}/${moduleId}/${FirebaseCollections.LESSONS}`;
-      await FirestoreService.saveDocument(lessonCollectionName, lessonDataObject);
+      const moduleCollectionName = `${FirebaseCollections.COURSES}/${courseId}/${FirebaseCollections.MODULES}`;
+      const updatedModule = await FirestoreService.updateDocument(moduleCollectionName, moduleId, moduleDataObject);
 
-      Logger.debug(this.LOG_TAG, `Lesson added to module:`, [lessonDataObject, moduleId, courseId]);
+      if (!updatedModule) {
+        Logger.error(this.LOG_TAG, `Module not updated:`, [moduleDataObject]);
+        return Promise.reject("Module not updated");
+      }
+      Logger.debug(this.LOG_TAG, `Module updated in course:`, [updatedModule, courseId]);
+
+      return updatedModule as IModule;
     } catch (error) {
-      Logger.error(this.LOG_TAG, `Error adding lesson to module:`, [lessonDataObject, moduleId, courseId]);
+      Logger.error(this.LOG_TAG, `Error updating module in course:`, [moduleDto, moduleId, courseId]);
+      return Promise.reject(error);
+    }
+  }
+
+  public async removeModule(courseId: string, moduleId: string): Promise<void> {
+    Logger.debug(this.LOG_TAG, `Removing module from course:`, [moduleId, courseId]);
+
+    try {
+      const moduleCollectionName = `${FirebaseCollections.COURSES}/${courseId}/${FirebaseCollections.MODULES}`;
+      await FirestoreService.deleteDocument(moduleCollectionName, moduleId);
+
+      Logger.debug(this.LOG_TAG, `Module removed from course:`, [moduleId, courseId]);
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error removing module from course:`, [moduleId, courseId]);
+      return Promise.reject(error);
+    }
+  }
+
+  public async updateLesson(
+    courseId: string,
+    moduleId: string,
+    lessonId: string,
+    lessonDto: ILessonDto,
+  ): Promise<ILesson> {
+    Logger.debug(this.LOG_TAG, `Updating lesson in module:`, [lessonDto, lessonId, moduleId, courseId]);
+    const moduleRef = await FirestoreService.getDocumentRefById(FirebaseCollections.COURSES, courseId);
+
+    const lessonObject = {
+      duration: lessonDto.duration,
+      thumbnailUrl: lessonDto.thumbnailUrl,
+      materialUrl: lessonDto.materialUrl,
+      videoRef: lessonDto.videoRef,
+      moduleId: moduleId,
+      moduleRef: moduleRef,
+      title: lessonDto.title,
+      order: lessonDto.order,
+      description: lessonDto.description,
+    };
+    try {
+      const lessonsCollectionName = `${FirebaseCollections.COURSES}/${courseId}/${FirebaseCollections.MODULES}/${moduleId}/${FirebaseCollections.LESSONS}`;
+      const updatedLesson = await FirestoreService.updateDocument(lessonsCollectionName, lessonId, lessonObject);
+
+      Logger.debug(this.LOG_TAG, `Lesson updated in module:`, [updatedLesson, lessonId, moduleId, courseId]);
+
+      return { id: lessonId, ...lessonDto } as ILesson;
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error updating lesson in module:`, [lessonDto, lessonId, moduleId, courseId]);
+      return Promise.reject(error);
+    }
+  }
+
+  public async removeLesson(courseId: string, moduleId: string, lessonId: string): Promise<void> {
+    Logger.debug(this.LOG_TAG, `Removing lesson from module:`, [lessonId, moduleId, courseId]);
+
+    try {
+      const lessonsCollectionName = `${FirebaseCollections.COURSES}/${courseId}/${FirebaseCollections.MODULES}/${moduleId}/${FirebaseCollections.LESSONS}`;
+      await FirestoreService.deleteDocument(lessonsCollectionName, lessonId);
+
+      Logger.debug(this.LOG_TAG, `Lesson removed from module:`, [lessonId, moduleId, courseId]);
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error removing lesson from module:`, [lessonId, moduleId, courseId]);
       return Promise.reject(error);
     }
   }

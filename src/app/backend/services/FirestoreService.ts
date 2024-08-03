@@ -191,6 +191,21 @@ class FirestoreService {
     }
   }
 
+  public async deleteDocument(collection: FirebaseCollections | string, id: string) {
+    await this.waitForFirestore();
+    Logger.debug(this.LOG_TAG, `Deleting document from collection: ${collection}, id: ${id}`);
+
+    try {
+      const collectionReference = FirebaseConfig.firestoreDB.collection(collection);
+      await collectionReference.doc(id).delete();
+
+      Logger.debug(this.LOG_TAG, `Document deleted from collection: ${collection}, id: ${id}`);
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error deleting document from collection: ${collection}, id: ${id}`, error);
+      return Promise.reject(error);
+    }
+  }
+
   private async waitForFirestore() {
     if (!FirebaseConfig.checkFirestoreDB()) {
       Logger.debug(this.LOG_TAG, "Waiting for Firestore to initialize");

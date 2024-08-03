@@ -58,14 +58,18 @@ function CourseFormPreview() {
             loading="lazy"
             width="100"
             height="100"
-            src={URL.createObjectURL(courseDto?.coverFile)}
+            src={courseDto?.coverUrl}
             alt="Course cover"
             className="relative h-fit w-fit object-cover "
           />
         </div>
         <div>
           <strong className="block text-lg font-bold">Video Promocional:</strong>
-          <video controls src={URL.createObjectURL(courseDto?.promoVideoFile)} className="w-full h-fit object-cover">
+          <video
+            controls
+            src={courseDto?.promoVideoRef?.toString() || "https://youtu.be/olcY7F_eDag"}
+            className="w-full h-fit object-cover"
+          >
             Your browser does not support the video tag.
           </video>
         </div>

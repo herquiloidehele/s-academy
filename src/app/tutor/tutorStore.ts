@@ -15,7 +15,8 @@ const useTutorStore = create<TutorState>((set) => ({
     try {
       const authUser = await getAuthUser();
       if ("id" in authUser) {
-        const tutor = await getTutorByUserId(authUser.id);
+        const tutor = await getTutorByUserId(authUser.email);
+        Logger.debug("useTutorStore", "Setting logged tutor", [tutor]);
         set({ loggedTutor: tutor });
       }
     } catch (e) {

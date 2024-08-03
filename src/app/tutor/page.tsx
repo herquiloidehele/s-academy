@@ -1,22 +1,16 @@
-"use client";
-
-import React, { useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React from "react";
+import { redirect } from "next/navigation";
 import { Constants } from "@/utils/Constants";
 import useTutorStore from "@/app/tutor/tutorStore";
 
-function Page(props) {
-  const router = useRouter();
-  const setLoggedTutor = useTutorStore((state) => state.setLoggedTutor);
+async function Page() {
+  const setLoggedTutor = useTutorStore.getState?.().setLoggedTutor;
 
-  useEffect(() => {
-    const fetchTutor = async () => {
-      await setLoggedTutor();
-    };
-    fetchTutor();
-  }, []);
+  if (setLoggedTutor) {
+    await setLoggedTutor();
+  }
 
-  router.push(Constants.APP_ROUTES.TEACHER.HOME);
+  redirect(Constants.APP_ROUTES.TEACHER.HOME);
   return <div></div>;
 }
 

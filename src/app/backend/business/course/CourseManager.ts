@@ -178,7 +178,7 @@ class CourseManager {
         return [];
       }
 
-      return courses as ICourse[];
+      return JSON.parse(JSON.stringify(courses)) as ICourse[];
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error getting all courses`, error);
       return [];

@@ -86,7 +86,7 @@ interface ICourseStoreState {
   goToNextStep: () => void;
   goToPreviousStep: () => void;
   setCurrentStepIndex: (index: number) => void;
-  setCoursesByTeacherId: (id: string) => Promise<void>;
+  fetchLoggedTutorCourses: () => Promise<void>;
   saveCourse: (course: ICourseDto) => Promise<ICourse>;
   saveCourseDtoInfo: (course: ICourseDto) => void;
   addModule: (module: IModuleDto) => void;
@@ -272,13 +272,19 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   setCurrentFormStep: (step: IFormStep) => {
     set({ currentFormStep: step });
   },
-  setCoursesByTeacherId: async (id: string) => {
+  fetchLoggedTutorCourses: async () => {
+    set({ loading: true });
     try {
-      const response = await fetchCoursesByTutorsID(id);
+      Logger.debug("CourseStore", "Fetching courses");
+      const loggedTutor = await getAuthUser();
+      const response = await fetchCoursesByTutorsID(loggedTutor?.email!);
+      Logger.debug("CourseStore", "Fetched courses", response);
       const courses = response as ICourse[];
       set((state) => ({ ...state, courses: courses || [] }));
     } catch (error) {
       Logger.error("CourseStore", "Error fetching courses", error);
+    } finally {
+      set((state) => ({ ...state, loading: false }));
     }
   },
   saveCourse: async (course: ICourseDto) => {

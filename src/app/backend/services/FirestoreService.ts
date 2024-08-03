@@ -168,6 +168,7 @@ class FirestoreService {
       });
 
       Logger.debug(this.LOG_TAG, `Document updated in collection: ${collection}`);
+      return { ...data, id: id };
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error updating document in collection: ${collection}`, error);
       return Promise.reject(error);

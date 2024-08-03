@@ -1,4 +1,5 @@
 import {
+  COURSE_STATUS,
   ICourse,
   ICourseDto,
   ILesson,
@@ -15,6 +16,8 @@ import SubscriptionManager from "@/app/backend/business/subscription/Subscriptio
 import AuthManager from "@/app/backend/business/auth/AuthManager";
 import { firestore } from "firebase-admin";
 import { undefined } from "zod";
+import { DocumentReference } from "firebase/firestore";
+import { DocumentData } from "@firebase/firestore";
 import FieldPath = firestore.FieldPath;
 
 class CourseManager {
@@ -237,6 +240,9 @@ class CourseManager {
     };
 
     try {
+      if (courseDto.id) {
+        return await this.updateCourse(courseDto, courseDataObject);
+      }
       const savedCourse = await FirestoreService.saveDocument(FirebaseCollections.COURSES, courseDataObject);
 
       if (!savedCourse) {
@@ -402,6 +408,41 @@ class CourseManager {
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error removing lesson from module:`, [lessonId, moduleId, courseId]);
       return Promise.reject(error);
+    }
+  }
+
+  private async updateCourse(
+    courseDto: ICourseDto,
+    courseDataObject: {
+      duration: string | undefined;
+      coverUrl: string | undefined;
+      tutorId: string | undefined;
+      createdAt: Date;
+      promoVideoRef: number;
+      price: number | undefined;
+      discount: number | undefined;
+      description: string | undefined;
+      tutorRef: DocumentReference<DocumentData> | null | undefined;
+      categories: string[];
+      title: string | undefined;
+      status: COURSE_STATUS | undefined;
+    },
+  ) {
+    try {
+      const updatedCourse = await FirestoreService.updateDocument(
+        FirebaseCollections.COURSES,
+        courseDto.id!,
+        courseDataObject,
+      );
+
+      if (!updatedCourse) {
+        Logger.error(this.LOG_TAG, `Course not updated:`, [courseDataObject]);
+        return Promise.reject("Course updated saved");
+      }
+
+      return JSON.parse(JSON.stringify(updatedCourse)) as ICourse;
+    } catch (e) {
+      Logger.error(this.LOG_TAG, `Error updating course:`, [courseDataObject, e]);
     }
   }
 }

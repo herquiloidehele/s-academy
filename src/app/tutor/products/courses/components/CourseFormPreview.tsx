@@ -10,8 +10,8 @@ function CourseFormPreview() {
   const courseDto = useCourseStore((state) => state.courseDto);
   const setCurrentStepIndex = useCourseStore((state) => state.setCurrentStepIndex);
   const canCourseBeSaved = useCourseStore((state) => state.canCourseBeSaved);
-  const saveCourse = useCourseStore((state) => state.saveCourse);
-  const [loading, setLoading] = React.useState(false);
+  const publishCourse = useCourseStore((state) => state.publishCourse);
+  const loading = useCourseStore((state) => state.loading);
   const router = useRouter();
 
   const handleEdit = () => {
@@ -19,18 +19,12 @@ function CourseFormPreview() {
   };
 
   const handleSaveCourse = async () => {
-    setLoading(true);
     try {
-      try {
-        await saveCourse();
-        toast.success("Curso criado com sucesso");
-        router.push("/tutor/products/courses");
-      } catch (e) {
-        toast.success("Erro ao criar curso");
-      }
+      await publishCourse();
+      toast.success("Curso publicado com sucesso");
+      router.push("/tutor/products/courses");
     } catch (e) {
-    } finally {
-      setLoading(false);
+      toast.success("Erro ao publicar curso");
     }
   };
   return (
@@ -94,10 +88,10 @@ function CourseFormPreview() {
         >
           {loading ? (
             <div className="flex flex-row gap-2">
-              <Loader2Icon className="size-6 animate-spin" /> <span>A gravar</span>
+              <Loader2Icon className="size-6 animate-spin" /> <span>A publicar</span>
             </div>
           ) : (
-            "Gravar"
+            "Publicar"
           )}
         </ButtonElement>
       </div>

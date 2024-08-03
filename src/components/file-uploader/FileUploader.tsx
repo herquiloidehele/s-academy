@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { Loader2Icon, XIcon } from "lucide-react";
 import { DocumentIcon } from "@heroicons/react/24/outline";
 
@@ -11,13 +11,9 @@ function FileUploader({
   fileTypes = "PDF, DOCX, PPTX",
   defaultFile,
 }) {
-  const [file, setFile] = useState(defaultFile);
+  const [file, setFile] = useState();
   const [loading, setLoading] = useState(false);
   const inputRef = useRef(null);
-
-  useEffect(() => {
-    setFile(defaultFile);
-  }, [defaultFile]);
 
   const handleDragOver = (event) => {
     event.preventDefault();
@@ -48,7 +44,7 @@ function FileUploader({
     onFileChange(null);
   };
 
-  const fileUrl = file ? URL.createObjectURL(file) : null;
+  const fileUrl = file ? URL.createObjectURL(file) : defaultFile;
   const fileType = file ? file.type : "";
 
   return (

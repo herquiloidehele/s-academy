@@ -148,7 +148,7 @@ function CourseFormInformation() {
                   <FormLabel className="font-light leading-tight">Capa</FormLabel>
                   <FormControl>
                     <FileUploader
-                      defaultFile={courseDto?.coverFile}
+                      defaultFile={courseDto?.coverUrl}
                       id="coverFile"
                       mimeType="image/*"
                       fileTypes={["SVG", "PNG", "JPG"]}

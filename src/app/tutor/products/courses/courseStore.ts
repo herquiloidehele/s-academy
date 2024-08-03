@@ -88,6 +88,7 @@ interface ICourseStoreState {
   setCurrentStepIndex: (index: number) => void;
   fetchLoggedTutorCourses: () => Promise<void>;
   saveCourse: (course: ICourseDto) => Promise<ICourse>;
+  publishCourse: () => Promise<ICourse>;
   saveCourseDtoInfo: (course: ICourseDto) => void;
   addModule: (module: IModuleDto) => void;
   removeModule: (module: IModuleDto) => void;
@@ -183,7 +184,8 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       const courseDto = useCourseStore.getState?.().courseDto;
 
       const videoLesson = await VimeoClientService.uploadVideo(lesson.videoFile!, lesson.title);
-      const materialUrl = await FirebaseClientService.uploadFile(lesson.materialFile!);
+
+      const materialUrl = lesson.materialFile ? await FirebaseClientService.uploadFile(lesson.materialFile) : "";
 
       const plainLesson = JSON.parse(
         JSON.stringify({
@@ -311,6 +313,28 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       Logger.error("CourseStore", "Unexpected error", error);
     } finally {
       set((state) => ({ ...state, isLoading: false }));
+    }
+  },
+
+  publishCourse: async () => {
+    set({ loading: true });
+    try {
+      set({ loading: true });
+      const courseDto = useCourseStore.getState?.().courseDto;
+
+      if (!courseDto) {
+        throw new Error("Course data is missing");
+      }
+
+      const response = await saveCourse({ ...courseDto, status: COURSE_STATUS.PUBLISHED });
+
+      Logger.debug("CourseStore", "Course saved response", response);
+      set({ courseDto: response, loading: false });
+    } catch (error) {
+      Logger.error("CourseStore", "Unexpected error", error);
+      set({ loading: false });
+    } finally {
+      set({ loading: false });
     }
   },
 

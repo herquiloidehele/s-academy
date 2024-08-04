@@ -1,6 +1,7 @@
 import Logger from "@/utils/Logger";
 import VimeoService from "@/app/backend/services/VimeoService";
 import { sleep } from "@/lib/utils";
+import { v4 as uuidV4 } from "uuid";
 
 export interface IUploadResponse {
   videoId: number;
@@ -10,12 +11,16 @@ export interface IUploadResponse {
 class VideoManager {
   private readonly LOG_TAG = "VideoManager";
 
-  public async uploadVideoFile(file: File, onProgress: (percentage: number) => void): Promise<IUploadResponse> {
+  public async uploadVideoFile(
+    file: File,
+    onProgress: (percentage: number) => void,
+    title?: string,
+  ): Promise<IUploadResponse> {
     Logger.log(this.LOG_TAG, "Start uploading video file", [file]);
 
     try {
       onProgress(0);
-      const uploadResponse = await VimeoService.createVideo(file.size);
+      const uploadResponse = await VimeoService.createVideo(file.size, title || uuidV4());
       await VimeoService.uploadVideoFile(uploadResponse.uploadLink, file, onProgress);
       const isUploadComplete = await VimeoService.verifyVideoUpload(uploadResponse.uploadLink);
 

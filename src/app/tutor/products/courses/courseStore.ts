@@ -186,9 +186,13 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
       const courseDto = useCourseStore.getState?.().courseDto;
 
-      const videoLesson = await VideoManager.uploadVideoFile(lesson.videoFile!, (percentage) => {
-        useCourseStore.getState?.().setVideoUploadPercentage(percentage);
-      });
+      const videoLesson = await VideoManager.uploadVideoFile(
+        lesson.videoFile!,
+        (percentage) => {
+          useCourseStore.getState?.().setVideoUploadPercentage(percentage);
+        },
+        lesson.title,
+      );
 
       const materialUrl = lesson.materialFile ? await FirebaseClientService.uploadFile(lesson.materialFile) : "";
 
@@ -313,9 +317,13 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       let uploadedVideo: IUploadResponse = { videoId: 0, thumbnailUrl: "" };
 
       if (courseDto.promoVideoFile) {
-        uploadedVideo = await VideoManager.uploadVideoFile(courseDto.promoVideoFile!, (percentage) => {
-          useCourseStore.getState?.().setVideoUploadPercentage(percentage);
-        });
+        uploadedVideo = await VideoManager.uploadVideoFile(
+          courseDto.promoVideoFile!,
+          (percentage) => {
+            useCourseStore.getState?.().setVideoUploadPercentage(percentage);
+          },
+          courseDto.title,
+        );
       }
       const plainCourseDto = JSON.parse(
         JSON.stringify({

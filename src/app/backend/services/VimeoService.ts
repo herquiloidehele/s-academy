@@ -18,9 +18,10 @@ class VimeoService {
   /**
    * Create video upload intent on Vimeo
    * @param videoSize
+   * @param title
    * @private
    */
-  public async createVideo(videoSize: number): Promise<IUploadResponse> {
+  public async createVideo(videoSize: number, title: string): Promise<IUploadResponse> {
     Logger.log(this.LOG_TAG, "Start creating video", videoSize);
 
     try {
@@ -37,6 +38,7 @@ class VimeoService {
             approach: this.UPLOAD_APPROACH,
             size: videoSize,
           },
+          name: title,
         },
       };
 

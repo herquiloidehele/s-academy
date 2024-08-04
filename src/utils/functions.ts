@@ -11,8 +11,13 @@ export function getCategoryLabel(value: string): string {
   return category ? category.label : "Categoria desconhecida";
 }
 
-async function uploadLessonVideoOnVimeo(videoFile: File | undefined) {
-  return 0;
+export function getCategoryOptions(values: string[]): { value: string; label: string }[] {
+  return values.map((value) => {
+    return {
+      value: value,
+      label: getCategoryLabel(value),
+    };
+  });
 }
 function deepCopy<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj)) as T;

@@ -32,7 +32,7 @@ function CoursesCard({ course }: { course: ICourse }) {
         <div className="w-full flex flex-row justify-end">
           {course.status === COURSE_STATUS.PUBLISHED && (
             <a
-              href="#"
+              href={`/tutor/products/courses/form/${course.id}`}
               className="self-end flex flex-row gap-2 items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-green-400 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               <span>Ver</span>
@@ -41,7 +41,7 @@ function CoursesCard({ course }: { course: ICourse }) {
           )}
           {course.status === COURSE_STATUS.DRAFT && (
             <a
-              href="#"
+              href={`/tutor/products/courses/form/${course.id}`}
               className="self-end flex flex-row gap-2 items-center px-3 py-2 text-sm font-medium text-center text-white bg-gray-400 rounded-lg hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               {" "}

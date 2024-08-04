@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -13,6 +13,7 @@ import { courseBasicInformationformSchema } from "@/app/tutor/products/courses/c
 import { MultiSelect } from "@/components/multi-selector/MultiSelect";
 import { toast } from "sonner";
 import FormButtonWithLoader from "@/components/FormButton/FormButtonWithLoader";
+import { getCategoryOptions } from "@/utils/functions";
 
 function CourseFormInformation() {
   const saveCourseDtoInfo = useCourseStore((state) => state.saveCourse);
@@ -53,6 +54,20 @@ function CourseFormInformation() {
       console.error(e);
     }
   }
+
+  useEffect(() => {
+    setSelectedSelectedCategories(getCategoryOptions(courseDto?.categories || []));
+
+    form.reset({
+      title: courseDto?.title,
+      description: courseDto?.description,
+      price: courseDto?.price,
+      discount: courseDto?.discount || 0,
+      categories: courseDto?.categories || [],
+      coverFile: courseDto?.coverUrl,
+      // promoVideoFile: courseDto?.promoVideoFile || null,
+    });
+  }, [courseDto]);
 
   return (
     <div>
@@ -192,7 +207,7 @@ function CourseFormInformation() {
             />
           </div>
           <DialogFooter>
-            <FormButtonWithLoader label={"Próximo"} loading={loading} loadingLabel={"A gravar"} />
+            <FormButtonWithLoader label={"Próximo"} loading={loading} />
           </DialogFooter>
         </form>
       </Form>

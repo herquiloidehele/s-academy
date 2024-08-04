@@ -68,7 +68,10 @@ class FirestoreService {
         return [];
       }
 
-      return querySnapshot.docs.map((doc) => doc.data()) as T[];
+      return querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as T[];
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error getting documents by query: ${query}`, error);
       return [];

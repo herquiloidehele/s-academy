@@ -13,6 +13,9 @@ import {
 export async function fetchCourses(): Promise<ICourse[]> {
   return CourseManager.getAllCourses();
 }
+export async function getCourseById(courseId: string): Promise<ICourse> {
+  return CourseManager.getCourseById(courseId);
+}
 
 export async function getCourseModules(courseId: string) {
   return CourseManager.getCourseModules(courseId);

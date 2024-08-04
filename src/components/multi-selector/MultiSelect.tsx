@@ -1,6 +1,7 @@
 "use client";
 
 import * as React from "react";
+import { useEffect } from "react";
 import { X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Command, CommandGroup, CommandItem, CommandList } from "@/components/ui/command";
@@ -43,6 +44,10 @@ export function MultiSelect({ options, onChange, selectedOptions }: MultiSelectP
       prevSelected.current = selected;
     }
   }, [selected, onChange]);
+
+  useEffect(() => {
+    setSelected(selectedOptions || []);
+  }, [selectedOptions]);
 
   const handleKeyDown = React.useCallback((e: React.KeyboardEvent<HTMLDivElement>) => {
     const input = inputRef.current;

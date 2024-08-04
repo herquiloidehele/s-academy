@@ -11,6 +11,7 @@ import {
 import {
   deleteLesson,
   fetchCoursesByTutorsID,
+  getCourseById,
   removeModule,
   saveCourse,
   saveLesson,
@@ -90,7 +91,7 @@ interface ICourseStoreState {
   saveCourse: (course: ICourseDto) => Promise<ICourse>;
   updateCourse: (course: ICourseDto) => Promise<ICourse>;
   publishCourse: () => Promise<ICourse>;
-  saveCourseDtoInfo: (course: ICourseDto) => void;
+  setCourseDtoData: (id: string) => void;
   addModule: (module: IModuleDto) => void;
   removeModule: (module: IModuleDto) => void;
   updateModule: (module: IModuleDto) => void;
@@ -277,10 +278,8 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   fetchLoggedTutorCourses: async () => {
     set({ loading: true });
     try {
-      console.log("CourseStore", "Fetching courses");
       const loggedTutor = await getAuthUser();
       const response = await fetchCoursesByTutorsID(loggedTutor?.email!);
-      console.log("CourseStore", "Fetched courses", response);
       const courses = response as ICourse[];
       set((state) => ({ ...state, courses: courses || [] }));
     } catch (error) {
@@ -308,7 +307,6 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
       const response = await saveCourse(plainCourseDto);
 
-      console.log("CourseStore", "Course saved response", response);
       set({ courseDto: response, loading: false });
     } catch (error) {
       set({ error: error.message });
@@ -356,7 +354,6 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
       const response = await updateCourse(plainCourseDto);
 
-      console.log("CourseStore", "Course updated response", response);
       set({ courseDto: response, loading: false });
     } catch (error) {
       set({ error: error.message });
@@ -383,6 +380,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       set({ loading: false });
     } finally {
       set({ loading: false });
+      useCourseStore.getState?.().reset();
     }
   },
   reset: () => {
@@ -400,9 +398,14 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       error: "",
     });
   },
-  saveCourseDtoInfo: (course: ICourseDto) => {
-    set((state) => ({ ...state, courseDto: course, loading: false }));
+  setCourseDtoData: async (id: string) => {
+    set({ loading: true });
+
+    const course = await getCourseById(id);
+
+    set((state) => ({ ...state, courseDto: course, loading: false, canCourseBeSaved: true }));
   },
+
   setCanCourseBeSaved: (value: boolean) => {
     set({ canCourseBeSaved: value });
   },

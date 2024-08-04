@@ -238,7 +238,7 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
                 />
               </div>
               <DialogFooter>
-                <FormButtonWithLoader loading={loading} label={"Gravar"} loadingLabel={"A gravar"} />
+                <FormButtonWithLoader loading={loading} label={"Gravar"} />
               </DialogFooter>
             </form>
           </Form>

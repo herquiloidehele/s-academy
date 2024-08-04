@@ -7,8 +7,18 @@ import useCourseStore, { IFormStep } from "@/app/tutor/products/courses/courseSt
 import { FolderOpen } from "lucide-react";
 import CourseFormContent from "@/app/tutor/products/courses/components/CourseFormContent";
 import CourseFormReview from "@/app/tutor/products/courses/components/CourseFormPreview";
+import { useRouter } from "next/navigation";
 
-function FormPage() {
+function FormPage({ params }: { params: { id: string } }) {
+  const router = useRouter();
+  useEffect(() => {
+    if (params.id) {
+      const fetchCourse = async () => {
+        await useCourseStore.getState?.().setCourseDtoData(params.id);
+      };
+      fetchCourse();
+    }
+  }, []);
   const formSteps: IFormStep[] = [
     {
       title: "Informações do Curso",

@@ -31,7 +31,6 @@ export function ModuleFormDialog(props: { children: React.ReactNode; moduleId?: 
   });
 
   async function onSubmit(values) {
-    console.log("values", courseDto);
     const moduleValues = {
       id: props.moduleId,
       order: values.order,
@@ -123,7 +122,7 @@ export function ModuleFormDialog(props: { children: React.ReactNode; moduleId?: 
 
               <DialogFooter>
                 <DialogFooter>
-                  <FormButtonWithLoader loading={loading} label={"Gravar"} loadingLabel={"A gravar"} />
+                  <FormButtonWithLoader loading={loading} label={"Gravar"} />
                 </DialogFooter>
               </DialogFooter>
             </form>

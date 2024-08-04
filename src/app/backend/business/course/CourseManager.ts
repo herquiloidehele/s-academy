@@ -29,16 +29,25 @@ class CourseManager {
     Logger.debug(this.LOG_TAG, `Getting course by id: ${courseId}`);
 
     try {
-      const course = await FirestoreService.getDocumentById(FirebaseCollections.COURSES, courseId);
+      let course = await FirestoreService.getDocumentById(FirebaseCollections.COURSES, courseId);
 
       if (!course) {
         Logger.error(this.LOG_TAG, `Course not found by id: ${courseId}`);
         return Promise.reject("Course not found");
       }
 
+      let courseModules = await this.getCourseModules(courseId);
+      courseModules = await Promise.all(
+        courseModules.map(async (module) => {
+          module.lessons = await this.getLessons(courseId, module.id);
+          return module;
+        }),
+      );
+
+      course.modules = courseModules;
       Logger.debug(this.LOG_TAG, `Course found by id: ${courseId}`, course);
 
-      return course as ICourse;
+      return JSON.parse(JSON.stringify(course));
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error getting course by id: ${courseId}`, error);
       return;

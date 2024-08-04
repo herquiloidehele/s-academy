@@ -24,7 +24,6 @@ function CourseFormPreview() {
       await publishCourse();
       toast.success("Curso publicado com sucesso");
       router.push(Constants.APP_ROUTES.TEACHER.COURSES);
-      useCourseStore.getState?.().reset();
     } catch (e) {
       toast.success("Erro ao publicar curso");
     }

@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Loader2Icon, XIcon } from "lucide-react";
 import { DocumentIcon } from "@heroicons/react/24/outline";
 
@@ -11,9 +11,13 @@ function FileUploader({
   fileTypes = "PDF, DOCX, PPTX",
   defaultFile,
 }) {
-  const [file, setFile] = useState();
+  const [file, setFile] = useState(defaultFile);
   const [loading, setLoading] = useState(false);
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    setFile(defaultFile);
+  }, [defaultFile]);
 
   const handleDragOver = (event) => {
     event.preventDefault();
@@ -44,29 +48,36 @@ function FileUploader({
     onFileChange(null);
   };
 
-  const fileUrl = file ? URL.createObjectURL(file) : defaultFile;
-  const fileType = file ? file.type : "";
+  const isFileObject = (file) => file instanceof File;
 
   return (
     <div id={id} className="flex items-center justify-center w-full" onDragOver={handleDragOver} onDrop={handleDrop}>
       {file ? (
         <div className="relative w-full h-64 border-2 border-gray-300 rounded-lg overflow-hidden">
-          {fileType.startsWith("image/") ? (
-            <img src={fileUrl} alt="Preview" className="w-full h-full object-contain rounded-lg" />
-          ) : fileType.startsWith("video/") ? (
-            <video controls src={fileUrl} className="w-full h-full object-contain rounded-lg">
+          {mimeType.startsWith("image/") ? (
+            <img
+              src={isFileObject(file) ? URL.createObjectURL(file) : file}
+              alt="Preview"
+              className="w-full h-full object-contain rounded-lg"
+            />
+          ) : mimeType.startsWith("video/") ? (
+            <video
+              controls
+              src={isFileObject(file) ? URL.createObjectURL(file) : file}
+              className="w-full h-full object-contain rounded-lg"
+            >
               Your browser does not support the video tag.
             </video>
           ) : (
             <a
-              href={fileUrl}
+              href={isFileObject(file) ? URL.createObjectURL(file) : file}
               target="_blank"
               rel="noopener noreferrer"
               className="flex flex-col items-center justify-center w-full h-full bg-gray-100"
             >
               <div className="flex flex-col items-center justify-center w-full h-full bg-gray-100">
                 <DocumentIcon className="h-16 w-16 text-blue-600" />
-                <p className="text-sm text-blue-600 mt-2">{file.name}</p>
+                <p className="text-sm text-blue-600 mt-2">{isFileObject(file) ? file.name : "Arquivo"}</p>
               </div>
             </a>
           )}
@@ -116,7 +127,12 @@ function FileUploader({
             accept={mimeType}
             className="hidden"
             ref={inputRef}
-            onChange={(e) => handleFileUpload(e.target.files?.[0])}
+            onChange={(e) => {
+              const selectedFile = e.target.files?.[0];
+              if (selectedFile) {
+                handleFileUpload(selectedFile);
+              }
+            }}
           />
         </label>
       )}

@@ -31,8 +31,8 @@ function CourseFormInformation() {
       price: courseDto?.price,
       discount: courseDto?.discount || 0,
       categories: courseDto?.categories || [],
-      coverFile: courseDto?.coverFile,
-      promoVideoFile: courseDto?.promoVideoFile,
+      coverFile: undefined,
+      promoVideoFile: undefined,
     },
   });
 
@@ -169,7 +169,7 @@ function CourseFormInformation() {
                   <FormLabel className="font-light leading-tight">Vídeo Promoção</FormLabel>
                   <FormControl>
                     <FileUploader
-                      defaultFile={courseDto?.promoVideoFile}
+                      defaultFile={courseDto?.promoVideoRef}
                       id="promoVideoFile"
                       mimeType="video/*"
                       fileTypes={["MP4"]}

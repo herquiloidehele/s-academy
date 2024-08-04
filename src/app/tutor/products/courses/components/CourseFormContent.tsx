@@ -19,26 +19,39 @@ function CourseFormContent() {
 
   if (!courseDto || !courseDto.modules || courseDto.modules.length === 0) {
     return (
-      <EmptyState
-        animationData={EmptyAnimation}
-        title={"Nenhum módulo encontrado"}
-        description={"Registe um novo módulo"}
-      >
-        <ModuleFormDialog>
+      <div className="flex flex-col gap-2">
+        <EmptyState
+          animationData={EmptyAnimation}
+          title={"Nenhum módulo encontrado"}
+          description={"Registe um novo módulo"}
+        >
+          <ModuleFormDialog>
+            <ButtonElement
+              shape={ButtonShape.SQUARE}
+              size={ButtonSize.SMALL}
+              fillType={FillType.FILLED}
+              type={ButtonType.PRIMARY}
+              onClick={() => router.push(Constants.APP_ROUTES.TEACHER.NEW_COURSES)}
+            >
+              <div className="flex flex-row gap-2 justify-center items-center">
+                <PlusIcon className="size-8" />
+                <span>Adicionar Módulo</span>
+              </div>
+            </ButtonElement>
+          </ModuleFormDialog>
+        </EmptyState>
+        <div className="flex flex-row w-full justify-end">
           <ButtonElement
-            shape={ButtonShape.SQUARE}
-            size={ButtonSize.SMALL}
+            onClick={useCourseStore.getState?.().goToPreviousStep}
             fillType={FillType.FILLED}
-            type={ButtonType.PRIMARY}
-            onClick={() => router.push(Constants.APP_ROUTES.TEACHER.NEW_COURSES)}
+            shape={ButtonShape.SQUARE}
+            size={ButtonSize.MEDIUM}
+            type={ButtonType.SECONDARY}
           >
-            <div className="flex flex-row gap-2 justify-center items-center">
-              <PlusIcon className="size-8" />
-              <span>Adicionar Módulo</span>
-            </div>
+            <span className="px-4">Voltar</span>
           </ButtonElement>
-        </ModuleFormDialog>
-      </EmptyState>
+        </div>
+      </div>
     );
   }
   return (
@@ -64,7 +77,16 @@ function CourseFormContent() {
           <ModuleItemList module={module} index={index} key={index} />
         ))}
       </Accordion>
-      <div className="flex flex-row w-full justify-end">
+      <div className="flex flex-row gap-2 w-full justify-end">
+        <ButtonElement
+          onClick={useCourseStore.getState?.().goToPreviousStep}
+          fillType={FillType.FILLED}
+          shape={ButtonShape.SQUARE}
+          size={ButtonSize.MEDIUM}
+          type={ButtonType.SECONDARY}
+        >
+          <span className="px-4">Voltar</span>
+        </ButtonElement>
         <ButtonElement
           shape={ButtonShape.SQUARE}
           size={ButtonSize.SMALL}
@@ -73,9 +95,7 @@ function CourseFormContent() {
           disabled={!canCourseBeSaved}
           onClick={() => goToNextStep()}
         >
-          <div className="flex flex-row gap-2 justify-center items-center">
-            <span>Próximo</span>
-          </div>
+          <span>Próximo</span>
         </ButtonElement>
       </div>
     </div>

@@ -293,7 +293,19 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     try {
       const loggedTutor = await getAuthUser();
 
-      set((state) => ({ ...state, loading: true, courseDto: { ...course, tutorId: loggedTutor?.id } as ICourseDto }));
+      const courseId = useCourseStore.getState?.().courseDto?.id;
+
+      console.log("CourseStore", "Saving course courseId ", courseId);
+      if (!courseId) {
+        set((state) => ({ ...state, loading: true, courseDto: { ...course, tutorId: loggedTutor?.id } as ICourseDto }));
+      } else {
+        set((state) => ({
+          ...state,
+          loading: true,
+          courseDto: { ...course, id: courseId, tutorId: loggedTutor?.id } as ICourseDto,
+        }));
+      }
+
       const courseDto = useCourseStore.getState?.().courseDto;
 
       if (!courseDto) {
@@ -307,10 +319,10 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
       const response = await saveCourse(plainCourseDto);
 
-      Logger.debug("CourseStore", "Course saved response", response);
+      console.log("CourseStore", "Course saved response", response);
       set({ courseDto: response, loading: false });
     } catch (error) {
-      Logger.error("CourseStore", "Unexpected error", error);
+      console.log("CourseStore", "Unexpected error", error);
     } finally {
       set((state) => ({ ...state, isLoading: false }));
     }

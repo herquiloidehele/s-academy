@@ -137,6 +137,34 @@ class VimeoService {
     }
   }
 
+  public async getVideoDetails(videoId: number): Promise<any> {
+    Logger.log(this.LOG_TAG, "Start getting video details", videoId);
+
+    try {
+      const request: IHttpRequestConfig = {
+        url: `${this.VIMEO_API_URL}/videos/${videoId}/?fields=pictures`,
+        httpMethod: HttpMethods.GET,
+        headers: {
+          Authorization: `bearer ${Constants.EXTERNAL_CONFIGS.VIMEO_ACCESS_TOKEN}`,
+          Accept: "application/vnd.vimeo.*+json;version=3.4",
+        },
+      };
+
+      const response = await ApiInterface.send(request);
+
+      Logger.log(this.LOG_TAG, "Get video details response", response);
+
+      if (!response || response.status !== HttpStatus.OK) {
+        return Promise.reject("Failed to get video details");
+      }
+
+      return response.data;
+    } catch (error) {
+      Logger.error(this.LOG_TAG, "Error getting video details", error);
+      return Promise.reject(error);
+    }
+  }
+
   private getVideoIdFromUrl(url: string) {
     const videoIdMatch = url.match(/videos\/(\d+)/);
     return Number(videoIdMatch ? videoIdMatch[1] : "");

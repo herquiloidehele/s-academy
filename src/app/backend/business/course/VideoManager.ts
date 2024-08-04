@@ -1,8 +1,10 @@
 import Logger from "@/utils/Logger";
 import VimeoService from "@/app/backend/services/VimeoService";
+import { sleep } from "@/lib/utils";
 
 export interface IUploadResponse {
   videoId: number;
+  thumbnailUrl: string;
 }
 
 class VideoManager {
@@ -21,9 +23,47 @@ class VideoManager {
         return Promise.reject("Failed to upload video");
       }
 
-      return { videoId: uploadResponse.videoId };
+      const videoThumbnail = await this.getVideoThumbnail(uploadResponse.videoId);
+
+      return { videoId: uploadResponse.videoId, thumbnailUrl: videoThumbnail };
     } catch (error) {
       Logger.error(this.LOG_TAG, "uploadVideoFile", error);
+      return Promise.reject(error);
+    }
+  }
+
+  public async getVideoThumbnail(videoId: number, retryCount = 0): Promise<string> {
+    Logger.log(this.LOG_TAG, "Get video thumbnail", [retryCount]);
+    const MAX_RETRY = 20;
+
+    const retryOperation = async () => {
+      Logger.log(this.LOG_TAG, "Retry get video thumbnail");
+      await sleep(2000);
+      ++retryCount;
+
+      if (retryCount >= MAX_RETRY) {
+        return "";
+      }
+      return this.getVideoThumbnail(videoId, retryCount);
+    };
+
+    try {
+      const videoDetails: any = await VimeoService.getVideoDetails(videoId);
+
+      if (!videoDetails || !videoDetails.pictures) {
+        Logger.log(this.LOG_TAG, "Unable to get video data", [videoDetails]);
+        return retryOperation();
+      }
+
+      if (videoDetails.pictures.default_picture) {
+        Logger.warn(this.LOG_TAG, "Thumbnail not available yet", [videoDetails.pictures.default_picture]);
+        return retryOperation();
+      }
+
+      Logger.log(this.LOG_TAG, "Get video thumbnail", [videoDetails.pictures.base_link]);
+      return videoDetails.pictures.base_link;
+    } catch (error) {
+      Logger.error(this.LOG_TAG, "getVideoThumbnail", error);
       return Promise.reject(error);
     }
   }

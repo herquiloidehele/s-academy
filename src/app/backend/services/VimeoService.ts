@@ -4,6 +4,11 @@ import { Constants } from "@/utils/Constants";
 import ApiInterface from "@/app/backend/services/rest/ApiInterface";
 import { Upload } from "tus-js-client";
 
+interface IUploadResponse {
+  videoId: number;
+  uploadLink: string;
+}
+
 class VimeoService {
   private readonly LOG_TAG = "VimeoService";
 
@@ -15,7 +20,7 @@ class VimeoService {
    * @param videoSize
    * @private
    */
-  public async createVideo(videoSize: number): Promise<string> {
+  public async createVideo(videoSize: number): Promise<IUploadResponse> {
     Logger.log(this.LOG_TAG, "Start creating video", videoSize);
 
     try {
@@ -48,7 +53,10 @@ class VimeoService {
         return Promise.reject("Invalid upload link");
       }
 
-      return Promise.resolve(upload.upload_link);
+      return {
+        videoId: this.getVideoIdFromUrl(response.data.uri),
+        uploadLink: upload.upload_link,
+      };
     } catch (error) {
       Logger.error(this.LOG_TAG, "createVideo", error);
       return Promise.reject(error);
@@ -62,7 +70,7 @@ class VimeoService {
       return new Promise((resolve, reject) => {
         const upload = new Upload(videoFile, {
           endpoint: uploadLink,
-          uploadUrl: uploadLink,
+          uploadUrl: `${uploadLink}?fields=id,uri,upload.upload_link`,
           retryDelays: [0, 3000, 5000, 10000, 20000],
           metadata: {
             filename: videoFile.name,
@@ -127,6 +135,11 @@ class VimeoService {
       Logger.error(this.LOG_TAG, "verifyVideoUpload", error);
       return Promise.reject(error);
     }
+  }
+
+  private getVideoIdFromUrl(url: string) {
+    const videoIdMatch = url.match(/videos\/(\d+)/);
+    return Number(videoIdMatch ? videoIdMatch[1] : "");
   }
 }
 

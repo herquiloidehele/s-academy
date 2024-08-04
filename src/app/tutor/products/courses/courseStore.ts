@@ -325,7 +325,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
       const response = await saveCourse(plainCourseDto);
 
-      set({ courseDto: response, loading: false, videoUploadPercentage: 0 });
+      set({ courseDto: response, loading: false, videoUploadPercentage: 0, isLoading: false });
     } catch (error) {
       set({ error: error.message });
     } finally {

@@ -3,11 +3,12 @@ import { truncateText } from "@/utils/functions";
 import { COURSE_STATUS, ICourse } from "@/app/backend/business/course/CourseData";
 import { ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Constants } from "@/utils/Constants";
 
 function CoursesCard({ course }: { course: ICourse }) {
   return (
     <div className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700  hover:scale-105 transition-transform duration-300 ease-in-out">
-      <a href="#">
+      <a href={Constants.APP_ROUTES.TEACHER.EDIT_COURSES(course.id)}>
         <img
           loading="lazy"
           width="100"
@@ -18,7 +19,7 @@ function CoursesCard({ course }: { course: ICourse }) {
         />
       </a>
       <div className="p-5">
-        <a href="#">
+        <a href={`/tutor/products/courses/form/${course.id}`}>
           <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
             {truncateText(course.title, 25)}{" "}
             {course.status === COURSE_STATUS.PUBLISHED && <Badge variant="default">Publicado</Badge>}
@@ -32,7 +33,7 @@ function CoursesCard({ course }: { course: ICourse }) {
         <div className="w-full flex flex-row justify-end">
           {course.status === COURSE_STATUS.PUBLISHED && (
             <a
-              href={`/tutor/products/courses/form/${course.id}`}
+              href={Constants.APP_ROUTES.TEACHER.EDIT_COURSES(course.id)}
               className="self-end flex flex-row gap-2 items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-green-400 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               <span>Ver</span>
@@ -41,7 +42,7 @@ function CoursesCard({ course }: { course: ICourse }) {
           )}
           {course.status === COURSE_STATUS.DRAFT && (
             <a
-              href={`/tutor/products/courses/form/${course.id}`}
+              href={Constants.APP_ROUTES.TEACHER.EDIT_COURSES(course.id)}
               className="self-end flex flex-row gap-2 items-center px-3 py-2 text-sm font-medium text-center text-white bg-gray-400 rounded-lg hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
             >
               {" "}

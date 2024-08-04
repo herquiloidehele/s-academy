@@ -62,19 +62,6 @@ function FileUploader({
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
-      {loading && mimeType.startsWith("video/") && progress > 0 && (
-        <div className="w-full mt-2">
-          <div className="relative w-full h-2 bg-gray-200 rounded-lg overflow-hidden">
-            <div
-              className="absolute h-full bg-primary"
-              style={{ width: `${progress}%`, transition: "width 0.3s" }}
-            ></div>
-            <span className="absolute inset-0 flex items-center justify-center text-black font-semibold text-xs">
-              {`${Math.round(progress)}%`}
-            </span>
-          </div>
-        </div>
-      )}
       {file ? (
         <div className="relative w-full h-64 border-2 border-gray-300 rounded-lg overflow-hidden">
           {mimeType.startsWith("image/") ? (
@@ -150,6 +137,19 @@ function FileUploader({
             }}
           />
         </label>
+      )}
+      {loading && mimeType.startsWith("video/") && progress > 0 && (
+        <div className="w-full mt-2">
+          <div className="relative w-full h-2 bg-gray-200 rounded-lg overflow-hidden">
+            <div
+              className="absolute h-full bg-primary"
+              style={{ width: `${progress}%`, transition: "width 0.3s" }}
+            ></div>
+            <span className="absolute inset-0 flex items-center justify-center text-black font-semibold text-xs">
+              {`${Math.round(progress)}%`}
+            </span>
+          </div>
+        </div>
       )}
     </div>
   );

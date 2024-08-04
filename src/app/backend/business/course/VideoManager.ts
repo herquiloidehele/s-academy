@@ -25,6 +25,7 @@ class VideoManager {
 
       const videoThumbnail = await this.getVideoThumbnail(uploadResponse.videoId);
 
+      onProgress(100);
       return { videoId: uploadResponse.videoId, thumbnailUrl: videoThumbnail };
     } catch (error) {
       Logger.error(this.LOG_TAG, "uploadVideoFile", error);

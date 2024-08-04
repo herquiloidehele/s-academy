@@ -81,7 +81,7 @@ class VimeoService {
             reject(error);
           },
           onProgress: function (bytesUploaded, bytesTotal) {
-            const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+            const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2) - 1 || 0;
             Logger.log(this.LOG_TAG, "Upload progress", percentage);
             onProgress(Number(percentage));
           },

@@ -23,7 +23,7 @@ import {
 import { IOptionType } from "@/components/multi-selector/MultiSelect";
 import getAuthUser from "@/app/backend/actions/auth";
 import FirebaseClientService from "@/app/backend/services/FirebaseClientService";
-import VideoManager from "@/app/backend/business/course/VideoManager";
+import VideoManager, { IUploadResponse } from "@/app/backend/business/course/VideoManager";
 
 const moduleList = [
   // ... (seu conteúdo de moduleList aqui)
@@ -309,16 +309,20 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       }
 
       const coverUrl = await FirebaseClientService.uploadFile(courseDto.coverFile!);
-      const uploadedVideo = await VideoManager.uploadVideoFile(courseDto.promoVideoFile!, (percentage) => {
-        useCourseStore.getState?.().setVideoUploadPercentage(percentage);
-      });
 
+      let uploadedVideo: IUploadResponse = { videoId: 0, thumbnailUrl: "" };
+
+      if (courseDto.promoVideoFile) {
+        uploadedVideo = await VideoManager.uploadVideoFile(courseDto.promoVideoFile!, (percentage) => {
+          useCourseStore.getState?.().setVideoUploadPercentage(percentage);
+        });
+      }
       const plainCourseDto = JSON.parse(
         JSON.stringify({
           ...courseDto,
           status: COURSE_STATUS.DRAFT,
           coverUrl,
-          promoVideoRef: uploadedVideo.videoId,
+          promoVideoRef: uploadedVideo.videoId === 0 ? undefined : uploadedVideo.videoId,
           promoVideoThumbnail: uploadedVideo.thumbnailUrl,
         }),
       ) as ICourseDto;

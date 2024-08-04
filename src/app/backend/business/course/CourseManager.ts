@@ -257,7 +257,7 @@ class CourseManager {
 
       Logger.debug(this.LOG_TAG, `Course saved:`, [savedCourse]);
 
-      return JSON.parse(JSON.stringify({ ...courseDto, id: savedCourse.id }));
+      return JSON.parse(JSON.stringify(courseDto));
     } catch (e) {
       Logger.error(this.LOG_TAG, `Error saving course:`, [courseDataObject, e]);
     }

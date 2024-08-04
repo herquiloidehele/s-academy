@@ -8,7 +8,6 @@ import { DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import FileUploader from "@/components/file-uploader/FileUploader";
-import VideoManager from "@/app/backend/business/course/VideoManager";
 
 function CourseFormInformation() {
   const formSchema = z.object({
@@ -148,15 +147,7 @@ function CourseFormInformation() {
                       mimeType="video/*"
                       fileTypes={["MP4"]}
                       onFileChange={(file) => {
-                        VideoManager.uploadVideoFile(file, (progress) => {
-                          console.log("progress", progress);
-                        })
-                          .then((response) => {
-                            console.log("response", response);
-                          })
-                          .catch((error) => {
-                            console.log("error", error);
-                          });
+                        console.log("file", file);
                       }}
                     />
                   </FormControl>

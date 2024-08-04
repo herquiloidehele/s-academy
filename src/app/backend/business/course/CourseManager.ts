@@ -3,7 +3,6 @@ import Logger from "@/utils/Logger";
 import FirestoreService from "@/app/backend/services/FirestoreService";
 import { FirebaseCollections } from "@/utils/Constants";
 import * as _ from "lodash";
-import { CourseMock } from "@/mock/CourseMock";
 import SubscriptionManager from "@/app/backend/business/subscription/SubscriptionManager";
 import AuthManager from "@/app/backend/business/auth/AuthManager";
 import { firestore } from "firebase-admin";
@@ -170,9 +169,7 @@ class CourseManager {
 
       Logger.debug(this.LOG_TAG, `Courses found`, [courses]);
 
-      const mockCourses = Array.from({ length: 8 }).map(() => CourseMock);
-
-      return [...courses, ...mockCourses];
+      return courses;
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error getting all courses`, error);
       return [];

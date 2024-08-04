@@ -298,7 +298,7 @@ class CourseManager {
         return Promise.reject("Course updated saved");
       }
 
-      return JSON.parse(JSON.stringify({ ...courseDto, id: updatedCourse.id }));
+      return JSON.parse(JSON.stringify(courseDto));
     } catch (e) {
       Logger.error(this.LOG_TAG, `Error updating course:`, [courseDataObject, e]);
     }

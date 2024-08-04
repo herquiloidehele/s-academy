@@ -6,6 +6,7 @@ import { Loader2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Constants } from "@/utils/Constants";
+import VideoPlayer from "@/components/course/video-player/VideoPlayer";
 
 function CourseFormPreview() {
   const courseDto = useCourseStore((state) => state.courseDto);
@@ -60,13 +61,7 @@ function CourseFormPreview() {
         </div>
         <div>
           <strong className="block text-lg font-bold">Video Promocional:</strong>
-          <video
-            controls
-            src={courseDto?.promoVideoRef?.toString() || "https://youtu.be/olcY7F_eDag"}
-            className="w-full h-fit object-cover"
-          >
-            Your browser does not support the video tag.
-          </video>
+          {courseDto?.promoVideoRef && <VideoPlayer videoId={courseDto?.promoVideoRef!} />}
         </div>
       </div>
       <div className="my-2 flex justify-end gap-2">

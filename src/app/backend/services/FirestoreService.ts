@@ -48,7 +48,11 @@ class FirestoreService {
         return [];
       }
 
-      return collectionSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id })) as T[];
+      return collectionSnapshot.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+        createdAt: doc.createTime.toDate(),
+      })) as T[];
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error getting documents from collection: ${collection}`, error);
       return [];

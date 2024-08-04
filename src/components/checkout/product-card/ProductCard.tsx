@@ -38,10 +38,12 @@ export default function ProductCard({ course }: IProductCardProps) {
             </span>
           </div>
 
-          <div className={"flex justify-between gap-5 text-red-400"}>
-            <span className={labelClass}>Desconto (Somente hoje)</span>
-            <span className={valueClass}>{formatCurrency(-course.discount)}</span>
-          </div>
+          {course.discount > 0 && (
+            <div className={"flex justify-between gap-5 text-red-400"}>
+              <span className={labelClass}>Desconto (Somente hoje)</span>
+              <span className={valueClass}>{formatCurrency(-course.discount)}</span>
+            </div>
+          )}
 
           <div className={"flex justify-between gap-5"}>
             <span className={`font-bold text-green-400 ${labelClass}`}>Total</span>

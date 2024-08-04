@@ -1,6 +1,12 @@
 import { SignupType } from "@/utils/interfaces";
 
+const EXTERNAL_CONFIGS = {
+  API_REQUEST_TIMEOUT: 60000,
+  VIMEO_ACCESS_TOKEN: process.env.NEXT_PUBLIC_VIMEO_ACCESS_TOKEN,
+};
+
 export const Constants = {
+  EXTERNAL_CONFIGS,
   UI: {
     HEADER_HEIGHT: "80px",
     SECTIONS: {

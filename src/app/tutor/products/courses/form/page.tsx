@@ -7,8 +7,10 @@ import useCourseStore, { IFormStep } from "@/app/tutor/products/courses/courseSt
 import { FolderOpen } from "lucide-react";
 import CourseFormContent from "@/app/tutor/products/courses/components/CourseFormContent";
 import CourseFormReview from "@/app/tutor/products/courses/components/CourseFormPreview";
+import { useRouter } from "next/navigation";
 
 function FormPage() {
+  const router = useRouter();
   const formSteps: IFormStep[] = [
     {
       title: "Informações do Curso",

@@ -5,6 +5,7 @@ import useCourseStore from "@/app/tutor/products/courses/courseStore";
 import { Loader2Icon } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import { Constants } from "@/utils/Constants";
 
 function CourseFormPreview() {
   const courseDto = useCourseStore((state) => state.courseDto);
@@ -22,8 +23,8 @@ function CourseFormPreview() {
     try {
       await publishCourse();
       toast.success("Curso publicado com sucesso");
+      router.push(Constants.APP_ROUTES.TEACHER.COURSES);
       useCourseStore.getState?.().reset();
-      router.push("/tutor/products/courses");
     } catch (e) {
       toast.success("Erro ao publicar curso");
     }

@@ -216,11 +216,15 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     const plainLesson = JSON.parse(JSON.stringify(lesson)) as ILessonDto;
     const updatedLesson = await updateLesson(courseDto?.id!, lesson.moduleId, lesson.id, plainLesson);
 
-    console.log("CourseStore", "courseDto", courseDto?.modules);
-    console.log("CourseStore", "Updated lesson", updatedLesson);
+    let materialUrl = "";
+    if (lesson.materialFile instanceof File) {
+      materialUrl = lesson.materialFile ? await FirebaseClientService.uploadFile(lesson.materialFile) : "";
+    }
     const updatedModules = courseDto?.modules?.map((module) => {
       if (module.id === updatedLesson.moduleId) {
-        const updatedLessons = module.lessons?.map((l) => (l.id === updatedLesson.id ? updatedLesson : l));
+        const updatedLessons = module.lessons?.map((l) =>
+          l.id === updatedLesson.id ? { ...updatedLesson, materialUrl: materialUrl || l.materialUrl } : l,
+        );
         return { ...module, lessons: updatedLessons };
       }
       return module;
@@ -317,13 +321,13 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     try {
       const loggedTutor = await getAuthUser();
 
-      const courseId = useCourseStore.getState().courseDto?.id;
+      const courseId = useCourseStore.getState?.().courseDto?.id;
 
       if (!courseId) {
         throw new Error("Course id is missing");
       }
 
-      const courseDto = useCourseStore.getState().courseDto;
+      const courseDto = useCourseStore.getState?.().courseDto;
 
       if (!courseDto) {
         throw new Error("Course data is missing");
@@ -331,7 +335,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
       let coverUrl = courseDto.coverUrl;
 
-      if (course.coverFile) {
+      if (course.coverFile instanceof File) {
         coverUrl = await FirebaseClientService.uploadFile(course.coverFile);
       }
 

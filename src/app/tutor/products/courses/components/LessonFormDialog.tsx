@@ -224,7 +224,7 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
                       <FormLabel className="font-light leading-tight">Material da aula</FormLabel>
                       <FormControl>
                         <FileUploader
-                          defaultFile={lessonData?.materialFile}
+                          defaultFile={lessonData?.materialUrl}
                           mimeType="application/pdf, application/vnd.openxmlformats-officedocument.wordprocessingml.document, application/vnd.openxmlformats-officedocument.presentationml.presentation"
                           fileTypes={["PDF", "DOCX", "PPTX"]}
                           onFileChange={(file) => {

@@ -22,6 +22,7 @@ function CourseFormPreview() {
     try {
       await publishCourse();
       toast.success("Curso publicado com sucesso");
+      useCourseStore.getState?.().reset();
       router.push("/tutor/products/courses");
     } catch (e) {
       toast.success("Erro ao publicar curso");

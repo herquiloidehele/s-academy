@@ -1,5 +1,4 @@
 import {
-  COURSE_STATUS,
   ICourse,
   ICourseDto,
   ILesson,
@@ -16,8 +15,7 @@ import SubscriptionManager from "@/app/backend/business/subscription/Subscriptio
 import AuthManager from "@/app/backend/business/auth/AuthManager";
 import { firestore } from "firebase-admin";
 import { undefined } from "zod";
-import { DocumentReference } from "firebase/firestore";
-import { DocumentData } from "@firebase/firestore";
+import { IQuery } from "@/app/backend/services/ServiceDaos";
 import FieldPath = firestore.FieldPath;
 
 class CourseManager {
@@ -240,15 +238,61 @@ class CourseManager {
     };
 
     Logger.debug(this.LOG_TAG, `Course data object:`, [courseDto, courseDto.id]);
+
+    Logger.debug(this.LOG_TAG, `Saving course:`, [courseDataObject]);
     try {
-      if (courseDto.id) {
-        return await this._updateCourse(courseDto, courseDataObject);
-      } else {
-        return await this._saveNewCourse(courseDto, courseDataObject);
+      const savedCourse = await FirestoreService.saveDocument(FirebaseCollections.COURSES, courseDataObject);
+
+      if (!savedCourse) {
+        Logger.error(this.LOG_TAG, `Course not saved:`, [courseDataObject]);
+        return Promise.reject("Course not saved");
       }
-    } catch (error) {
-      Logger.error(this.LOG_TAG, `Error Occuried:`, [courseDataObject, error]);
-      return Promise.reject(error);
+
+      Logger.debug(this.LOG_TAG, `Course saved:`, [savedCourse]);
+
+      return JSON.parse(JSON.stringify({ ...courseDto, id: savedCourse.id }));
+    } catch (e) {
+      Logger.error(this.LOG_TAG, `Error saving course:`, [courseDataObject, e]);
+    }
+  }
+
+  public async updateCourse(courseDto: ICourseDto): Promise<ICourse> {
+    Logger.debug(this.LOG_TAG, `Updating course:`, [courseDto]);
+
+    const tutorRef = await FirestoreService.getDocumentRefById(FirebaseCollections.USERS, courseDto.tutorId!);
+    if (!tutorRef) throw new Error("Tutor not found");
+
+    const courseDataObject = {
+      title: courseDto.title,
+      status: courseDto.status,
+      price: courseDto.price,
+      duration: courseDto.duration,
+      discount: courseDto.discount,
+      tutorId: courseDto.tutorId,
+      categories: courseDto.categories || [],
+      createdAt: new Date(),
+      coverUrl: courseDto.coverUrl,
+      description: courseDto.description,
+      promoVideoRef: courseDto.promoVideoRef || 0,
+      tutorRef: courseDto.tutorRef,
+    };
+
+    Logger.debug(this.LOG_TAG, `Updating course:`, [courseDto, courseDataObject]);
+    try {
+      const updatedCourse = await FirestoreService.updateDocument(
+        FirebaseCollections.COURSES,
+        courseDto.id!,
+        courseDataObject,
+      );
+
+      if (!updatedCourse) {
+        Logger.error(this.LOG_TAG, `Course not updated:`, [courseDataObject]);
+        return Promise.reject("Course updated saved");
+      }
+
+      return JSON.parse(JSON.stringify({ ...courseDto, id: updatedCourse.id }));
+    } catch (e) {
+      Logger.error(this.LOG_TAG, `Error updating course:`, [courseDataObject, e]);
     }
   }
 
@@ -336,7 +380,7 @@ class CourseManager {
       }
       Logger.debug(this.LOG_TAG, `Module updated in course:`, [updatedModule, courseId]);
 
-      return updatedModule as IModule;
+      return JSON.parse(JSON.stringify(updatedModule));
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error updating module in course:`, [moduleDto, moduleId, courseId]);
       return Promise.reject(error);
@@ -347,6 +391,11 @@ class CourseManager {
     Logger.debug(this.LOG_TAG, `Removing module from course:`, [moduleId, courseId]);
 
     try {
+      const lessonsCollectionName = `${FirebaseCollections.COURSES}/${courseId}/${FirebaseCollections.MODULES}/${moduleId}/${FirebaseCollections.LESSONS}`;
+
+      const lessonsQuery: IQuery = { field: "moduleId", operator: "==", value: moduleId };
+      await FirestoreService.deleteDocumentByQuery(lessonsCollectionName as FirebaseCollections, lessonsQuery);
+
       const moduleCollectionName = `${FirebaseCollections.COURSES}/${courseId}/${FirebaseCollections.MODULES}`;
       await FirestoreService.deleteDocument(moduleCollectionName, moduleId);
 
@@ -383,7 +432,7 @@ class CourseManager {
 
       Logger.debug(this.LOG_TAG, `Lesson updated in module:`, [updatedLesson, lessonId, moduleId, courseId]);
 
-      return { id: lessonId, ...lessonDto } as ILesson;
+      return JSON.parse(JSON.stringify({ id: lessonId, ...lessonDto }));
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error updating lesson in module:`, [lessonDto, lessonId, moduleId, courseId]);
       return Promise.reject(error);
@@ -403,76 +452,5 @@ class CourseManager {
       return Promise.reject(error);
     }
   }
-
-  private async _saveNewCourse(
-    courseDto: ICourseDto,
-    courseDataObject: {
-      duration: string | undefined;
-      coverUrl: string | undefined;
-      tutorId: string | undefined;
-      createdAt: Date;
-      promoVideoRef: number;
-      price: number | undefined;
-      discount: number | undefined;
-      description: string | undefined;
-      tutorRef: DocumentReference<DocumentData> | null | undefined;
-      categories: string[];
-      title: string | undefined;
-      status: COURSE_STATUS | undefined;
-    },
-  ) {
-    Logger.debug(this.LOG_TAG, `Saving course:`, [courseDataObject]);
-    try {
-      const savedCourse = await FirestoreService.saveDocument(FirebaseCollections.COURSES, courseDataObject);
-
-      if (!savedCourse) {
-        Logger.error(this.LOG_TAG, `Course not saved:`, [courseDataObject]);
-        return Promise.reject("Course not saved");
-      }
-
-      Logger.debug(this.LOG_TAG, `Course saved:`, [savedCourse]);
-
-      return JSON.parse(JSON.stringify({ ...courseDto, id: savedCourse.id }));
-    } catch (e) {
-      Logger.error(this.LOG_TAG, `Error saving course:`, [courseDataObject, e]);
-    }
-  }
-
-  private async _updateCourse(
-    courseDto: ICourseDto,
-    courseDataObject: {
-      duration: string | undefined;
-      coverUrl: string | undefined;
-      tutorId: string | undefined;
-      createdAt: Date;
-      promoVideoRef: number;
-      price: number | undefined;
-      discount: number | undefined;
-      description: string | undefined;
-      tutorRef: DocumentReference<DocumentData> | null | undefined;
-      categories: string[];
-      title: string | undefined;
-      status: COURSE_STATUS | undefined;
-    },
-  ) {
-    Logger.debug(this.LOG_TAG, `Updating course:`, [courseDto, courseDataObject]);
-    try {
-      const updatedCourse = await FirestoreService.updateDocument(
-        FirebaseCollections.COURSES,
-        courseDto.id!,
-        courseDataObject,
-      );
-
-      if (!updatedCourse) {
-        Logger.error(this.LOG_TAG, `Course not updated:`, [courseDataObject]);
-        return Promise.reject("Course updated saved");
-      }
-
-      return JSON.parse(JSON.stringify({ ...courseDto, id: updatedCourse.id }));
-    } catch (e) {
-      Logger.error(this.LOG_TAG, `Error updating course:`, [courseDataObject, e]);
-    }
-  }
 }
-
 export default new CourseManager();

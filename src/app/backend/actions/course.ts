@@ -29,6 +29,9 @@ export async function fetchCoursesByTutorsID(tutorId: string): Promise<ICourse[]
 export async function saveCourse(courseDto: ICourseDto): Promise<ICourse> {
   return CourseManager.saveCourse(courseDto);
 }
+export async function updateCourse(courseDto: ICourseDto): Promise<ICourse> {
+  return CourseManager.updateCourse(courseDto);
+}
 
 export async function saveModule(courseId: string, moduleDto: IModuleDto): Promise<IModule> {
   return CourseManager.addModuleToCourse(courseId, moduleDto);

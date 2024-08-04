@@ -1,5 +1,4 @@
 import { create } from "zustand";
-import Logger from "@/utils/Logger";
 import {
   COURSE_STATUS,
   ICourse,
@@ -16,6 +15,7 @@ import {
   saveCourse,
   saveLesson,
   saveModule,
+  updateCourse,
   updateLesson,
   updateModule,
 } from "@/app/backend/actions/course";
@@ -88,6 +88,7 @@ interface ICourseStoreState {
   setCurrentStepIndex: (index: number) => void;
   fetchLoggedTutorCourses: () => Promise<void>;
   saveCourse: (course: ICourseDto) => Promise<ICourse>;
+  updateCourse: (course: ICourseDto) => Promise<ICourse>;
   publishCourse: () => Promise<ICourse>;
   saveCourseDtoInfo: (course: ICourseDto) => void;
   addModule: (module: IModuleDto) => void;
@@ -98,6 +99,7 @@ interface ICourseStoreState {
   updateLesson: (lesson: ILessonDto) => void;
   canCourseBeSaved: boolean;
   setCanCourseBeSaved: (value: boolean) => void;
+  reset: () => void;
 }
 
 const useCourseStore = create<ICourseStoreState>((set) => ({
@@ -124,11 +126,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       const courseDto = useCourseStore.getState?.().courseDto;
       if (!courseDto) throw new Error("No courseDto found");
 
-      Logger.debug("CourseStore", "Adding module", courseDto);
-
       const savedModule = await saveModule(courseDto.id!, module);
-
-      Logger.debug("CourseStore", "Saved module", savedModule);
 
       let updatedModules = [];
       if ("modules" in courseDto) {
@@ -143,7 +141,6 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
           updatedModules.length > 0 && updatedModules.some((mod) => mod.lessons && mod.lessons.length > 0),
       }));
     } catch (error) {
-      Logger.error("CourseStore", "Unexpected error", error);
       set({ error: error.message });
     } finally {
       set({ loading: false });
@@ -154,7 +151,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     const updatedModule = await updateModule(courseDto?.id!, module.id!, module);
 
     const updatedModules = Array.isArray(courseDto?.modules)
-      ? courseDto?.modules.map((m) => (m.id === updatedModule.id ? updatedModule : m))
+      ? courseDto?.modules.map((m) => (m.id === updatedModule.id ? { ...updatedModule, lessons: m.lessons } : m))
       : [];
 
     set({
@@ -207,48 +204,47 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
         courseDto: { ...courseDto, modules: updatedModules },
         canCourseBeSaved: updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
       });
-    } catch (e) {
-      Logger.error("CourseStore", "Unexpected error", e);
+    } catch (error) {
+      set({ error: error.message });
     } finally {
       set({ loading: false });
     }
   },
   updateLesson: async (lesson: ILessonDto) => {
-    await set(async (state: ICourseStoreState) => {
-      const { courseDto } = state;
-      const updatedLesson = await updateLesson(courseDto?.id!, lesson.moduleId, lesson.id, lesson);
+    const courseDto = useCourseStore.getState?.().courseDto;
 
-      const updatedModules = courseDto?.modules?.map((module) => {
-        if (module.id === updatedLesson.moduleId) {
-          const updatedLessons = module.lessons?.map((l) => (l.id === updatedLesson.id ? updatedLesson : l));
-          return { ...module, lessons: updatedLessons };
-        }
-        return module;
-      });
+    const plainLesson = JSON.parse(JSON.stringify(lesson)) as ILessonDto;
+    const updatedLesson = await updateLesson(courseDto?.id!, lesson.moduleId, lesson.id, plainLesson);
 
-      return {
-        courseDto: { ...courseDto, modules: updatedModules },
-        canCourseBeSaved: updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
-      };
+    console.log("CourseStore", "courseDto", courseDto?.modules);
+    console.log("CourseStore", "Updated lesson", updatedLesson);
+    const updatedModules = courseDto?.modules?.map((module) => {
+      if (module.id === updatedLesson.moduleId) {
+        const updatedLessons = module.lessons?.map((l) => (l.id === updatedLesson.id ? updatedLesson : l));
+        return { ...module, lessons: updatedLessons };
+      }
+      return module;
+    });
+
+    set({
+      courseDto: { ...courseDto, modules: updatedModules },
+      canCourseBeSaved: updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
     });
   },
-  removeLesson: (lessonId: string, moduleId: string) => {
-    set(async (state: ICourseStoreState) => {
-      const { courseDto } = state;
+  removeLesson: async (lessonId: string, moduleId: string) => {
+    const courseDto = useCourseStore.getState?.().courseDto;
 
-      await deleteLesson(courseDto?.id!, moduleId, lessonId);
-      const updatedModules = courseDto?.modules?.map((module) => {
-        if (module.id === moduleId) {
-          const updatedLessons = module.lessons?.filter((lesson) => lesson.id !== lessonId);
-          return { ...module, lessons: updatedLessons };
-        }
-        return module;
-      });
-
-      return {
-        courseDto: { ...courseDto, modules: updatedModules },
-        canCourseBeSaved: updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
-      };
+    await deleteLesson(courseDto?.id!, moduleId, lessonId);
+    const updatedModules = courseDto?.modules?.map((module) => {
+      if (module.id === moduleId) {
+        const updatedLessons = module.lessons?.filter((lesson) => lesson.id !== lessonId);
+        return { ...module, lessons: updatedLessons };
+      }
+      return module;
+    });
+    set({
+      courseDto: { ...courseDto, modules: updatedModules },
+      canCourseBeSaved: updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
     });
   },
   goToNextStep: () => {
@@ -277,14 +273,14 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   fetchLoggedTutorCourses: async () => {
     set({ loading: true });
     try {
-      Logger.debug("CourseStore", "Fetching courses");
+      console.log("CourseStore", "Fetching courses");
       const loggedTutor = await getAuthUser();
       const response = await fetchCoursesByTutorsID(loggedTutor?.email!);
-      Logger.debug("CourseStore", "Fetched courses", response);
+      console.log("CourseStore", "Fetched courses", response);
       const courses = response as ICourse[];
       set((state) => ({ ...state, courses: courses || [] }));
     } catch (error) {
-      Logger.error("CourseStore", "Error fetching courses", error);
+      set({ error: error.message });
     } finally {
       set((state) => ({ ...state, loading: false }));
     }
@@ -293,18 +289,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     try {
       const loggedTutor = await getAuthUser();
 
-      const courseId = useCourseStore.getState?.().courseDto?.id;
-
-      console.log("CourseStore", "Saving course courseId ", courseId);
-      if (!courseId) {
-        set((state) => ({ ...state, loading: true, courseDto: { ...course, tutorId: loggedTutor?.id } as ICourseDto }));
-      } else {
-        set((state) => ({
-          ...state,
-          loading: true,
-          courseDto: { ...course, id: courseId, tutorId: loggedTutor?.id } as ICourseDto,
-        }));
-      }
+      set((state) => ({ ...state, loading: true, courseDto: { ...course, tutorId: loggedTutor?.id } as ICourseDto }));
 
       const courseDto = useCourseStore.getState?.().courseDto;
 
@@ -322,9 +307,57 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       console.log("CourseStore", "Course saved response", response);
       set({ courseDto: response, loading: false });
     } catch (error) {
-      console.log("CourseStore", "Unexpected error", error);
+      set({ error: error.message });
     } finally {
       set((state) => ({ ...state, isLoading: false }));
+    }
+  },
+
+  updateCourse: async (course: ICourseDto) => {
+    try {
+      const loggedTutor = await getAuthUser();
+
+      const courseId = useCourseStore.getState().courseDto?.id;
+
+      if (!courseId) {
+        throw new Error("Course id is missing");
+      }
+
+      const courseDto = useCourseStore.getState().courseDto;
+
+      if (!courseDto) {
+        throw new Error("Course data is missing");
+      }
+
+      let coverUrl = courseDto.coverUrl;
+
+      if (course.coverFile) {
+        coverUrl = await FirebaseClientService.uploadFile(course.coverFile);
+      }
+
+      set((state) => ({
+        ...state,
+        loading: true,
+        courseDto: {
+          ...courseDto,
+          ...course,
+          id: courseId,
+          status: COURSE_STATUS.DRAFT,
+          coverUrl: coverUrl,
+          tutorId: loggedTutor?.id,
+        } as ICourseDto,
+      }));
+
+      const plainCourseDto = JSON.parse(JSON.stringify({ ...useCourseStore.getState().courseDto })) as ICourseDto;
+
+      const response = await updateCourse(plainCourseDto);
+
+      console.log("CourseStore", "Course updated response", response);
+      set({ courseDto: response, loading: false });
+    } catch (error) {
+      set({ error: error.message });
+    } finally {
+      set((state) => ({ ...state, loading: false }));
     }
   },
 
@@ -338,20 +371,32 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
         throw new Error("Course data is missing");
       }
 
-      const response = await saveCourse({ ...courseDto, status: COURSE_STATUS.PUBLISHED });
+      const response = await updateCourse({ ...courseDto, status: COURSE_STATUS.PUBLISHED });
 
-      Logger.debug("CourseStore", "Course saved response", response);
       set({ courseDto: response, loading: false });
     } catch (error) {
-      Logger.error("CourseStore", "Unexpected error", error);
+      set({ error: error.message });
       set({ loading: false });
     } finally {
       set({ loading: false });
     }
   },
-
+  reset: () => {
+    set({
+      courses: [],
+      courseDto: null,
+      currentFormStep: {} as IFormStep,
+      lessons: [],
+      modules: moduleList,
+      selectedCategories: [],
+      categoriesOptions: categoriesOptions,
+      currentStepIndex: 0,
+      canCourseBeSaved: false,
+      loading: false,
+      error: "",
+    });
+  },
   saveCourseDtoInfo: (course: ICourseDto) => {
-    Logger.debug("CourseStore", "Saving course info", course);
     set((state) => ({ ...state, courseDto: course, loading: false }));
   },
   setCanCourseBeSaved: (value: boolean) => {

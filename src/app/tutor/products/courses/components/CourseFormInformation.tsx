@@ -16,6 +16,7 @@ import FormButtonWithLoader from "@/components/FormButton/FormButtonWithLoader";
 
 function CourseFormInformation() {
   const saveCourseDtoInfo = useCourseStore((state) => state.saveCourse);
+  const updateCourseDtoInfo = useCourseStore((state) => state.updateCourse);
   const courseDto = useCourseStore((state) => state.courseDto);
   const categoriesOptions = useCourseStore((state) => state.categoriesOptions);
   const selectedCategories = useCourseStore((state) => state.selectedCategories);
@@ -31,15 +32,22 @@ function CourseFormInformation() {
       price: courseDto?.price,
       discount: courseDto?.discount || 0,
       categories: courseDto?.categories || [],
-      coverFile: undefined,
-      promoVideoFile: undefined,
+      coverFile: courseDto?.coverUrl,
+      // promoVideoFile: courseDto?.promoVideoFile || null,
     },
   });
 
   async function onSubmit(values: z.infer<typeof courseBasicInformationformSchema>) {
     try {
-      await saveCourseDtoInfo(values);
-      toast.success("Informações do curso salvas com sucesso!");
+      const courseId = useCourseStore.getState?.().courseDto?.id;
+      if (!courseId) {
+        await saveCourseDtoInfo(values);
+        toast.success("Informações do curso salvas com sucesso!");
+      } else {
+        await updateCourseDtoInfo({ ...values, id: courseId });
+        toast.success("Informações do curso atualizadas com sucesso!");
+      }
+
       if (!loading) goToNextStep();
     } catch (e) {
       console.error(e);

@@ -207,6 +207,29 @@ class FirestoreService {
     }
   }
 
+  public async deleteDocumentByQuery(collection: FirebaseCollections, query: IQuery) {
+    await this.waitForFirestore();
+    Logger.debug(this.LOG_TAG, `Deleting documents by query:`, [query]);
+
+    try {
+      const collectionReference = FirebaseConfig.firestoreDB.collection(collection);
+      const querySnapshot = await collectionReference.where(query.field, query.operator, query.value).get();
+
+      if (querySnapshot.empty) {
+        Logger.warn(this.LOG_TAG, `No documents found for query:`, [query]);
+        return;
+      }
+
+      const deletePromises = querySnapshot.docs.map((doc) => doc.ref.delete());
+      await Promise.all(deletePromises);
+
+      Logger.debug(this.LOG_TAG, `Documents deleted by query:`, [query]);
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error deleting documents by query: ${query}`, error);
+      return Promise.reject(error);
+    }
+  }
+
   private async waitForFirestore() {
     if (!FirebaseConfig.checkFirestoreDB()) {
       Logger.debug(this.LOG_TAG, "Waiting for Firestore to initialize");

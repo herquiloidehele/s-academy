@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 
 function CoursesCard({ course }: { course: ICourse }) {
   return (
-    <div className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+    <div className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700  hover:scale-105 transition-transform duration-300 ease-in-out">
       <a href="#">
         <img
           loading="lazy"
@@ -14,7 +14,7 @@ function CoursesCard({ course }: { course: ICourse }) {
           height="100"
           src={course.coverUrl}
           alt="Course cover"
-          className="relative h-[250px] w-full object-cover hover:scale-105 transition-transform duration-300 ease-in-out rounded-t-lg"
+          className="relative h-[250px] w-full object-cover rounded-t-lg"
         />
       </a>
       <div className="p-5">

@@ -9,6 +9,7 @@ import {
   IModule,
   IModuleDto,
 } from "@/app/backend/business/course/CourseData";
+import VideoManager, { IUploadResponse } from "@/app/backend/business/course/VideoManager";
 
 export async function fetchCourses(): Promise<ICourse[]> {
   return CourseManager.getAllCourses();
@@ -64,6 +65,10 @@ export async function deleteLesson(courseId: string, moduleId: string, lessonId:
   return CourseManager.removeLesson(courseId, moduleId, lessonId);
 }
 
-// export async function uploadVideo(videoFile: File, description: string) {
-//   return VimeoClientService.uploadVideo(videoFile, description);
-// }
+export async function uploadVideo(file: File, onProgress: (percentage: number) => void): Promise<IUploadResponse> {
+  return VideoManager.uploadVideoFile(file, onProgress);
+}
+
+export async function getVideoThumbnail(videoId: number): Promise<string> {
+  return VideoManager.getVideoThumbnail(videoId);
+}

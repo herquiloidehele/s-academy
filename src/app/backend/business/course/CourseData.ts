@@ -1,6 +1,5 @@
 import { DocumentData, DocumentReference } from "firebase/firestore";
 
-// Interface para um curso
 export interface ICourse {
   id: string;
   title: string;
@@ -12,13 +11,13 @@ export interface ICourse {
   modules: IModule[];
   coverUrl?: string;
   promoVideoRef?: number;
+  promoVideoThumbnail?: string;
   categories?: string[];
   createdAt?: Date;
   tutorId: string;
   tutorRef?: DocumentReference<DocumentData> | null;
 }
 
-// DTO para um curso
 export interface ICourseDto {
   id?: string;
   title?: string;
@@ -32,13 +31,13 @@ export interface ICourseDto {
   coverFile?: File;
   promoVideoFile?: File;
   promoVideoRef?: number;
+  promoVideoThumbnail?: string;
   categories?: string[];
   createdAt?: Date;
   tutorId?: string;
   tutorRef?: DocumentReference<DocumentData> | null;
 }
 
-// DTO para um módulo
 export interface IModuleDto {
   id?: string;
   order?: number;
@@ -48,7 +47,6 @@ export interface IModuleDto {
   courseRef?: DocumentReference<DocumentData> | null;
 }
 
-// DTO para uma lição
 export interface ILessonDto {
   id: string;
   order: number;
@@ -64,7 +62,6 @@ export interface ILessonDto {
   moduleRef: DocumentReference<DocumentData> | null;
 }
 
-// Interface para um módulo
 export interface IModule {
   id: string;
   order: number;
@@ -75,7 +72,6 @@ export interface IModule {
   courseRef: DocumentReference<DocumentData> | null;
 }
 
-// Interface para uma lição
 export interface ILesson {
   id: string;
   order: number;
@@ -89,7 +85,6 @@ export interface ILesson {
   moduleRef: DocumentReference<DocumentData> | null;
 }
 
-// Enum para status do curso
 export enum COURSE_STATUS {
   DRAFT = "DRAFT",
   PUBLISHED = "PUBLISHED",

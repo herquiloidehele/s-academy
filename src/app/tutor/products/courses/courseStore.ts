@@ -23,7 +23,7 @@ import {
 import { IOptionType } from "@/components/multi-selector/MultiSelect";
 import getAuthUser from "@/app/backend/actions/auth";
 import FirebaseClientService from "@/app/backend/services/FirebaseClientService";
-import VimeoClientService from "@/app/backend/services/VimeoClientService";
+import VideoManager from "@/app/backend/business/course/VideoManager";
 
 const moduleList = [
   // ... (seu conteúdo de moduleList aqui)
@@ -80,6 +80,8 @@ interface ICourseStoreState {
   selectedCategories: IOptionType[];
   loading: boolean;
   error: string;
+  videoUploadPercentage: number;
+  setVideoUploadPercentage: (value: number) => void;
   setLoading: (value: boolean) => void;
   setError: (value: string) => void;
   setSelectedCategories: (categories: IOptionType[]) => void;
@@ -147,6 +149,9 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       set({ loading: false });
     }
   },
+  setVideoUploadPercentage: (value: number) => {
+    set({ videoUploadPercentage: value });
+  },
   updateModule: async (module: IModuleDto) => {
     const courseDto = useCourseStore.getState?.().courseDto;
     const updatedModule = await updateModule(courseDto?.id!, module.id!, module);
@@ -181,7 +186,9 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
       const courseDto = useCourseStore.getState?.().courseDto;
 
-      const videoLesson = await VimeoClientService.uploadVideo(lesson.videoFile!, lesson.title);
+      const videoLesson = await VideoManager.uploadVideoFile(lesson.videoFile!, (percentage) => {
+        useCourseStore.getState?.().setVideoUploadPercentage(percentage);
+      });
 
       const materialUrl = lesson.materialFile ? await FirebaseClientService.uploadFile(lesson.materialFile) : "";
 
@@ -203,6 +210,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       });
       set({
         courseDto: { ...courseDto, modules: updatedModules },
+        progress: 0,
         canCourseBeSaved: updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
       });
     } catch (error) {
@@ -301,13 +309,23 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       }
 
       const coverUrl = await FirebaseClientService.uploadFile(courseDto.coverFile!);
+      const uploadedVideo = await VideoManager.uploadVideoFile(courseDto.promoVideoFile!, (percentage) => {
+        useCourseStore.getState?.().setVideoUploadPercentage(percentage);
+      });
+
       const plainCourseDto = JSON.parse(
-        JSON.stringify({ ...courseDto, status: COURSE_STATUS.DRAFT, coverUrl }),
+        JSON.stringify({
+          ...courseDto,
+          status: COURSE_STATUS.DRAFT,
+          coverUrl,
+          promoVideoRef: uploadedVideo.videoId,
+          promoVideoThumbnail: uploadedVideo.thumbnailUrl,
+        }),
       ) as ICourseDto;
 
       const response = await saveCourse(plainCourseDto);
 
-      set({ courseDto: response, loading: false });
+      set({ courseDto: response, loading: false, videoUploadPercentage: 0 });
     } catch (error) {
       set({ error: error.message });
     } finally {

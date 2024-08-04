@@ -30,6 +30,7 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
   const modules = courseDto?.modules || [];
   const [lessonData, setLessonData] = useState<ILessonDto | undefined>({} as ILessonDto);
   const loading = useCourseStore((state) => state.loading);
+  const videoUploadPercentage = useCourseStore((state) => state.videoUploadPercentage);
 
   const form = useForm<z.infer<typeof ILessonSchema>>({
     resolver: zodResolver(ILessonSchema),
@@ -203,7 +204,9 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
                       <FormLabel className="font-light leading-tight">Video Aula</FormLabel>
                       <FormControl>
                         <FileUploader
+                          loading={loading}
                           defaultFile={lessonData?.videoFile}
+                          uploadedPercentage={videoUploadPercentage}
                           mimeType="video/*"
                           fileTypes={["MP4"]}
                           onFileChange={(file) => {

@@ -24,6 +24,7 @@ function CourseFormInformation() {
   const setSelectedSelectedCategories = useCourseStore((state) => state.setSelectedCategories);
   const goToNextStep = useCourseStore((state) => state.goToNextStep);
   const loading = useCourseStore((state) => state.loading);
+  const videoUploadPercentage = useCourseStore((state) => state.videoUploadPercentage);
 
   const form = useForm<z.infer<typeof courseBasicInformationformSchema>>({
     resolver: zodResolver(courseBasicInformationformSchema),
@@ -34,7 +35,7 @@ function CourseFormInformation() {
       discount: courseDto?.discount || 0,
       categories: courseDto?.categories || [],
       coverFile: courseDto?.coverUrl,
-      // promoVideoFile: courseDto?.promoVideoFile || null,
+      promoVideoFile: courseDto?.promoVideoFile,
     },
   });
 
@@ -65,7 +66,7 @@ function CourseFormInformation() {
       discount: courseDto?.discount || 0,
       categories: courseDto?.categories || [],
       coverFile: courseDto?.coverUrl,
-      // promoVideoFile: courseDto?.promoVideoFile || null,
+      promoVideoFile: courseDto?.promoVideoFile,
     });
   }, [courseDto]);
 
@@ -193,6 +194,8 @@ function CourseFormInformation() {
                   <FormControl>
                     <FileUploader
                       defaultFile={courseDto?.promoVideoRef}
+                      loading={loading}
+                      uploadedPercentage={videoUploadPercentage}
                       id="promoVideoFile"
                       mimeType="video/*"
                       fileTypes={["MP4"]}

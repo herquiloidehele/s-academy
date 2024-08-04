@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Loader2Icon, XIcon } from "lucide-react";
+import { XIcon } from "lucide-react";
 import { DocumentIcon } from "@heroicons/react/24/outline";
+import VideoPlayer from "@/components/course/video-player/VideoPlayer";
 
 function FileUploader({
   id,
@@ -10,14 +11,20 @@ function FileUploader({
   mimeType,
   fileTypes = "PDF, DOCX, PPTX",
   defaultFile,
+  uploadedPercentage = 0, // default to 0 if not provided
+  loading = false,
 }) {
   const [file, setFile] = useState(defaultFile);
-  const [loading, setLoading] = useState(false);
+  const [progress, setProgress] = useState(0); // Manage upload progress
   const inputRef = useRef(null);
 
   useEffect(() => {
     setFile(defaultFile);
   }, [defaultFile]);
+
+  useEffect(() => {
+    setProgress(uploadedPercentage);
+  }, [uploadedPercentage]);
 
   const handleDragOver = (event) => {
     event.preventDefault();
@@ -34,10 +41,8 @@ function FileUploader({
   };
 
   const handleFileUpload = (file) => {
-    setLoading(true);
     setFile(file);
     onFileChange(file);
-    setLoading(false); // Simulating the end of the upload process
   };
 
   const handleRemoveFile = () => {
@@ -51,7 +56,25 @@ function FileUploader({
   const isFileObject = (file) => file instanceof File;
 
   return (
-    <div id={id} className="flex items-center justify-center w-full" onDragOver={handleDragOver} onDrop={handleDrop}>
+    <div
+      id={id}
+      className="flex flex-col items-center justify-center w-full"
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+    >
+      {loading && mimeType.startsWith("video/") && progress > 0 && (
+        <div className="w-full mt-2">
+          <div className="relative w-full h-2 bg-gray-200 rounded-lg overflow-hidden">
+            <div
+              className="absolute h-full bg-primary"
+              style={{ width: `${progress}%`, transition: "width 0.3s" }}
+            ></div>
+            <span className="absolute inset-0 flex items-center justify-center text-black font-semibold text-xs">
+              {`${Math.round(progress)}%`}
+            </span>
+          </div>
+        </div>
+      )}
       {file ? (
         <div className="relative w-full h-64 border-2 border-gray-300 rounded-lg overflow-hidden">
           {mimeType.startsWith("image/") ? (
@@ -61,13 +84,13 @@ function FileUploader({
               className="w-full h-full object-contain rounded-lg"
             />
           ) : mimeType.startsWith("video/") ? (
-            <video
-              controls
-              src={isFileObject(file) ? URL.createObjectURL(file) : file}
-              className="w-full h-full object-contain rounded-lg"
-            >
-              Your browser does not support the video tag.
-            </video>
+            isFileObject(file) ? (
+              <video controls src={URL.createObjectURL(file)} className="w-full h-full object-contain rounded-lg">
+                Your browser does not support the video tag.
+              </video>
+            ) : (
+              <VideoPlayer videoId={file} />
+            )
           ) : (
             <a
               href={isFileObject(file) ? URL.createObjectURL(file) : file}
@@ -90,15 +113,7 @@ function FileUploader({
           htmlFor={`dropzone-file-${id}`}
           className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
         >
-          {loading ? (
-            <div className="flex flex-col items-center justify-center">
-              <div className="loader"></div>
-              <p className="text-sm flex flex-grow gap-2 text-gray-500 dark:text-gray-400">
-                <Loader2Icon className="animate-spin" />
-                Uploading...
-              </p>
-            </div>
-          ) : (
+          {
             <div className="flex flex-col items-center justify-center pt-5 pb-6">
               <svg
                 className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
@@ -120,7 +135,7 @@ function FileUploader({
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400">{fileTypes}</p>
             </div>
-          )}
+          }
           <input
             id={`dropzone-file-${id}`}
             type="file"

@@ -42,18 +42,18 @@ export const courseBasicInformationformSchema = z.object({
     )
     .optional()
     .nullable(),
-  // promoVideoFile: z
-  //   .any()
-  //   .refine(
-  //     (value) =>
-  //       value === null ||
-  //       value === undefined ||
-  //       fileSchema.safeParse(value).success ||
-  //       urlSchema.safeParse(value).success,
-  //     { message: "Deve ser um arquivo válido ou uma URL válida." },
-  //   )
-  //   .optional()
-  //   .nullable(),
+  promoVideoFile: z
+    .any()
+    .refine(
+      (value) =>
+        value === null ||
+        value === undefined ||
+        fileSchema.safeParse(value).success ||
+        urlSchema.safeParse(value).success,
+      { message: "Deve ser um arquivo válido ou uma URL válida." },
+    )
+    .optional()
+    .nullable(),
   categories: z.array(z.string()).nonempty({ message: "Selecione pelo menos uma categoria." }),
 });
 

@@ -239,7 +239,8 @@ class CourseManager {
       createdAt: new Date(),
       coverUrl: courseDto.coverUrl,
       description: courseDto.description,
-      promoVideoRef: courseDto.promoVideoRef || 0,
+      promoVideoRef: courseDto.promoVideoRef,
+      promoVideoThumbnail: courseDto.promoVideoThumbnail,
       tutorRef: courseDto.tutorRef,
     };
 
@@ -279,7 +280,8 @@ class CourseManager {
       createdAt: new Date(),
       coverUrl: courseDto.coverUrl,
       description: courseDto.description,
-      promoVideoRef: courseDto.promoVideoRef || 0,
+      promoVideoRef: courseDto.promoVideoRef,
+      promoVideoThumbnail: courseDto.promoVideoThumbnail,
       tutorRef: courseDto.tutorRef,
     };
 

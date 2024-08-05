@@ -10,6 +10,7 @@ import { motion } from "framer-motion";
 import EmptyAnimation from "@/assets/animation/empty.json";
 import EmptyState from "@/components/empty-list/EmptyState";
 import useCourseStore from "@/app/tutor/products/courses/courseStore";
+import Loading from "@/components/loading/Loading";
 
 function CoursePage() {
   const router = useRouter();
@@ -25,11 +26,7 @@ function CoursePage() {
   }, [fetchCoursesByTutor]);
 
   if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-primary"></div>
-      </div>
-    );
+    return <Loading />;
   } else
     return (
       <div>

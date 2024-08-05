@@ -79,10 +79,12 @@ interface ICourseStoreState {
   modules: IModule[];
   selectedCategories: IOptionType[];
   loading: boolean;
+  pageLoading: boolean;
   error: string;
   videoUploadPercentage: number;
   setVideoUploadPercentage: (value: number) => void;
   setLoading: (value: boolean) => void;
+  setPageLoading: (value: boolean) => void;
   setError: (value: string) => void;
   setSelectedCategories: (categories: IOptionType[]) => void;
   currentStepIndex: number;
@@ -119,6 +121,9 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   error: "",
   setLoading: (value: boolean) => {
     set({ loading: value });
+  },
+  setPageLoading: (value: boolean) => {
+    set({ pageLoading: value });
   },
   setError: (value: string) => {
     set({ error: value });
@@ -373,7 +378,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
         thumbnailUrl: oldCourseData.promoVideoThumbnail,
       };
 
-      if (newCourseData.promoVideoFile) {
+      if (newCourseData.promoVideoFile instanceof File) {
         uploadedVideo = await VideoManager.uploadVideoFile(
           newCourseData.promoVideoFile!,
           (percentage) => {

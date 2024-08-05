@@ -8,13 +8,19 @@ import { FolderOpen } from "lucide-react";
 import CourseFormContent from "@/app/tutor/products/courses/components/CourseFormContent";
 import CourseFormReview from "@/app/tutor/products/courses/components/CourseFormPreview";
 import { useRouter } from "next/navigation";
+import Loading from "@/components/loading/Loading";
 
 function FormPage({ params }: { params: { id: string } }) {
   const router = useRouter();
+  const pageLoading = useCourseStore((state) => state.pageLoading);
+
   useEffect(() => {
+    useCourseStore.getState?.().setPageLoading(true);
+
     if (params.id) {
       const fetchCourse = async () => {
         await useCourseStore.getState?.().setCourseDtoData(params.id);
+        useCourseStore.getState?.().setPageLoading(false);
       };
       fetchCourse();
     }
@@ -51,24 +57,26 @@ function FormPage({ params }: { params: { id: string } }) {
   useEffect(() => {
     setCurrentFormStep(formSteps[currentStepIndex]);
   }, [currentStepIndex]);
+  if (pageLoading) {
+    return <Loading />;
+  } else
+    return (
+      <div className="flex flex-row gap-3 ">
+        <FormStepper
+          title="Registo de curso"
+          steps={formSteps}
+          onBackClick={() => {
+            router.back();
+          }}
+        />
 
-  return (
-    <div className="flex flex-row gap-3 ">
-      <FormStepper
-        title="Registo de curso"
-        steps={formSteps}
-        onBackClick={() => {
-          router.back();
-        }}
-      />
-
-      <div className="flex flex-col w-full">
-        <span className="text-3xl font-bold mb-5 text-gray-800">{currentFormStep.title}</span>
-        <hr className="w-full h-2 text-primary" />
-        <div className="w-full">{currentFormStep.page}</div>
+        <div className="flex flex-col w-full">
+          <span className="text-3xl font-bold mb-5 text-gray-800">{currentFormStep.title}</span>
+          <hr className="w-full h-2 text-primary" />
+          <div className="w-full">{currentFormStep.page}</div>
+        </div>
       </div>
-    </div>
-  );
+    );
 }
 
 export default FormPage;

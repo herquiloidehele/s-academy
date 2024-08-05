@@ -9,7 +9,6 @@ import {
   IModule,
   IModuleDto,
 } from "@/app/backend/business/course/CourseData";
-import VideoManager, { IUploadResponse } from "@/app/backend/business/course/VideoManager";
 
 export async function fetchCourses(): Promise<ICourse[]> {
   return CourseManager.getAllCourses();
@@ -36,12 +35,15 @@ export async function saveCourse(courseDto: ICourseDto): Promise<ICourse> {
 export async function updateCourse(courseDto: ICourseDto): Promise<ICourse> {
   return CourseManager.updateCourse(courseDto);
 }
+export async function deleteCourse(courseId: string): Promise<void> {
+  return CourseManager.deleteCourse(courseId);
+}
 
 export async function saveModule(courseId: string, moduleDto: IModuleDto): Promise<IModule> {
   return CourseManager.addModuleToCourse(courseId, moduleDto);
 }
-export async function removeModule(courseId: string, moduleId: string): Promise<void> {
-  return CourseManager.removeModule(courseId, moduleId);
+export async function deleteModule(courseId: string, moduleId: string): Promise<void> {
+  return CourseManager.deleteModule(courseId, moduleId);
 }
 
 export async function saveLesson(courseId: string, moduleId: string, lessonDto: ILessonDto): Promise<ILesson> {
@@ -62,16 +64,8 @@ export async function updateLesson(
 }
 
 export async function deleteLesson(courseId: string, moduleId: string, lessonId: string): Promise<void> {
-  return CourseManager.removeLesson(courseId, moduleId, lessonId);
+  return CourseManager.deleteLesson(courseId, moduleId, lessonId);
 }
 export async function unpublishCourse(courseId: string): Promise<void> {
   return CourseManager.unpublishCourse(courseId);
-}
-
-export async function uploadVideo(file: File, onProgress: (percentage: number) => void): Promise<IUploadResponse> {
-  return VideoManager.uploadVideoFile(file, onProgress);
-}
-
-export async function getVideoThumbnail(videoId: number): Promise<string> {
-  return VideoManager.getVideoThumbnail(videoId);
 }

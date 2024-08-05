@@ -9,10 +9,11 @@ import {
   IModuleDto,
 } from "@/app/backend/business/course/CourseData";
 import {
+  deleteCourse,
   deleteLesson,
+  deleteModule,
   fetchCoursesByTutorsID,
   getCourseById,
-  removeModule,
   saveCourse,
   saveLesson,
   saveModule,
@@ -107,6 +108,7 @@ interface ICourseStoreState {
   setCanCourseBeSaved: (value: boolean) => void;
   resetCourseFormData: () => void;
   unpublishCourse: (courseId: string) => void;
+  removeCourse: (courseId: string) => void;
 }
 
 const useCourseStore = create<ICourseStoreState>((set) => ({
@@ -129,6 +131,17 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   },
   setError: (value: string) => {
     set({ error: value });
+  },
+  removeCourse: async (courseId: string) => {
+    set({ loading: true });
+    try {
+      await deleteCourse(courseId);
+      set({ loading: false });
+    } catch (error) {
+      set({ error: error.message });
+    } finally {
+      set({ loading: false });
+    }
   },
   unpublishCourse: async (courseId: string) => {
     set({ loading: true });
@@ -187,7 +200,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   removeModule: async (moduleId: string) => {
     const courseDto = useCourseStore.getState?.().courseDto;
 
-    await removeModule(courseDto?.id!, moduleId);
+    await deleteModule(courseDto?.id!, moduleId);
     const updatedModules = Array.isArray(courseDto?.modules)
       ? courseDto?.modules.filter((module) => module.id !== moduleId)
       : [];

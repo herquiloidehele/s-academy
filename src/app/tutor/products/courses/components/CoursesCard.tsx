@@ -2,12 +2,13 @@
 import React from "react";
 import { truncateText } from "@/utils/functions";
 import { COURSE_STATUS, ICourse } from "@/app/backend/business/course/CourseData";
-import { ArrowRight, EyeOff } from "lucide-react";
+import { ArrowRight, EyeOff, Trash } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Constants } from "@/utils/Constants";
 import { CustomAlertDialog } from "@/components/alert-dialog/AlertDialog";
 import useCourseStore from "@/app/tutor/products/courses/courseStore";
 import { toast } from "sonner";
+import { deleteCourse } from "@/app/backend/actions/course";
 
 function CoursesCard({ course }: { course: ICourse }) {
   const unpublishedCourse = useCourseStore((state) => state.unpublishCourse);
@@ -19,7 +20,18 @@ function CoursesCard({ course }: { course: ICourse }) {
       await fetchLoggedTutorCourses();
       toast.success("Curso despublicado com sucesso.");
     } catch (e) {
-      toast.error("Curso não foi despublicado.");
+      toast.error("Curso não foi despublicado, ocorreu um erro");
+      console.error(e);
+    }
+  }
+
+  async function handleDeleteCourse() {
+    try {
+      await deleteCourse(course.id);
+      await fetchLoggedTutorCourses();
+      toast.success("Curso eliminado com sucesso.");
+    } catch (e) {
+      toast.error("Curso não foi eliminado, ocorreu um erro.");
       console.error(e);
     }
   }
@@ -74,14 +86,28 @@ function CoursesCard({ course }: { course: ICourse }) {
             </div>
           )}
           {course.status === COURSE_STATUS.DRAFT && (
-            <a
-              href={Constants.APP_ROUTES.TEACHER.EDIT_COURSES(course.id)}
-              className="self-end flex flex-row gap-2 items-center px-3 py-2 text-sm font-medium text-center text-white bg-gray-400 rounded-lg hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              {" "}
-              <span>Editar</span>
-              <ArrowRight className="size-4" />
-            </a>
+            <div className="flex flex-row gap-2">
+              <CustomAlertDialog
+                title={`Tem certeza que deseja eliminar o curso ${course.title}?`}
+                description="Esta ação não pode ser desfeita."
+                onAction={handleDeleteCourse}
+                open={open}
+                setOpen={setOpen}
+              >
+                <button className="self-end flex flex-row gap-2 items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-400 rounded-lg hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  <span>Eliminar</span>
+                  <Trash className="h-5 w-5" />
+                </button>
+              </CustomAlertDialog>
+              <a
+                href={Constants.APP_ROUTES.TEACHER.EDIT_COURSES(course.id)}
+                className="self-end flex flex-row gap-2 items-center px-3 py-2 text-sm font-medium text-center text-white bg-gray-400 rounded-lg hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                {" "}
+                <span>Editar</span>
+                <ArrowRight className="size-4" />
+              </a>
+            </div>
           )}
         </div>
       </div>

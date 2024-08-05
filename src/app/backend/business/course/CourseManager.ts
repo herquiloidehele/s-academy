@@ -306,6 +306,24 @@ class CourseManager {
     }
   }
 
+  public async deleteCourse(courseId: string): Promise<void> {
+    Logger.debug(this.LOG_TAG, `Removing course: ${courseId}`);
+
+    try {
+      const courseModules = await this.getCourseModules(courseId);
+
+      for (const module of courseModules) {
+        await this.deleteModule(courseId, module.id);
+      }
+
+      await FirestoreService.deleteDocument(FirebaseCollections.COURSES, courseId);
+
+      Logger.debug(this.LOG_TAG, `Course removed: ${courseId}`);
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error removing course: ${courseId}`, error);
+      return Promise.reject(error);
+    }
+  }
   public async addModuleToCourse(courseId: string, moduleDto: IModuleDto): Promise<IModule> {
     Logger.debug(this.LOG_TAG, `Adding module to course:`, [moduleDto, courseId]);
 
@@ -397,7 +415,7 @@ class CourseManager {
     }
   }
 
-  public async removeModule(courseId: string, moduleId: string): Promise<void> {
+  public async deleteModule(courseId: string, moduleId: string): Promise<void> {
     Logger.debug(this.LOG_TAG, `Removing module from course:`, [moduleId, courseId]);
 
     try {
@@ -449,7 +467,7 @@ class CourseManager {
     }
   }
 
-  public async removeLesson(courseId: string, moduleId: string, lessonId: string): Promise<void> {
+  public async deleteLesson(courseId: string, moduleId: string, lessonId: string): Promise<void> {
     Logger.debug(this.LOG_TAG, `Removing lesson from module:`, [lessonId, moduleId, courseId]);
 
     try {

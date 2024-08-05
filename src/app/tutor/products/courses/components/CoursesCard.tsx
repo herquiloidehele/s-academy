@@ -1,11 +1,29 @@
+"use client";
 import React from "react";
 import { truncateText } from "@/utils/functions";
 import { COURSE_STATUS, ICourse } from "@/app/backend/business/course/CourseData";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, EyeOff } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Constants } from "@/utils/Constants";
+import { CustomAlertDialog } from "@/components/alert-dialog/AlertDialog";
+import useCourseStore from "@/app/tutor/products/courses/courseStore";
+import { toast } from "sonner";
 
 function CoursesCard({ course }: { course: ICourse }) {
+  const unpublishedCourse = useCourseStore((state) => state.unpublishCourse);
+  const [open, setOpen] = React.useState(false);
+  const fetchLoggedTutorCourses = useCourseStore((state) => state.fetchLoggedTutorCourses);
+  async function handleUnpublishCourse() {
+    try {
+      await unpublishedCourse(course.id);
+      await fetchLoggedTutorCourses();
+      toast.success("Curso despublicado com sucesso.");
+    } catch (e) {
+      toast.error("Curso não foi despublicado.");
+      console.error(e);
+    }
+  }
+
   return (
     <div className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700  hover:scale-105 transition-transform duration-300 ease-in-out">
       <a href={Constants.APP_ROUTES.TEACHER.EDIT_COURSES(course.id)}>
@@ -32,13 +50,28 @@ function CoursesCard({ course }: { course: ICourse }) {
 
         <div className="w-full flex flex-row justify-end">
           {course.status === COURSE_STATUS.PUBLISHED && (
-            <a
-              href={Constants.APP_ROUTES.TEACHER.EDIT_COURSES(course.id)}
-              className="self-end flex flex-row gap-2 items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-green-400 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
-            >
-              <span>Ver</span>
-              <ArrowRight className="size-4" />
-            </a>
+            <div className="flex flex-row gap-2">
+              <CustomAlertDialog
+                title={`Tem certeza que deseja despublicar o curso ${course.title}?`}
+                description="Esta ação só pode ser desfeita abrindo o curso e publicando novamente."
+                onAction={handleUnpublishCourse}
+                open={open}
+                setOpen={setOpen}
+              >
+                <button className="self-end flex flex-row gap-2 items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-400 rounded-lg hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  <span>Despublicar</span>
+                  <EyeOff className="h-5 w-5" />
+                </button>
+              </CustomAlertDialog>
+
+              <a
+                href={Constants.APP_ROUTES.TEACHER.EDIT_COURSES(course.id)}
+                className="self-end flex flex-row gap-2 items-center px-3 py-2 text-sm font-medium text-center text-white bg-primary rounded-lg hover:bg-green-400 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+              >
+                <span>Ver</span>
+                <ArrowRight className="size-4" />
+              </a>
+            </div>
           )}
           {course.status === COURSE_STATUS.DRAFT && (
             <a

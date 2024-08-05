@@ -16,6 +16,7 @@ import {
   saveCourse,
   saveLesson,
   saveModule,
+  unpublishCourse,
   updateCourse,
   updateLesson,
   updateModule,
@@ -105,6 +106,7 @@ interface ICourseStoreState {
   canCourseBeSaved: boolean;
   setCanCourseBeSaved: (value: boolean) => void;
   reset: () => void;
+  unpublishCourse: (courseId: string) => void;
 }
 
 const useCourseStore = create<ICourseStoreState>((set) => ({
@@ -127,6 +129,17 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   },
   setError: (value: string) => {
     set({ error: value });
+  },
+  unpublishCourse: async (courseId: string) => {
+    set({ loading: true });
+    try {
+      await unpublishCourse(courseId);
+      set({ loading: false });
+    } catch (error) {
+      set({ error: error.message });
+    } finally {
+      set({ loading: false });
+    }
   },
   addModule: async (module: IModuleDto) => {
     set({ loading: true });

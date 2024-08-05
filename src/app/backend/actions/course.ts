@@ -64,6 +64,9 @@ export async function updateLesson(
 export async function deleteLesson(courseId: string, moduleId: string, lessonId: string): Promise<void> {
   return CourseManager.removeLesson(courseId, moduleId, lessonId);
 }
+export async function unpublishCourse(courseId: string): Promise<void> {
+  return CourseManager.unpublishCourse(courseId);
+}
 
 export async function uploadVideo(file: File, onProgress: (percentage: number) => void): Promise<IUploadResponse> {
   return VideoManager.uploadVideoFile(file, onProgress);

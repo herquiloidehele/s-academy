@@ -1,4 +1,5 @@
 import {
+  COURSE_STATUS,
   ICourse,
   ICourseDto,
   ILesson,
@@ -257,7 +258,7 @@ class CourseManager {
 
       Logger.debug(this.LOG_TAG, `Course saved:`, [savedCourse]);
 
-      return JSON.parse(JSON.stringify(courseDto));
+      return JSON.parse(JSON.stringify(savedCourse));
     } catch (e) {
       Logger.error(this.LOG_TAG, `Error saving course:`, [courseDataObject, e]);
     }
@@ -298,7 +299,7 @@ class CourseManager {
         return Promise.reject("Course updated saved");
       }
 
-      return JSON.parse(JSON.stringify(courseDto));
+      return JSON.parse(JSON.stringify(updatedCourse));
     } catch (e) {
       Logger.error(this.LOG_TAG, `Error updating course:`, [courseDataObject, e]);
     }
@@ -457,6 +458,32 @@ class CourseManager {
       Logger.debug(this.LOG_TAG, `Lesson removed from module:`, [lessonId, moduleId, courseId]);
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error removing lesson from module:`, [lessonId, moduleId, courseId]);
+      return Promise.reject(error);
+    }
+  }
+
+  public async unpublishCourse(courseId: string): Promise<void> {
+    Logger.debug(this.LOG_TAG, `Unpublishing course: ${courseId}`);
+
+    try {
+      const courseRef = await FirestoreService.getDocumentRefById(FirebaseCollections.COURSES, courseId);
+      if (!courseRef) {
+        Logger.error(this.LOG_TAG, `Course not found: ${courseId}`);
+        return Promise.reject("Course not found");
+      }
+
+      const updatedCourse = await FirestoreService.updateDocument(FirebaseCollections.COURSES, courseId, {
+        status: COURSE_STATUS.DRAFT,
+      });
+
+      if (!updatedCourse) {
+        Logger.error(this.LOG_TAG, `Course not unpublished: ${courseId}`);
+        return Promise.reject("Course not unpublished");
+      }
+
+      Logger.debug(this.LOG_TAG, `Course unpublished: ${courseId}`);
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error unpublishing course: ${courseId}`, error);
       return Promise.reject(error);
     }
   }

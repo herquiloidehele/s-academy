@@ -21,6 +21,7 @@ interface AlertDialogProps {
   onAction: () => void;
   onCancel?: () => void;
   open: boolean;
+  loading?: boolean;
   setOpen: (open: boolean) => void;
 }
 

@@ -27,6 +27,8 @@ function CourseFormInformation() {
   const loading = useCourseStore((state) => state.loading);
   const videoUploadPercentage = useCourseStore((state) => state.videoUploadPercentage);
 
+  const [isLoading, setIsLoading] = React.useState(false);
+
   const form = useForm<z.infer<typeof courseBasicInformationformSchema>>({
     resolver: zodResolver(courseBasicInformationformSchema),
     defaultValues: {
@@ -40,7 +42,11 @@ function CourseFormInformation() {
     },
   });
 
+  useEffect(() => {
+    setIsLoading(loading);
+  }, [loading]);
   async function onSubmit(values: z.infer<typeof courseBasicInformationformSchema>) {
+    setIsLoading(true);
     try {
       const courseId = useCourseStore.getState?.().courseDto?.id;
       if (!courseId) {
@@ -212,7 +218,7 @@ function CourseFormInformation() {
             />
           </div>
           <DialogFooter>
-            <FormButtonWithLoader label={"Próximo"} loading={loading} />
+            <FormButtonWithLoader label={"Próximo"} loading={isLoading} />
           </DialogFooter>
         </form>
       </Form>

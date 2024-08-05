@@ -170,14 +170,15 @@ class CourseManager {
     }
   }
 
-  public async getCoursesByTutorId(tutorId: string): Promise<ICourse[]> {
+  public async getCoursesByTutorsId(tutorId: string): Promise<ICourse[]> {
     Logger.debug(this.LOG_TAG, `Getting courses by tutor ID`);
+    const tutorRef = await FirestoreService.getDocumentRefById(FirebaseCollections.TUTORS, tutorId);
 
     try {
       const courses = await FirestoreService.getDocumentsByQuery<ICourse>(FirebaseCollections.COURSES, {
-        field: "tutorId",
+        field: "tutorRef",
         operator: "==",
-        value: tutorId,
+        value: tutorRef,
       });
 
       Logger.debug(this.LOG_TAG, `Subscriptions found`, [courses]);
@@ -226,7 +227,7 @@ class CourseManager {
   public async saveCourse(courseDto: ICourseDto): Promise<ICourse> {
     Logger.debug(this.LOG_TAG, `Saving course:`, [courseDto]);
 
-    const tutorRef = await FirestoreService.getDocumentRefById(FirebaseCollections.USERS, courseDto.tutorId!);
+    const tutorRef = await FirestoreService.getDocumentRefById(FirebaseCollections.TUTORS, courseDto.tutorId!);
     if (!tutorRef) throw new Error("Tutor not found");
 
     const courseDataObject = {
@@ -242,7 +243,7 @@ class CourseManager {
       description: courseDto.description,
       promoVideoRef: courseDto.promoVideoRef,
       promoVideoThumbnail: courseDto.promoVideoThumbnail,
-      tutorRef: courseDto.tutorRef,
+      tutorRef: tutorRef,
     };
 
     Logger.debug(this.LOG_TAG, `Course data object:`, [courseDto, courseDto.id]);
@@ -267,7 +268,7 @@ class CourseManager {
   public async updateCourse(courseDto: ICourseDto): Promise<ICourse> {
     Logger.debug(this.LOG_TAG, `Updating course:`, [courseDto]);
 
-    const tutorRef = await FirestoreService.getDocumentRefById(FirebaseCollections.USERS, courseDto.tutorId!);
+    const tutorRef = await FirestoreService.getDocumentRefById(FirebaseCollections.TUTORS, courseDto.tutorId!);
     if (!tutorRef) throw new Error("Tutor not found");
 
     const courseDataObject = {
@@ -283,7 +284,7 @@ class CourseManager {
       description: courseDto.description,
       promoVideoRef: courseDto.promoVideoRef,
       promoVideoThumbnail: courseDto.promoVideoThumbnail,
-      tutorRef: courseDto.tutorRef,
+      tutorRef: tutorRef,
     };
 
     Logger.debug(this.LOG_TAG, `Updating course:`, [courseDto, courseDataObject]);

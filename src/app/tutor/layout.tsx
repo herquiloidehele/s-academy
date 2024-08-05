@@ -5,11 +5,8 @@ import TutorLayoutContent from "@/components/tutor-layout-content/TutorLayoutCon
 import useTutorStore from "@/app/tutor/tutorStore";
 
 const Layout = async ({ children }) => {
-  const setLoggedTutor = useTutorStore.getState?.().setLoggedTutor;
+  await useTutorStore.getState?.().setLoggedTutor();
 
-  if (setLoggedTutor) {
-    await setLoggedTutor();
-  }
   return (
     <ProtectedRoutes allowedRoles={[USER_ROLES.TUTOR]}>
       <TutorLayoutContent>{children}</TutorLayoutContent>

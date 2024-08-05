@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import FormStepper from "@/app/tutor/products/courses/components/FormStepper";
 import CourseFormInformation from "@/app/tutor/products/courses/components/CourseFormInformation";
 import { EyeIcon, InformationCircleIcon } from "@heroicons/react/24/outline";
@@ -12,8 +12,7 @@ import Loading from "@/components/loading/Loading";
 
 function FormPage({ params }: { params: { id: string } }) {
   const router = useRouter();
-  const pageLoading = useCourseStore((state) => state.pageLoading);
-  const resetStore = useCourseStore((state) => state.reset);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     useCourseStore.getState?.().setPageLoading(true);
@@ -21,7 +20,7 @@ function FormPage({ params }: { params: { id: string } }) {
     if (params.id) {
       const fetchCourse = async () => {
         await useCourseStore.getState?.().setCourseDtoData(params.id);
-        useCourseStore.getState?.().setPageLoading(false);
+        setIsLoading(false);
       };
       fetchCourse();
     }
@@ -58,7 +57,7 @@ function FormPage({ params }: { params: { id: string } }) {
   useEffect(() => {
     setCurrentFormStep(formSteps[currentStepIndex]);
   }, [currentStepIndex]);
-  if (pageLoading) {
+  if (isLoading) {
     return <Loading />;
   } else
     return (
@@ -68,7 +67,6 @@ function FormPage({ params }: { params: { id: string } }) {
           steps={formSteps}
           onBackClick={() => {
             router.back();
-            resetStore();
           }}
         />
 

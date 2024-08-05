@@ -27,7 +27,7 @@ export async function getSubscribedCourses() {
 }
 
 export async function fetchCoursesByTutorsID(tutorId: string): Promise<ICourse[]> {
-  return CourseManager.getCoursesByTutorId(tutorId);
+  return CourseManager.getCoursesByTutorsId(tutorId);
 }
 
 export async function saveCourse(courseDto: ICourseDto): Promise<ICourse> {

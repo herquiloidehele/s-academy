@@ -22,9 +22,9 @@ import {
   updateModule,
 } from "@/app/backend/actions/course";
 import { IOptionType } from "@/components/multi-selector/MultiSelect";
-import getAuthUser from "@/app/backend/actions/auth";
 import FirebaseClientService from "@/app/backend/services/FirebaseClientService";
 import VideoManager, { IUploadResponse } from "@/app/backend/business/course/VideoManager";
+import useTutorStore from "@/app/tutor/tutorStore";
 
 const moduleList = [
   // ... (seu conteúdo de moduleList aqui)
@@ -105,7 +105,7 @@ interface ICourseStoreState {
   updateLesson: (lesson: ILessonDto) => void;
   canCourseBeSaved: boolean;
   setCanCourseBeSaved: (value: boolean) => void;
-  reset: () => void;
+  resetCourseFormData: () => void;
   unpublishCourse: (courseId: string) => void;
 }
 
@@ -328,8 +328,9 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   fetchLoggedTutorCourses: async () => {
     set({ loading: true });
     try {
-      const loggedTutor = await getAuthUser();
-      const response = await fetchCoursesByTutorsID(loggedTutor?.email!);
+      await useTutorStore.getState?.().setLoggedTutor();
+      const loggedTutor = useTutorStore.getState?.().loggedTutor;
+      const response = await fetchCoursesByTutorsID(loggedTutor?.id!);
       const courses = response as ICourse[];
       set((state) => ({ ...state, courses: courses || [] }));
     } catch (error) {
@@ -340,8 +341,12 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   },
   saveCourse: async (courseNewData: ICourseDto) => {
     try {
-      const loggedTutor = await getAuthUser();
+      await useTutorStore.getState?.().setLoggedTutor();
+      const loggedTutor = useTutorStore.getState?.().loggedTutor;
 
+      if (!loggedTutor) {
+        throw new Error("Tutor data is missing");
+      }
       set((state) => ({ ...state, loading: true }));
 
       const courseDto = useCourseStore.getState?.().courseDto;
@@ -398,7 +403,8 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   updateCourse: async (newCourseData: ICourseDto) => {
     try {
       set({ loading: true });
-      const loggedTutor = await getAuthUser();
+      await useTutorStore.getState?.().setLoggedTutor();
+      const loggedTutor = useTutorStore.getState?.().loggedTutor;
 
       const courseId = useCourseStore.getState?.().courseDto?.id;
 
@@ -476,10 +482,9 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       set({ loading: false });
     } finally {
       set({ loading: false });
-      useCourseStore.getState?.().reset();
     }
   },
-  reset: () => {
+  resetCourseFormData: () => {
     set({
       courseDto: {} as ICourseDto,
     });

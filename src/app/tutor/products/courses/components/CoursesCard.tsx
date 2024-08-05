@@ -20,13 +20,13 @@ function CoursesCard({ course }: { course: ICourse }) {
       </a>
       <div className="p-5">
         <a href={`/tutor/products/courses/form/${course.id}`}>
-          <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">
+          <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white break-words">
             {truncateText(course.title, 25)}{" "}
             {course.status === COURSE_STATUS.PUBLISHED && <Badge variant="default">Publicado</Badge>}
             {course.status === COURSE_STATUS.DRAFT && <Badge variant="secondary">Rascunho</Badge>}
           </h5>
         </a>
-        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">
+        <p className="mb-3 font-normal text-gray-700 dark:text-gray-400 break-words">
           {truncateText(course.description || "", 75)}
         </p>
 

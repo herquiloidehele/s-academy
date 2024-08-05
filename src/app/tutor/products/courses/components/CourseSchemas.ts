@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-const urlSchema = z.string().url({ message: "Deve ser uma URL válida." });
+const urlSchema = z.string().url({ message: "Deve ser um endereço válido." });
 
 // Define um esquema para validação de arquivos (só para tipos de arquivo específicos)
 const fileSchema = z.instanceof(File).refine(

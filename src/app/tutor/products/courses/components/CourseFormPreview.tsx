@@ -26,7 +26,7 @@ function CourseFormPreview() {
       toast.success("Curso publicado com sucesso");
       router.push(Constants.APP_ROUTES.TEACHER.COURSES);
     } catch (e) {
-      toast.success("Erro ao publicar curso");
+      toast.error("Erro ao publicar curso");
     }
   };
   return (

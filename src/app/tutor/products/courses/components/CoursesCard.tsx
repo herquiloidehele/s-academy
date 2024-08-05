@@ -2,7 +2,7 @@
 import React from "react";
 import { truncateText } from "@/utils/functions";
 import { COURSE_STATUS, ICourse } from "@/app/backend/business/course/CourseData";
-import { ArrowRight, EyeOff, Trash } from "lucide-react";
+import { ArrowRight, EyeOff, Loader2Icon, Trash } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Constants } from "@/utils/Constants";
 import { CustomAlertDialog } from "@/components/alert-dialog/AlertDialog";
@@ -14,7 +14,9 @@ function CoursesCard({ course }: { course: ICourse }) {
   const unpublishedCourse = useCourseStore((state) => state.unpublishCourse);
   const [open, setOpen] = React.useState(false);
   const fetchLoggedTutorCourses = useCourseStore((state) => state.fetchLoggedTutorCourses);
+  const [isLoading, setIsLoading] = React.useState(false);
   async function handleUnpublishCourse() {
+    setIsLoading(true);
     try {
       await unpublishedCourse(course.id);
       await fetchLoggedTutorCourses();
@@ -22,10 +24,13 @@ function CoursesCard({ course }: { course: ICourse }) {
     } catch (e) {
       toast.error("Curso não foi despublicado, ocorreu um erro");
       console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   }
 
   async function handleDeleteCourse() {
+    setIsLoading(true);
     try {
       await deleteCourse(course.id);
       await fetchLoggedTutorCourses();
@@ -33,6 +38,8 @@ function CoursesCard({ course }: { course: ICourse }) {
     } catch (e) {
       toast.error("Curso não foi eliminado, ocorreu um erro.");
       console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -71,8 +78,16 @@ function CoursesCard({ course }: { course: ICourse }) {
                 setOpen={setOpen}
               >
                 <button className="self-end flex flex-row gap-2 items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-400 rounded-lg hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                  <span>Despublicar</span>
-                  <EyeOff className="h-5 w-5" />
+                  {isLoading ? (
+                    <div className="flex flex-row gap-2">
+                      <Loader2Icon className="size-6 animate-spin" />
+                    </div>
+                  ) : (
+                    <div className="flex flex-row gap-2">
+                      <span>Despublicar</span>
+                      <EyeOff className="h-5 w-5" />
+                    </div>
+                  )}
                 </button>
               </CustomAlertDialog>
 
@@ -95,8 +110,16 @@ function CoursesCard({ course }: { course: ICourse }) {
                 setOpen={setOpen}
               >
                 <button className="self-end flex flex-row gap-2 items-center px-3 py-2 text-sm font-medium text-center text-white bg-red-400 rounded-lg hover:bg-red-600 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                  <span>Eliminar</span>
-                  <Trash className="h-5 w-5" />
+                  {isLoading ? (
+                    <div className="flex flex-row gap-2">
+                      <Loader2Icon className="size-6 animate-spin" />
+                    </div>
+                  ) : (
+                    <div className="flex flex-row gap-2">
+                      <span>Eliminar</span>
+                      <Trash className="h-5 w-5" />
+                    </div>
+                  )}
                 </button>
               </CustomAlertDialog>
               <a

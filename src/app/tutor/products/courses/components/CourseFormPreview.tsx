@@ -30,14 +30,14 @@ function CourseFormPreview() {
     }
   };
   return (
-    <div className="container mx-auto p-4">
+    <div className="container flex flex-col break-words mx-auto p-4">
       <div className="grid grid-cols-2 gap-2 p-4 rounded-md shadow-md space-y-4">
         <div>
           <strong className="block font-bold">Nome:</strong>
           <p>{courseDto?.title}</p>
         </div>
         <div>
-          <strong className="block font-bold">Descrição:</strong>
+          <strong className="block font-bold  w-fit">Descrição:</strong>
           <p>{courseDto?.description}</p>
         </div>
         <div>

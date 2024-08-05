@@ -6,16 +6,15 @@ import { ArrowLeft } from "lucide-react";
 function FormStepper({ steps, onBackClick, title }: { steps: IFormStep[]; onBackClick?: () => void; title: string }) {
   const setCurrentStepIndex = useCourseStore((state) => state.setCurrentStepIndex);
   const currentStepIndex = useCourseStore((state) => state.currentStepIndex);
+  const canCourseBeSaved = useCourseStore((state) => state.canCourseBeSaved);
 
-  // Set the initial step when the component mounts
   useEffect(() => {
     setCurrentStepIndex(0);
   }, [setCurrentStepIndex]);
 
-  // Handler for clicking a step
   const handleStepClick = (index: number) => {
     if (index >= 0 && index < steps.length) {
-      setCurrentStepIndex(index);
+      if (canCourseBeSaved) setCurrentStepIndex(index);
     }
   };
 

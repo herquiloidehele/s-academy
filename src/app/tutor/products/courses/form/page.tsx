@@ -11,6 +11,8 @@ import { useRouter } from "next/navigation";
 
 function FormPage() {
   const router = useRouter();
+  const resetStore = useCourseStore((state) => state.reset);
+
   const formSteps: IFormStep[] = [
     {
       title: "Informações do Curso",
@@ -51,6 +53,7 @@ function FormPage() {
         steps={formSteps}
         onBackClick={() => {
           router.back();
+          resetStore();
         }}
       />
 

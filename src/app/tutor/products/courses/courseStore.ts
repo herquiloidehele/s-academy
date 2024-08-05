@@ -449,17 +449,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   },
   reset: () => {
     set({
-      courses: [],
-      courseDto: null,
-      currentFormStep: {} as IFormStep,
-      lessons: [],
-      modules: moduleList,
-      selectedCategories: [],
-      categoriesOptions: categoriesOptions,
-      currentStepIndex: 0,
-      canCourseBeSaved: false,
-      loading: false,
-      error: "",
+      courseDto: {} as ICourseDto,
     });
   },
   setCourseDtoData: async (id: string) => {

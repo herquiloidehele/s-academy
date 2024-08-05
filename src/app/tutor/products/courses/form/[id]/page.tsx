@@ -13,6 +13,7 @@ import Loading from "@/components/loading/Loading";
 function FormPage({ params }: { params: { id: string } }) {
   const router = useRouter();
   const pageLoading = useCourseStore((state) => state.pageLoading);
+  const resetStore = useCourseStore((state) => state.reset);
 
   useEffect(() => {
     useCourseStore.getState?.().setPageLoading(true);
@@ -67,6 +68,7 @@ function FormPage({ params }: { params: { id: string } }) {
           steps={formSteps}
           onBackClick={() => {
             router.back();
+            resetStore();
           }}
         />
 

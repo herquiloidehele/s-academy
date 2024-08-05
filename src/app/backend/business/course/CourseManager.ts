@@ -163,7 +163,7 @@ class CourseManager {
 
       Logger.debug(this.LOG_TAG, `Courses found`, [courses]);
 
-      return courses;
+      return JSON.parse(JSON.stringify(courses));
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error getting all courses`, error);
       return [];

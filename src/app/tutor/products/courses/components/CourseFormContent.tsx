@@ -3,7 +3,6 @@ import React from "react";
 import { Accordion } from "@/components/ui/accordion";
 import useCourseStore from "@/app/tutor/products/courses/courseStore";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
-import { Constants } from "@/utils/Constants";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { ModuleFormDialog } from "@/app/tutor/products/courses/components/ModuleFormDialog";
@@ -31,7 +30,6 @@ function CourseFormContent() {
               size={ButtonSize.SMALL}
               fillType={FillType.FILLED}
               type={ButtonType.PRIMARY}
-              onClick={() => router.push(Constants.APP_ROUTES.TEACHER.NEW_COURSES)}
             >
               <div className="flex flex-row gap-2 justify-center items-center">
                 <PlusIcon className="size-8" />
@@ -63,7 +61,6 @@ function CourseFormContent() {
             size={ButtonSize.SMALL}
             fillType={FillType.FILLED}
             type={ButtonType.PRIMARY}
-            onClick={() => router.push(Constants.APP_ROUTES.TEACHER.NEW_COURSES)}
           >
             <div className="flex flex-row gap-2 justify-center items-center">
               <PlusIcon className="size-8" />

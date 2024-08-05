@@ -4,7 +4,6 @@ import { ILesson } from "@/app/backend/business/course/CourseData";
 import { LessonFormDialog } from "@/app/tutor/products/courses/components/LessonFormDialog";
 import React from "react";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
-import { Constants } from "@/utils/Constants";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { useRouter } from "next/navigation";
 import { CustomAlertDialog } from "@/components/alert-dialog/AlertDialog";
@@ -38,7 +37,6 @@ export function LessonModuleListItems({ lessons, moduleId }: { lessons: ILesson[
             size={ButtonSize.SMALL}
             fillType={FillType.FILLED}
             type={ButtonType.SECONDARY}
-            onClick={() => router.push(Constants.APP_ROUTES.TEACHER.NEW_COURSES)}
             className="mt-4"
           >
             <div className="flex flex-row gap-2 justify-center items-center">
@@ -60,7 +58,6 @@ export function LessonModuleListItems({ lessons, moduleId }: { lessons: ILesson[
             size={ButtonSize.SMALL}
             fillType={FillType.FILLED}
             type={ButtonType.SECONDARY}
-            onClick={() => router.push(Constants.APP_ROUTES.TEACHER.NEW_COURSES)}
           >
             <div className="flex flex-row gap-2 justify-center items-center">
               <PlusIcon className="w-5 h-5" />

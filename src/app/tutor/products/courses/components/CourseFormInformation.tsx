@@ -14,6 +14,7 @@ import { MultiSelect } from "@/components/multi-selector/MultiSelect";
 import { toast } from "sonner";
 import FormButtonWithLoader from "@/components/FormButton/FormButtonWithLoader";
 import { getCategoryOptions } from "@/utils/functions";
+import ProgressBar from "@/components/progress-bar/ProgressBar";
 
 function CourseFormInformation() {
   const saveCourseDtoInfo = useCourseStore((state) => state.saveCourse);
@@ -193,17 +194,18 @@ function CourseFormInformation() {
                 <FormItem>
                   <FormLabel className="font-light leading-tight">Vídeo Promoção</FormLabel>
                   <FormControl>
-                    <FileUploader
-                      defaultFile={courseDto?.promoVideoRef}
-                      loading={loading}
-                      uploadedPercentage={videoUploadPercentage}
-                      id="promoVideoFile"
-                      mimeType="video/*"
-                      fileTypes={["MP4"]}
-                      onFileChange={(file) => {
-                        field.onChange(file);
-                      }}
-                    />
+                    <div className="flex flex-col gap-1">
+                      <FileUploader
+                        defaultFile={courseDto?.promoVideoRef}
+                        id="promoVideoFile"
+                        mimeType="video/*"
+                        fileTypes={["MP4"]}
+                        onFileChange={(file) => {
+                          field.onChange(file);
+                        }}
+                      />
+                      <ProgressBar percentage={videoUploadPercentage} />
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

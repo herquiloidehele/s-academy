@@ -20,6 +20,7 @@ import { v4 as uuidv4 } from "uuid";
 import { ILessonDto } from "@/app/backend/business/course/CourseData";
 import { toast } from "sonner";
 import FormButtonWithLoader from "@/components/FormButton/FormButtonWithLoader";
+import ProgressBar from "@/components/progress-bar/ProgressBar";
 
 export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: string; moduleId: string }) {
   const [open, setOpen] = useState(false);
@@ -203,16 +204,17 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
                     <FormItem className="col-span-2">
                       <FormLabel className="font-light leading-tight">Video Aula</FormLabel>
                       <FormControl>
-                        <FileUploader
-                          loading={loading}
-                          defaultFile={lessonData?.videoFile}
-                          uploadedPercentage={videoUploadPercentage}
-                          mimeType="video/*"
-                          fileTypes={["MP4"]}
-                          onFileChange={(file) => {
-                            field.onChange(file);
-                          }}
-                        />
+                        <div className="flex flex-col gap-1">
+                          <FileUploader
+                            defaultFile={lessonData?.videoFile}
+                            mimeType="video/*"
+                            fileTypes={["MP4"]}
+                            onFileChange={(file) => {
+                              field.onChange(file);
+                            }}
+                          />
+                          <ProgressBar percentage={videoUploadPercentage} />
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>

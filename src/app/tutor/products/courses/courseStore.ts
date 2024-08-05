@@ -220,6 +220,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       set({
         courseDto: { ...courseDto, modules: updatedModules },
         progress: 0,
+        videoUploadPercentage: 0,
         canCourseBeSaved: updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
       });
     } catch (error) {
@@ -401,8 +402,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
       const response = await updateCourse(plainCourseDto);
 
-      console.log("response", response);
-      set({ courseDto: { ...response, modules: oldCourseData.modules }, loading: false });
+      set({ courseDto: { ...response, modules: oldCourseData.modules }, videoUploadPercentage: 0, loading: false });
     } catch (error) {
       set({ error: error.message });
     } finally {

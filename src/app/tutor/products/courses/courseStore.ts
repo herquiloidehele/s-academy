@@ -345,8 +345,9 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     }
   },
 
-  updateCourse: async (course: ICourseDto) => {
+  updateCourse: async (newCourseData: ICourseDto) => {
     try {
+      set({ loading: true });
       const loggedTutor = await getAuthUser();
 
       const courseId = useCourseStore.getState?.().courseDto?.id;
@@ -355,36 +356,48 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
         throw new Error("Course id is missing");
       }
 
-      const courseDto = useCourseStore.getState?.().courseDto;
+      const oldCourseData = useCourseStore.getState?.().courseDto;
 
-      if (!courseDto) {
+      if (!oldCourseData) {
         throw new Error("Course data is missing");
       }
 
-      let coverUrl = courseDto.coverUrl;
+      let coverUrl = oldCourseData.coverUrl;
 
-      if (course.coverFile instanceof File) {
-        coverUrl = await FirebaseClientService.uploadFile(course.coverFile);
+      if (newCourseData.coverFile instanceof File) {
+        coverUrl = await FirebaseClientService.uploadFile(newCourseData.coverFile);
       }
 
-      set((state) => ({
-        ...state,
-        loading: true,
-        courseDto: {
-          ...courseDto,
-          ...course,
-          id: courseId,
-          status: COURSE_STATUS.DRAFT,
-          coverUrl: coverUrl,
-          tutorId: loggedTutor?.id,
-        } as ICourseDto,
-      }));
+      let uploadedVideo = {
+        videoId: oldCourseData.promoVideoRef,
+        thumbnailUrl: oldCourseData.promoVideoThumbnail,
+      };
 
-      const plainCourseDto = JSON.parse(JSON.stringify({ ...useCourseStore.getState().courseDto })) as ICourseDto;
+      if (newCourseData.promoVideoFile) {
+        uploadedVideo = await VideoManager.uploadVideoFile(
+          newCourseData.promoVideoFile!,
+          (percentage) => {
+            useCourseStore.getState?.().setVideoUploadPercentage(percentage);
+          },
+          newCourseData.title,
+        );
+      }
+
+      const plainCourseDto = JSON.parse(
+        JSON.stringify({
+          ...newCourseData,
+          status: COURSE_STATUS.DRAFT,
+          coverUrl,
+          tutorId: loggedTutor?.id,
+          promoVideoRef: uploadedVideo.videoId === 0 ? undefined : uploadedVideo.videoId,
+          promoVideoThumbnail: uploadedVideo.thumbnailUrl,
+        }),
+      ) as ICourseDto;
 
       const response = await updateCourse(plainCourseDto);
 
-      set({ courseDto: response, loading: false });
+      console.log("response", response);
+      set({ courseDto: { ...response, modules: oldCourseData.modules }, loading: false });
     } catch (error) {
       set({ error: error.message });
     } finally {

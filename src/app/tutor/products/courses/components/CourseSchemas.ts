@@ -35,10 +35,7 @@ export const courseBasicInformationformSchema = z.object({
     .any()
     .refine(
       (value) =>
-        value === null ||
-        value === undefined ||
-        fileSchema.safeParse(value).success ||
-        urlSchema.safeParse(value).success,
+        value === null || value === undefined || fileSchema.safeParse(value).success || typeof value === "number",
       { message: "Deve ser um arquivo válido ou uma URL válida." },
     )
     .optional()

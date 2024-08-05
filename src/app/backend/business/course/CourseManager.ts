@@ -440,7 +440,7 @@ class CourseManager {
 
       Logger.debug(this.LOG_TAG, `Lesson updated in module:`, [updatedLesson, lessonId, moduleId, courseId]);
 
-      return JSON.parse(JSON.stringify({ id: lessonId, ...lessonDto }));
+      return JSON.parse(JSON.stringify(lessonDto));
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error updating lesson in module:`, [lessonDto, lessonId, moduleId, courseId]);
       return Promise.reject(error);

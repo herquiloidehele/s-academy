@@ -35,7 +35,7 @@ function CourseFormInformation() {
       discount: courseDto?.discount || 0,
       categories: courseDto?.categories || [],
       coverFile: courseDto?.coverUrl,
-      promoVideoFile: courseDto?.promoVideoFile,
+      promoVideoFile: courseDto?.promoVideoRef,
     },
   });
 

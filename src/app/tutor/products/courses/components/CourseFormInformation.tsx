@@ -95,12 +95,31 @@ function CourseFormInformation() {
                 </FormItem>
               )}
             />
-
+            <FormField
+              control={form.control}
+              name="categories"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="font-light leading-tight">Categorias</FormLabel>
+                  <FormControl>
+                    <MultiSelect
+                      selectedOptions={selectedCategories}
+                      options={categoriesOptions}
+                      onChange={(selected) => {
+                        setSelectedCategories(selected);
+                        field.onChange(selected.map((s) => s.value));
+                      }}
+                    ></MultiSelect>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
             <FormField
               control={form.control}
               name="description"
               render={({ field }) => (
-                <FormItem>
+                <FormItem className="col-span-2">
                   <FormLabel className="font-light leading-tight">Descrição</FormLabel>
                   <FormControl>
                     <Textarea placeholder="Descrição" className="bg-smoothBackground" {...field} />
@@ -151,26 +170,7 @@ function CourseFormInformation() {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="categories"
-              render={({ field }) => (
-                <FormItem className="col-span-2">
-                  <FormLabel className="font-light leading-tight">Categorias</FormLabel>
-                  <FormControl>
-                    <MultiSelect
-                      selectedOptions={selectedCategories}
-                      options={categoriesOptions}
-                      onChange={(selected) => {
-                        setSelectedCategories(selected);
-                        field.onChange(selected.map((s) => s.value));
-                      }}
-                    ></MultiSelect>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+
             <FormField
               control={form.control}
               name="coverFile"

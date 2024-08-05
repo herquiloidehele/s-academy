@@ -61,7 +61,7 @@ function CourseFormPreview() {
         </div>
         <div>
           <strong className="block text-lg font-bold">Video Promocional:</strong>
-          {courseDto?.promoVideoRef && <VideoPlayer videoId={courseDto?.promoVideoRef!} />}
+          {courseDto?.promoVideoRef > 0 && <VideoPlayer videoId={courseDto?.promoVideoRef!} />}
         </div>
       </div>
       <div className="my-2 flex justify-end gap-2">

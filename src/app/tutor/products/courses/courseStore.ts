@@ -229,21 +229,39 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       set({ loading: false });
     }
   },
-  updateLesson: async (lesson: ILessonDto) => {
+  updateLesson: async (newLessonData: ILessonDto) => {
+    set({ loading: true });
     const courseDto = useCourseStore.getState?.().courseDto;
+    const currentModule = courseDto?.modules?.find((mod) => mod.id === newLessonData.moduleId);
+    const currentLesson = currentModule?.lessons?.find((lesson) => lesson.id === newLessonData.id);
+    newLessonData.materialUrl = currentLesson?.materialUrl || "";
+    let uploadedVideo: IUploadResponse = {
+      videoId: currentLesson.promoVideoRef || 0,
+      thumbnailUrl: currentLesson.promoVideoThumbnail || "",
+    };
 
-    const plainLesson = JSON.parse(JSON.stringify(lesson)) as ILessonDto;
-    const updatedLesson = await updateLesson(courseDto?.id!, lesson.moduleId, lesson.id, plainLesson);
-
-    let materialUrl = "";
-    if (lesson.materialFile instanceof File) {
-      materialUrl = lesson.materialFile ? await FirebaseClientService.uploadFile(lesson.materialFile) : "";
+    if (newLessonData.videoFile instanceof File) {
+      uploadedVideo = await VideoManager.uploadVideoFile(
+        newLessonData.videoFile!,
+        (percentage) => {
+          useCourseStore.getState?.().setVideoUploadPercentage(percentage);
+        },
+        newLessonData.title,
+      );
     }
+    newLessonData.videoRef = uploadedVideo.videoId;
+    newLessonData.thumbnailUrl = uploadedVideo.thumbnailUrl;
+
+    if (newLessonData.materialFile instanceof File) {
+      newLessonData.materialUrl = await FirebaseClientService.uploadFile(newLessonData.materialFile);
+    }
+
+    const plainLesson = JSON.parse(JSON.stringify(newLessonData)) as ILessonDto;
+    const updatedLesson = await updateLesson(courseDto?.id!, newLessonData.moduleId, newLessonData.id, plainLesson);
+
     const updatedModules = courseDto?.modules?.map((module) => {
       if (module.id === updatedLesson.moduleId) {
-        const updatedLessons = module.lessons?.map((l) =>
-          l.id === updatedLesson.id ? { ...updatedLesson, materialUrl: materialUrl || l.materialUrl } : l,
-        );
+        const updatedLessons = module.lessons?.map((l) => (l.id === updatedLesson.id ? updatedLesson : l));
         return { ...module, lessons: updatedLessons };
       }
       return module;
@@ -251,6 +269,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
     set({
       courseDto: { ...courseDto, modules: updatedModules },
+      loading: false,
       canCourseBeSaved: updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
     });
   },

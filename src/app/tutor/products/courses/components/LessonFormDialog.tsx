@@ -63,8 +63,8 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
           title: lessonData.title,
           description: lessonData.description,
           moduleId: lessonData.moduleId,
-          materialFile: lessonData.materialFile,
-          videoFile: lessonData.videoFile,
+          materialFile: lessonData.materialUrl || undefined,
+          videoFile: lessonData.videoRef,
         });
       }
     }
@@ -206,7 +206,7 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
                       <FormControl>
                         <div className="flex flex-col gap-1">
                           <FileUploader
-                            defaultFile={lessonData?.videoFile}
+                            defaultFile={lessonData?.videoRef}
                             mimeType="video/*"
                             fileTypes={["MP4"]}
                             onFileChange={(file) => {

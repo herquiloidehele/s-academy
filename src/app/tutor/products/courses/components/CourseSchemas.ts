@@ -51,5 +51,5 @@ export const ILessonSchema = z.object({
     .union([fileSchema, urlSchema], { message: "Deve ser um arquivo válido ou uma URL válida." })
     .optional()
     .nullable(),
-  videoFile: z.union([fileSchema, urlSchema], { message: "Deve ser um arquivo de video ou uma URL válida." }),
+  videoFile: z.union([fileSchema, vimeoIDSchema], { message: "Deve ser um arquivo válido" }).optional().nullable(),
 });

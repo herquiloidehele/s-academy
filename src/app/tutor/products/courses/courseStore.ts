@@ -107,7 +107,7 @@ interface ICourseStoreState {
 
 const useCourseStore = create<ICourseStoreState>((set) => ({
   courses: [],
-  courseDto: null,
+  courseDto: {} as ICourseDto,
   currentFormStep: {} as IFormStep,
   lessons: [],
   modules: moduleList,

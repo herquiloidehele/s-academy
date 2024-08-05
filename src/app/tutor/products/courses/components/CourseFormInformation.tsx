@@ -21,7 +21,7 @@ function CourseFormInformation() {
   const courseDto = useCourseStore((state) => state.courseDto);
   const categoriesOptions = useCourseStore((state) => state.categoriesOptions);
   const selectedCategories = useCourseStore((state) => state.selectedCategories);
-  const setSelectedSelectedCategories = useCourseStore((state) => state.setSelectedCategories);
+  const setSelectedCategories = useCourseStore((state) => state.setSelectedCategories);
   const goToNextStep = useCourseStore((state) => state.goToNextStep);
   const loading = useCourseStore((state) => state.loading);
   const videoUploadPercentage = useCourseStore((state) => state.videoUploadPercentage);
@@ -29,13 +29,13 @@ function CourseFormInformation() {
   const form = useForm<z.infer<typeof courseBasicInformationformSchema>>({
     resolver: zodResolver(courseBasicInformationformSchema),
     defaultValues: {
-      title: courseDto?.title,
-      description: courseDto?.description,
-      price: courseDto?.price,
+      title: courseDto?.title || "",
+      description: courseDto?.description || "",
+      price: courseDto?.price || 0,
       discount: courseDto?.discount || 0,
       categories: courseDto?.categories || [],
-      coverFile: courseDto?.coverUrl,
-      promoVideoFile: courseDto?.promoVideoRef,
+      coverFile: courseDto?.coverUrl || "",
+      promoVideoFile: courseDto?.promoVideoRef || 0,
     },
   });
 
@@ -57,15 +57,15 @@ function CourseFormInformation() {
   }
 
   useEffect(() => {
-    setSelectedSelectedCategories(getCategoryOptions(courseDto?.categories || []));
+    setSelectedCategories(getCategoryOptions(courseDto?.categories || []));
 
     form.reset({
-      title: courseDto?.title,
-      description: courseDto?.description,
-      price: courseDto?.price,
+      title: courseDto?.title || "",
+      description: courseDto?.description || "",
+      price: courseDto?.price || 0,
       discount: courseDto?.discount || 0,
       categories: courseDto?.categories || [],
-      coverFile: courseDto?.coverUrl,
+      coverFile: courseDto?.coverUrl || "",
       promoVideoFile: courseDto?.promoVideoFile,
     });
   }, [courseDto]);
@@ -155,7 +155,7 @@ function CourseFormInformation() {
                       selectedOptions={selectedCategories}
                       options={categoriesOptions}
                       onChange={(selected) => {
-                        setSelectedSelectedCategories(selected);
+                        setSelectedCategories(selected);
                         field.onChange(selected.map((s) => s.value));
                       }}
                     ></MultiSelect>

@@ -306,37 +306,49 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       set((state) => ({ ...state, loading: false }));
     }
   },
-  saveCourse: async (course: ICourseDto) => {
+  saveCourse: async (courseNewData: ICourseDto) => {
     try {
       const loggedTutor = await getAuthUser();
 
-      set((state) => ({ ...state, loading: true, courseDto: { ...course, tutorId: loggedTutor?.id } as ICourseDto }));
+      set((state) => ({ ...state, loading: true }));
 
       const courseDto = useCourseStore.getState?.().courseDto;
+      courseNewData = {
+        ...courseNewData,
+        tutorId: loggedTutor?.id,
+        coverUrl: courseDto?.coverUrl,
+        promoVideoRef: courseDto?.promoVideoRef,
+        promoVideoThumbnail: courseDto?.promoVideoThumbnail,
+      };
 
       if (!courseDto) {
         throw new Error("Course data is missing");
       }
 
-      const coverUrl = await FirebaseClientService.uploadFile(courseDto.coverFile!);
+      if (courseNewData.coverFile instanceof File) {
+        courseNewData.coverUrl = await FirebaseClientService.uploadFile(courseNewData.coverFile);
+      }
 
-      let uploadedVideo: IUploadResponse = { videoId: 0, thumbnailUrl: "" };
+      let uploadedVideo: IUploadResponse = {
+        videoId: courseNewData.promoVideoRef || 0,
+        thumbnailUrl: courseNewData.promoVideoThumbnail || "",
+      };
 
-      if (courseDto.promoVideoFile) {
+      if (courseNewData.promoVideoFile instanceof File) {
         uploadedVideo = await VideoManager.uploadVideoFile(
-          courseDto.promoVideoFile!,
+          courseNewData.promoVideoFile!,
           (percentage) => {
             useCourseStore.getState?.().setVideoUploadPercentage(percentage);
           },
-          courseDto.title,
+          courseNewData.title,
         );
       }
+
       const plainCourseDto = JSON.parse(
         JSON.stringify({
-          ...courseDto,
+          ...courseNewData,
           status: COURSE_STATUS.DRAFT,
-          coverUrl,
-          promoVideoRef: uploadedVideo.videoId === 0 ? undefined : uploadedVideo.videoId,
+          promoVideoRef: uploadedVideo.videoId,
           promoVideoThumbnail: uploadedVideo.thumbnailUrl,
         }),
       ) as ICourseDto;
@@ -395,14 +407,18 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
           status: COURSE_STATUS.DRAFT,
           coverUrl,
           tutorId: loggedTutor?.id,
-          promoVideoRef: uploadedVideo.videoId === 0 ? undefined : uploadedVideo.videoId,
+          promoVideoRef: uploadedVideo.videoId,
           promoVideoThumbnail: uploadedVideo.thumbnailUrl,
         }),
       ) as ICourseDto;
 
       const response = await updateCourse(plainCourseDto);
 
-      set({ courseDto: { ...response, modules: oldCourseData.modules }, videoUploadPercentage: 0, loading: false });
+      set({
+        courseDto: { ...plainCourseDto, id: response.id, modules: oldCourseData.modules },
+        videoUploadPercentage: 0,
+        loading: false,
+      });
     } catch (error) {
       set({ error: error.message });
     } finally {

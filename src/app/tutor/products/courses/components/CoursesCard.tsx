@@ -19,7 +19,7 @@ function CoursesCard({ course }: { course: ICourse }) {
         />
       </a>
       <div className="p-5">
-        <a href={`/tutor/products/courses/form/${course.id}`}>
+        <a href={Constants.APP_ROUTES.TEACHER.EDIT_COURSES(course.id)}>
           <h5 className="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white break-words">
             {truncateText(course.title, 25)}{" "}
             {course.status === COURSE_STATUS.PUBLISHED && <Badge variant="default">Publicado</Badge>}

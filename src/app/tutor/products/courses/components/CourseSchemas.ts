@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 const urlSchema = z.string().url({ message: "Deve ser um endereço válido." });
+const vimeoIDSchema = z.number({ message: "Deve ser um id válido." });
 
 // Define um esquema para validação de arquivos (só para tipos de arquivo específicos)
 const fileSchema = z.instanceof(File).refine(
@@ -31,15 +32,7 @@ export const courseBasicInformationformSchema = z.object({
     .min(0, { message: "O desconto deve ser um número positivo." })
     .max(100, { message: "O desconto não pode exceder 100%." }),
   coverFile: z.union([fileSchema, urlSchema], { message: "Deve ser um arquivo válido ou uma URL válida." }),
-  promoVideoFile: z
-    .any()
-    .refine(
-      (value) =>
-        value === null || value === undefined || fileSchema.safeParse(value).success || typeof value === "number",
-      { message: "Deve ser um arquivo válido ou uma URL válida." },
-    )
-    .optional()
-    .nullable(),
+  promoVideoFile: z.union([fileSchema, vimeoIDSchema], { message: "Deve ser um arquivo válido" }).optional().nullable(),
   categories: z.array(z.string()).nonempty({ message: "Selecione pelo menos uma categoria." }),
 });
 

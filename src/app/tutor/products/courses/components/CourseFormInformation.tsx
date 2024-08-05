@@ -47,7 +47,6 @@ function CourseFormInformation() {
         await saveCourseDtoInfo(values);
         toast.success("Informações do curso salvas com sucesso!");
       } else {
-        console.log("values", values);
         await updateCourseDtoInfo({ ...values, id: courseId });
         toast.success("Informações do curso atualizadas com sucesso!");
       }
@@ -68,7 +67,7 @@ function CourseFormInformation() {
       discount: courseDto?.discount || 0,
       categories: courseDto?.categories || [],
       coverFile: courseDto?.coverUrl || "",
-      promoVideoFile: courseDto?.promoVideoFile,
+      promoVideoFile: courseDto?.promoVideoRef || 0,
     });
   }, [courseDto]);
 

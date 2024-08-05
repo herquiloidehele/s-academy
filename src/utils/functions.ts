@@ -1,7 +1,7 @@
 import useCourseStore from "@/app/tutor/products/courses/courseStore";
 
 export const truncateText = (text: string, maxLength: number) => {
-  if (text.length > maxLength) {
+  if (text?.length > maxLength) {
     return text.substring(0, maxLength) + "...";
   }
   return text;

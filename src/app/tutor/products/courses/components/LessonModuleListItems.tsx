@@ -79,7 +79,7 @@ export function LessonModuleListItems({ lessons, moduleId }: { lessons: ILesson[
         <TableBody>
           {lessons.map((lesson, index) => (
             <TableRow key={index} onMouseEnter={() => handleShowActions(index)} onMouseLeave={handleHideActions}>
-              <TableCell className="font-light">{index}</TableCell>
+              <TableCell className="font-light">{index + 1}</TableCell>
               <TableCell>
                 <LessonFormDialog lessonId={lesson.id} moduleId={moduleId}>
                   <span className="text-primary font-semibold cursor-pointer">{lesson.title}</span>

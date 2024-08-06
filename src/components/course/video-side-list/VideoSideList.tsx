@@ -14,9 +14,9 @@ export default async function VideoSideList(props: VideoSideListProps) {
         {courseModules.map((section, index) => (
           <AccordionItem key={index} value={`item-${index}`} className={"border-b-0"}>
             <AccordionTrigger>
-              <spam className={"text-left text-sm w-100 overflow-hidden line-clamp-1 whitespace-normal"}>
+              <span className={"text-left text-sm w-100 overflow-hidden line-clamp-1 whitespace-normal"}>
                 {section.title}
-              </spam>
+              </span>
             </AccordionTrigger>
             <AccordionContent>
               <ul className="space-y-4 md:space-y-3">

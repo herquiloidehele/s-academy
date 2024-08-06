@@ -30,7 +30,10 @@ class CourseManager {
 
       Logger.debug(this.LOG_TAG, `Course found by id: ${courseId}`, course);
 
-      return course as ICourse;
+      return {
+        ...course,
+        tutorRef: undefined,
+      } as ICourse;
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error getting course by id: ${courseId}`, error);
       return;

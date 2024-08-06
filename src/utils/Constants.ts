@@ -25,7 +25,7 @@ export const Constants = {
     LESSON: (courseId: string, moduleId: string, lessonId: string) => `/courses/${courseId}/${moduleId}/${lessonId}`,
   },
   COURSE: {
-    DEFAULT_COURSE_ID: "Q0us6qiWzX00sF2IZyQL",
+    DEFAULT_COURSE_ID: "Z292zjFG2GD70MNkyHw5",
   },
 };
 

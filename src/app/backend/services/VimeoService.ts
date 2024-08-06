@@ -167,6 +167,33 @@ class VimeoService {
     }
   }
 
+  public async deleteVideoById(videoId: number): Promise<void> {
+    Logger.log(this.LOG_TAG, "Start deleting video", videoId);
+
+    try {
+      const request: IHttpRequestConfig = {
+        url: `${this.VIMEO_API_URL}/videos/${videoId}`,
+        httpMethod: HttpMethods.DELETE,
+        headers: {
+          Authorization: `bearer ${Constants.EXTERNAL_CONFIGS.VIMEO_ACCESS_TOKEN}`,
+          Accept: "application/vnd.vimeo.*+json;version=3.4",
+        },
+      };
+
+      const response = await ApiInterface.send(request);
+      Logger.log(this.LOG_TAG, "Delete video response", response);
+
+      if (!response || response.status !== HttpStatus.NO_CONTENT) {
+        return Promise.reject("Failed to delete video");
+      }
+
+      Logger.log(this.LOG_TAG, "Video deleted successfully", videoId);
+    } catch (error) {
+      Logger.error(this.LOG_TAG, "deleteVideoById", error);
+      return Promise.reject(error);
+    }
+  }
+
   private getVideoIdFromUrl(url: string) {
     const videoIdMatch = url.match(/videos\/(\d+)/);
     return Number(videoIdMatch ? videoIdMatch[1] : "");

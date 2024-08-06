@@ -10,21 +10,18 @@ import { CustomAlertDialog } from "@/components/alert-dialog/AlertDialog";
 import useCourseStore from "@/app/tutor/products/courses/courseStore";
 
 export function LessonModuleListItems({ lessons, moduleId }: { lessons: ILesson[]; moduleId: string }) {
-  const [showActions, setShowActions] = React.useState<number | null>(null); // Track which row is being hovered
-  const [isAlertDialogOpen, setIsAlertDialogOpen] = React.useState<{ open: boolean; lessonId?: string } | null>(null); // Manage alert dialog state
+  const [showActions, setShowActions] = React.useState<number | null>(null);
+  const [isAlertDialogOpen, setIsAlertDialogOpen] = React.useState<boolean>(false);
   const router = useRouter();
   const removeLesson = useCourseStore((state) => state.removeLesson);
 
   const handleShowActions = (index: number) => setShowActions(index);
   const handleHideActions = () => setShowActions(null);
-  const handleAlertDialogOpen = (lessonId: string) => setIsAlertDialogOpen({ open: true, lessonId });
   const handleAlertDialogClose = () => setIsAlertDialogOpen(null);
 
-  const handleRemoveLesson = () => {
-    if (isAlertDialogOpen?.lessonId) {
-      removeLesson(isAlertDialogOpen.lessonId, moduleId);
-      handleAlertDialogClose();
-    }
+  const handleRemoveLesson = async (lesson: ILesson) => {
+    await removeLesson(lesson, moduleId);
+    handleAlertDialogClose();
   };
 
   if (!lessons || lessons.length === 0) {
@@ -97,18 +94,18 @@ export function LessonModuleListItems({ lessons, moduleId }: { lessons: ILesson[
                     <Edit2Icon className="w-6 h-6 stroke-1 text-blue-700 cursor-pointer" />
                   </LessonFormDialog>
                   <CustomAlertDialog
-                    open={isAlertDialogOpen?.open || false}
+                    open={isAlertDialogOpen || false}
                     setOpen={handleAlertDialogClose}
                     title={`Tem certeza que deseja excluir a aula ${lesson.title}?`}
                     description="Esta ação não pode ser desfeita. Isso excluirá permanentemente a aula."
-                    onAction={handleRemoveLesson}
+                    onAction={() => handleRemoveLesson(lesson)}
                     onCancel={handleAlertDialogClose}
                   >
                     <Trash2Icon
                       className="w-6 h-6 stroke-1 text-red-700 cursor-pointer"
                       onClick={(event) => {
                         event.preventDefault();
-                        handleAlertDialogOpen(lesson.id);
+                        setIsAlertDialogOpen(true);
                       }}
                     />
                   </CustomAlertDialog>

@@ -102,7 +102,7 @@ interface ICourseStoreState {
   removeModule: (module: IModuleDto) => void;
   updateModule: (module: IModuleDto) => void;
   addLesson: (lesson: ILessonDto) => void;
-  removeLesson: (lessonId: string, moduleId: string) => void;
+  removeLesson: (lessonId: ILesson, moduleId: string) => void;
   updateLesson: (lesson: ILessonDto) => void;
   canCourseBeSaved: boolean;
   setCanCourseBeSaved: (value: boolean) => void;
@@ -275,6 +275,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
         },
         newLessonData.title,
       );
+      await VideoManager.deleteVideoById(currentLesson.videoRef);
     }
     newLessonData.videoRef = uploadedVideo.videoId;
     newLessonData.thumbnailUrl = uploadedVideo.thumbnailUrl;
@@ -300,13 +301,15 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       canCourseBeSaved: updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
     });
   },
-  removeLesson: async (lessonId: string, moduleId: string) => {
+  removeLesson: async (lesson: ILesson, moduleId: string) => {
     const courseDto = useCourseStore.getState?.().courseDto;
 
-    await deleteLesson(courseDto?.id!, moduleId, lessonId);
+    await deleteLesson(courseDto?.id!, moduleId, lesson.id);
+    await VideoManager.deleteVideoById(lesson.videoRef);
+
     const updatedModules = courseDto?.modules?.map((module) => {
       if (module.id === moduleId) {
-        const updatedLessons = module.lessons?.filter((lesson) => lesson.id !== lessonId);
+        const updatedLessons = module.lessons?.filter((l) => l.id !== lesson.id);
         return { ...module, lessons: updatedLessons };
       }
       return module;

@@ -73,6 +73,17 @@ class VideoManager {
       return Promise.reject(error);
     }
   }
+  public async deleteVideoById(videoId: number): Promise<void> {
+    Logger.log(this.LOG_TAG, "Start deleting video", videoId);
+
+    try {
+      await VimeoService.deleteVideoById(videoId);
+      Logger.log(this.LOG_TAG, "Video deleted successfully", videoId);
+    } catch (error) {
+      Logger.error(this.LOG_TAG, "deleteVideoById", error);
+      return Promise.reject(error);
+    }
+  }
 }
 
 export default new VideoManager();

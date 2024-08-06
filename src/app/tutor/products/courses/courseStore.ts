@@ -231,6 +231,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
         JSON.stringify({
           ...lesson,
           videoRef: videoLesson.videoId,
+          thumbnailUrl: videoLesson.thumbnailUrl,
           materialUrl: materialUrl,
         }),
       ) as ILessonDto;

@@ -55,6 +55,7 @@ class CourseManager {
           ...module,
           order: Number(module.order),
           lessons: await this.getLessons(courseId, module.id),
+          courseRef: undefined,
         })),
       );
 
@@ -82,6 +83,7 @@ class CourseManager {
       const lessonsWithOrder = lessons.map((lesson) => ({
         ...lesson,
         order: Number(lesson.order),
+        moduleRef: undefined,
       }));
       const sortedLessons = _.sortBy(lessonsWithOrder, "order");
 

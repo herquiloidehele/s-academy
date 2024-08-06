@@ -13,7 +13,11 @@ export default async function VideoSideList(props: VideoSideListProps) {
       <Accordion type="single" collapsible className="w-full" defaultValue={"item-0"}>
         {courseModules.map((section, index) => (
           <AccordionItem key={index} value={`item-${index}`} className={"border-b-0"}>
-            <AccordionTrigger>{section.title}</AccordionTrigger>
+            <AccordionTrigger>
+              <spam className={"text-left text-sm w-100 overflow-hidden line-clamp-1 whitespace-normal"}>
+                {section.title}
+              </spam>
+            </AccordionTrigger>
             <AccordionContent>
               <ul className="space-y-4 md:space-y-3">
                 {section.lessons.map((video, index) => (

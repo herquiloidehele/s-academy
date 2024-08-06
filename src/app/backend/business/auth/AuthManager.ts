@@ -21,7 +21,7 @@ class AuthManager {
 
       Logger.info(this.LOG_TAG, "User found", [user]);
 
-      const authUser = (await FirestoreService.getDocumentById(FirebaseCollections.USERS, user?.email)) as IUser;
+      const authUser = await FirestoreService.getDocumentById(FirebaseCollections.USERS, user?.email);
 
       Logger.info(this.LOG_TAG, "Auth user found", [authUser]);
       return authUser as IUser;

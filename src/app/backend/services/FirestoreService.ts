@@ -27,8 +27,8 @@ class FirestoreService {
       return {
         ...documentSnapshot.data(),
         id: documentSnapshot.id,
-        createdAt: documentSnapshot.createTime?.toDate(),
-      };
+        createdAt: documentSnapshot.createTime?.toDate() || new Date(),
+      } as any;
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error getting document by id:`, [id, error]);
       return null;

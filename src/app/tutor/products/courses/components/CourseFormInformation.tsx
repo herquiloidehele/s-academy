@@ -141,6 +141,7 @@ function CourseFormInformation() {
                         type="number"
                         placeholder="Preço"
                         className="bg-smoothBackground"
+                        min={0}
                         {...field}
                         onChange={(e) => field.onChange(e.target.valueAsNumber)}
                       />
@@ -162,6 +163,7 @@ function CourseFormInformation() {
                       type="number"
                       placeholder="Desconto"
                       className="bg-smoothBackground"
+                      min={0}
                       {...field}
                       onChange={(e) => field.onChange(e.target.valueAsNumber)}
                     />

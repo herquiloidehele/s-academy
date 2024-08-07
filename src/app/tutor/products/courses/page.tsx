@@ -124,7 +124,7 @@ function CoursePage() {
         )}
       </div>
 
-      {courses.length === 0 && !isLoading && (
+      {courses.length === 0 && !isLoading && courses.length > 0 && (
         <EmptyState
           animationData={EmptyAnimation}
           title={"Nenhum curso encontrado"}

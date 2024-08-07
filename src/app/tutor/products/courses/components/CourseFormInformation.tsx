@@ -156,7 +156,7 @@ function CourseFormInformation() {
               name="discount"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="font-light leading-tight">Desconto (%)</FormLabel>
+                  <FormLabel className="font-light leading-tight">Desconto</FormLabel>
                   <FormControl>
                     <Input
                       type="number"

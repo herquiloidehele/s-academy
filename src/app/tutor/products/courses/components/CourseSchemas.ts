@@ -20,21 +20,26 @@ const fileSchema = z.instanceof(File).refine(
   { message: "Tipo de arquivo não suportado." },
 );
 
-export const courseBasicInformationformSchema = z.object({
-  title: z.string().min(5, { message: "O nome do curso deve ter no minimo 5 caracteres." }),
-  description: z
-    .string()
-    .min(70, { message: "A descrição do curso deve ter no minimo 70 caracteres." })
-    .max(2000, { message: "A descrição não pode exceder 200 caracteres." }),
-  price: z.number().min(200, { message: "O preço deve ser um número no minimo 200 meticais." }),
-  discount: z
-    .number()
-    .min(0, { message: "O desconto deve ser um número positivo." })
-    .max(100, { message: "O desconto não pode exceder 100%." }),
-  coverFile: z.union([fileSchema, urlSchema], { message: "Deve ser um arquivo válido ou uma URL válida." }),
-  promoVideoFile: z.union([fileSchema, vimeoIDSchema], { message: "Deve ser um arquivo válido" }).optional().nullable(),
-  categories: z.array(z.string()).nonempty({ message: "Selecione pelo menos uma categoria." }),
-});
+export const courseBasicInformationformSchema = z
+  .object({
+    title: z.string().min(5, { message: "O nome do curso deve ter no mínimo 5 caracteres." }),
+    description: z
+      .string()
+      .min(70, { message: "A descrição do curso deve ter no mínimo 70 caracteres." })
+      .max(2000, { message: "A descrição não pode exceder 2000 caracteres." }),
+    price: z.number().min(200, { message: "O preço deve ser no mínimo 200 meticais." }),
+    discount: z.number().min(0, { message: "O desconto deve ser um número positivo." }),
+    coverFile: z.union([fileSchema, urlSchema], { message: "Deve ser um arquivo válido ou uma URL válida." }),
+    promoVideoFile: z
+      .union([fileSchema, vimeoIDSchema], { message: "Deve ser um arquivo válido" })
+      .optional()
+      .nullable(),
+    categories: z.array(z.string()).nonempty({ message: "Selecione pelo menos uma categoria." }),
+  })
+  .refine((data) => data.discount <= data.price, {
+    message: "O desconto não pode exceder o preço.",
+    path: ["discount"],
+  });
 
 export const IModuleSchema = z.object({
   order: z.number(),

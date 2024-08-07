@@ -11,6 +11,8 @@ import EmptyAnimation from "@/assets/animation/empty.json";
 import EmptyState from "@/components/empty-list/EmptyState";
 import useCourseStore from "@/app/tutor/products/courses/courseStore";
 import Loading from "@/components/loading/Loading";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { COURSE_STATUS } from "@/app/backend/business/course/CourseData";
 
 function CoursePage() {
   const router = useRouter();
@@ -19,6 +21,11 @@ function CoursePage() {
   const [isLoading, setIsLoading] = useState(true);
   const resetCourseFormData = useCourseStore((state) => state.resetCourseFormData);
 
+  const [filteredCourses, setFilteredCourses] = useState([]);
+
+  const [searchValue, setSearchValue] = useState("");
+  const [statusFilter, setStatusFilter] = useState("ALL");
+
   useEffect(() => {
     resetCourseFormData();
     const fetchCourses = async () => {
@@ -26,25 +33,59 @@ function CoursePage() {
       setIsLoading(false);
     };
     fetchCourses();
-  }, [fetchCoursesByTutor]);
+  }, [fetchCoursesByTutor, resetCourseFormData]);
+
+  useEffect(() => {
+    let updatedCourses = courses;
+
+    if (searchValue !== "") {
+      updatedCourses = updatedCourses.filter(
+        (course) =>
+          course.title.toLowerCase().includes(searchValue.toLowerCase()) ||
+          course.description?.toLowerCase().includes(searchValue.toLowerCase()),
+      );
+    }
+
+    if (statusFilter !== "ALL") {
+      updatedCourses = updatedCourses.filter((course) => course.status.toString() === statusFilter);
+    }
+
+    setFilteredCourses(updatedCourses);
+  }, [courses, searchValue, statusFilter]);
 
   if (isLoading) {
     return <Loading />;
   }
 
   return (
-    <div>
+    <div className="h-full">
       <div className="flex flex-row w-full items-center justify-between gap-6 mb-8">
-        <div className="relative w-full">
-          <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-            <SearchIcon className="size-6" />
+        <div className="flex flex-row gap-2 w-full">
+          <div className="relative w-full">
+            <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
+              <SearchIcon className="size-6" />
+            </div>
+            <input
+              type="text"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              id="email-address-icon"
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+              placeholder="procura por nome"
+            />
           </div>
-          <input
-            type="text"
-            id="email-address-icon"
-            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            placeholder="procura por nome"
-          />
+          <div>
+            <Select value={statusFilter} onValueChange={(newValue) => setStatusFilter(newValue)}>
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Estado" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ALL">Todos</SelectItem>
+                <SelectItem value={COURSE_STATUS.PUBLISHED.toString()}>Publicado</SelectItem>
+                <SelectItem value={COURSE_STATUS.DRAFT.toString()}>Rascunho</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
         {courses.length > 0 && (
           <div className="w-full flex flex-row justify-end">
@@ -64,17 +105,23 @@ function CoursePage() {
         )}
       </div>
 
-      <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-1 gap-3 mb-8">
-        {courses.map((course, index) => (
-          <motion.div
-            key={`${course.id}-${index}`}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, delay: index * 0.1 }}
-          >
-            <CoursesCard course={course} />
-          </motion.div>
-        ))}
+      <div className="grid lg:grid-cols-4 h-full md:grid-cols-3 grid-cols-1 gap-3 mb-8">
+        {filteredCourses.length > 0 ? (
+          filteredCourses.map((course, index) => (
+            <motion.div
+              key={`${course.id}-${index}`}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: index * 0.1 }}
+            >
+              <CoursesCard course={course} />
+            </motion.div>
+          ))
+        ) : (
+          <div className="flex flex-row justify-center w-full h-full col-span-full">
+            <p className="self-center text-gray-400">Não encontramos cursos que correspondam ao seu filtro.</p>
+          </div>
+        )}
       </div>
 
       {courses.length === 0 && !isLoading && (

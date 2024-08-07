@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import CoursesCard from "@/app/tutor/products/courses/components/CoursesCard";
 import { SearchIcon } from "lucide-react";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
@@ -14,6 +14,11 @@ import Loading from "@/components/loading/Loading";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { COURSE_STATUS } from "@/app/backend/business/course/CourseData";
 
+const DEFAULT_FILTERS = {
+  SEARCH: "",
+  STATUS: "ALL",
+};
+
 function CoursePage() {
   const router = useRouter();
   const fetchCoursesByTutor = useCourseStore((state) => state.fetchLoggedTutorCourses);
@@ -23,8 +28,12 @@ function CoursePage() {
 
   const [filteredCourses, setFilteredCourses] = useState([]);
 
-  const [searchValue, setSearchValue] = useState("");
-  const [statusFilter, setStatusFilter] = useState("ALL");
+  const [searchValue, setSearchValue] = useState(DEFAULT_FILTERS.SEARCH);
+  const [statusFilter, setStatusFilter] = useState(DEFAULT_FILTERS.STATUS);
+
+  const hasFilters = useMemo(() => {
+    return statusFilter !== DEFAULT_FILTERS.STATUS || searchValue !== DEFAULT_FILTERS.SEARCH;
+  }, [searchValue, statusFilter]);
 
   useEffect(() => {
     resetCourseFormData();
@@ -105,26 +114,28 @@ function CoursePage() {
         )}
       </div>
 
-      <div className="grid lg:grid-cols-4 h-full md:grid-cols-3 grid-cols-1 gap-3 mb-8">
-        {filteredCourses.length > 0 ? (
-          filteredCourses.map((course, index) => (
-            <motion.div
-              key={`${course.id}-${index}`}
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: index * 0.1 }}
-            >
-              <CoursesCard course={course} />
-            </motion.div>
-          ))
-        ) : (
-          <div className="flex flex-row justify-center w-full h-full col-span-full">
-            <p className="self-center text-gray-400">Não encontramos cursos que correspondam ao seu filtro.</p>
-          </div>
-        )}
-      </div>
+      {hasFilters && (
+        <div className="grid lg:grid-cols-4 h-full md:grid-cols-3 grid-cols-1 gap-3 mb-8">
+          {filteredCourses.length > 0 ? (
+            filteredCourses.map((course, index) => (
+              <motion.div
+                key={`${course.id}-${index}`}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: index * 0.1 }}
+              >
+                <CoursesCard course={course} />
+              </motion.div>
+            ))
+          ) : (
+            <div className="flex flex-row justify-center w-full h-full col-span-full">
+              <p className="self-center text-gray-400">Não encontramos cursos que correspondam ao seu filtro.</p>
+            </div>
+          )}
+        </div>
+      )}
 
-      {courses.length === 0 && !isLoading && courses.length > 0 && (
+      {courses.length === 0 && !isLoading && (
         <EmptyState
           animationData={EmptyAnimation}
           title={"Nenhum curso encontrado"}

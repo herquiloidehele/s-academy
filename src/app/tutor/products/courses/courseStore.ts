@@ -539,4 +539,8 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   },
 }));
 
+export const courseSelectors = {
+  progressPercentage: (state) => state.videoUploadPercentage,
+};
+
 export default useCourseStore;

@@ -114,47 +114,45 @@ function CoursePage() {
         )}
       </div>
 
-      {hasFilters && (
-        <div className="grid lg:grid-cols-4 h-full md:grid-cols-3 grid-cols-1 gap-3 mb-8">
-          {filteredCourses.length > 0 ? (
-            filteredCourses.map((course, index) => (
-              <motion.div
-                key={`${course.id}-${index}`}
-                initial={{ opacity: 0, y: 50 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 1, delay: index * 0.1 }}
+      <div className="grid lg:grid-cols-4 h-full md:grid-cols-3 grid-cols-1 gap-3 mb-8">
+        {filteredCourses.length > 0 ? (
+          filteredCourses.map((course, index) => (
+            <motion.div
+              key={`${course.id}-${index}`}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1, delay: index * 0.1 }}
+            >
+              <CoursesCard course={course} />
+            </motion.div>
+          ))
+        ) : hasFilters ? (
+          <div className="flex flex-row justify-center w-full h-full col-span-full">
+            <p className="self-center text-gray-400">Não encontramos cursos que correspondam ao seu filtro.</p>
+          </div>
+        ) : (
+          !isLoading && (
+            <EmptyState
+              animationData={EmptyAnimation}
+              title={"Nenhum curso encontrado"}
+              description={"Crie um novo curso ou explore outras categorias"}
+            >
+              <ButtonElement
+                shape={ButtonShape.SQUARE}
+                size={ButtonSize.SMALL}
+                fillType={FillType.FILLED}
+                type={ButtonType.PRIMARY}
+                onClick={() => router.push(Constants.APP_ROUTES.TEACHER.NEW_COURSES)}
               >
-                <CoursesCard course={course} />
-              </motion.div>
-            ))
-          ) : (
-            <div className="flex flex-row justify-center w-full h-full col-span-full">
-              <p className="self-center text-gray-400">Não encontramos cursos que correspondam ao seu filtro.</p>
-            </div>
-          )}
-        </div>
-      )}
-
-      {courses.length === 0 && !isLoading && (
-        <EmptyState
-          animationData={EmptyAnimation}
-          title={"Nenhum curso encontrado"}
-          description={"Crie um novo curso ou explore outras categorias"}
-        >
-          <ButtonElement
-            shape={ButtonShape.SQUARE}
-            size={ButtonSize.SMALL}
-            fillType={FillType.FILLED}
-            type={ButtonType.PRIMARY}
-            onClick={() => router.push(Constants.APP_ROUTES.TEACHER.NEW_COURSES)}
-          >
-            <div className="flex flex-row gap-2 justify-center items-center">
-              <PlusIcon className="size-8" />
-              <span>Adicionar Curso</span>
-            </div>
-          </ButtonElement>
-        </EmptyState>
-      )}
+                <div className="flex flex-row gap-2 justify-center items-center">
+                  <PlusIcon className="size-8" />
+                  <span>Adicionar Curso</span>
+                </div>
+              </ButtonElement>
+            </EmptyState>
+          )
+        )}
+      </div>
     </div>
   );
 }

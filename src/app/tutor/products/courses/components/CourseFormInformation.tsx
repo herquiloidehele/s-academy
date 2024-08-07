@@ -8,13 +8,13 @@ import { Input } from "@/components/ui/input";
 import { DialogFooter } from "@/components/ui/dialog";
 import { Textarea } from "@/components/ui/textarea";
 import FileUploader from "@/components/file-uploader/FileUploader";
-import useCourseStore from "@/app/tutor/products/courses/courseStore";
+import useCourseStore, { courseSelectors } from "@/app/tutor/products/courses/courseStore";
 import { courseBasicInformationformSchema } from "@/app/tutor/products/courses/components/CourseSchemas";
 import { MultiSelect } from "@/components/multi-selector/MultiSelect";
 import { toast } from "sonner";
 import FormButtonWithLoader from "@/components/FormButton/FormButtonWithLoader";
 import { getCategoryOptions } from "@/utils/functions";
-import ProgressBar from "@/components/progress-bar/ProgressBar";
+import ProgressbarWrapper from "@/app/tutor/products/courses/components/ProgressbarWrapper";
 
 function CourseFormInformation() {
   const saveCourseDtoInfo = useCourseStore((state) => state.saveCourse);
@@ -25,7 +25,6 @@ function CourseFormInformation() {
   const setSelectedCategories = useCourseStore((state) => state.setSelectedCategories);
   const goToNextStep = useCourseStore((state) => state.goToNextStep);
   const loading = useCourseStore((state) => state.loading);
-  const videoUploadPercentage = useCourseStore((state) => state.videoUploadPercentage);
 
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -211,7 +210,7 @@ function CourseFormInformation() {
                           field.onChange(file);
                         }}
                       />
-                      <ProgressBar percentage={videoUploadPercentage} />
+                      <ProgressbarWrapper selector={courseSelectors.progressPercentage} />
                     </div>
                   </FormControl>
                   <FormMessage />

@@ -133,4 +133,4 @@ function FileUploader({
   );
 }
 
-export default FileUploader;
+export default React.memo(FileUploader);

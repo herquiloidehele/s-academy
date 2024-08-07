@@ -26,7 +26,7 @@ export const courseBasicInformationformSchema = z.object({
     .string()
     .min(70, { message: "A descrição do curso deve ter no minimo 70 caracteres." })
     .max(2000, { message: "A descrição não pode exceder 200 caracteres." }),
-  price: z.number().min(0, { message: "O preço deve ser um número positivo." }),
+  price: z.number().min(200, { message: "O preço deve ser um número no minimo 200 meticais." }),
   discount: z
     .number()
     .min(0, { message: "O desconto deve ser um número positivo." })

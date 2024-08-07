@@ -16,6 +16,7 @@ import AuthManager from "@/app/backend/business/auth/AuthManager";
 import { firestore } from "firebase-admin";
 import { undefined } from "zod";
 import { IQuery } from "@/app/backend/services/ServiceDaos";
+import VideoManager from "@/app/backend/business/course/VideoManager";
 import FieldPath = firestore.FieldPath;
 
 class CourseManager {
@@ -310,6 +311,15 @@ class CourseManager {
     Logger.debug(this.LOG_TAG, `Removing course: ${courseId}`);
 
     try {
+      try {
+        const course = await this.getCourseById(courseId);
+        if (course && course.promoVideoRef) {
+          await VideoManager.deleteVideoById(course?.promoVideoRef!);
+        }
+      } catch (e) {
+        Logger.error(this.LOG_TAG, `Error deleting promo video from course:`, [courseId]);
+      }
+
       const courseModules = await this.getCourseModules(courseId);
 
       for (const module of courseModules) {
@@ -419,6 +429,14 @@ class CourseManager {
     Logger.debug(this.LOG_TAG, `Removing module from course:`, [moduleId, courseId]);
 
     try {
+      try {
+        const lessons = await this.getLessons(courseId, moduleId);
+        for (const lesson of lessons) {
+          await VideoManager.deleteVideoById(lesson.videoRef);
+        }
+      } catch (e) {
+        Logger.error(this.LOG_TAG, `Error deleting video from lesson:`, [moduleId, courseId]);
+      }
       const lessonsCollectionName = `${FirebaseCollections.COURSES}/${courseId}/${FirebaseCollections.MODULES}/${moduleId}/${FirebaseCollections.LESSONS}`;
 
       const lessonsQuery: IQuery = { field: "moduleId", operator: "==", value: moduleId };

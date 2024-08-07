@@ -368,7 +368,7 @@ class CourseManager {
   public async addLessonToModule(lessonDto: ILessonDto, courseId: string, moduleId: string): Promise<ILesson> {
     Logger.debug(this.LOG_TAG, `Adding lesson to module:`, [lessonDto, moduleId, courseId]);
 
-    const moduleRef = await FirestoreService.getDocumentRefById(FirebaseCollections.COURSES, courseId);
+    const moduleRef = await FirestoreService.getDocumentRefById(FirebaseCollections.MODULES, moduleId);
     const lessonObject = {
       duration: lessonDto.duration,
       thumbnailUrl: lessonDto.thumbnailUrl,
@@ -459,7 +459,7 @@ class CourseManager {
     lessonDto: ILessonDto,
   ): Promise<ILesson> {
     Logger.debug(this.LOG_TAG, `Updating lesson in module:`, [lessonDto, lessonId, moduleId, courseId]);
-    const moduleRef = await FirestoreService.getDocumentRefById(FirebaseCollections.COURSES, courseId);
+    const moduleRef = await FirestoreService.getDocumentRefById(FirebaseCollections.MODULES, moduleId);
 
     const lessonObject = {
       duration: lessonDto.duration,

@@ -4,9 +4,15 @@ import useCourseStore, { IFormStep } from "@/app/tutor/products/courses/courseSt
 import { ArrowLeft } from "lucide-react";
 
 function FormStepper({ steps, onBackClick, title }: { steps: IFormStep[]; onBackClick?: () => void; title: string }) {
+  const courseDto = useCourseStore((state) => state.courseDto);
   const setCurrentStepIndex = useCourseStore((state) => state.setCurrentStepIndex);
   const currentStepIndex = useCourseStore((state) => state.currentStepIndex);
-  const canCourseBeSaved = useCourseStore((state) => state.canCourseBeSaved);
+  const canCourseBePublished = useCourseStore((state) => state.canCourseBePublished);
+  const [canGoNextStep, setCanGoNextStep] = React.useState<boolean>(false);
+
+  useEffect(() => {
+    setCanGoNextStep(canCourseBePublished());
+  }, [canCourseBePublished, courseDto]);
 
   useEffect(() => {
     setCurrentStepIndex(0);
@@ -14,7 +20,7 @@ function FormStepper({ steps, onBackClick, title }: { steps: IFormStep[]; onBack
 
   const handleStepClick = (index: number) => {
     if (index >= 0 && index < steps.length) {
-      if (canCourseBeSaved) setCurrentStepIndex(index);
+      if (canGoNextStep) setCurrentStepIndex(index);
     }
   };
 

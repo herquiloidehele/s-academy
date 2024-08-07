@@ -104,9 +104,8 @@ interface ICourseStoreState {
   addLesson: (lesson: ILessonDto) => void;
   removeLesson: (lessonId: ILesson, moduleId: string) => void;
   updateLesson: (lesson: ILessonDto) => void;
-  canCourseBeSaved: boolean;
-  setCanCourseBeSaved: (value: boolean) => void;
   resetCourseFormData: () => void;
+  canCourseBePublished: () => boolean;
   unpublishCourse: (courseId: string) => void;
   removeCourse: (courseId: string) => void;
 }
@@ -120,7 +119,12 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
   selectedCategories: [],
   categoriesOptions: categoriesOptions,
   currentStepIndex: 0,
-  canCourseBeSaved: false,
+  canCourseBePublished: () => {
+    return (
+      useCourseStore.getState?.().courseDto?.modules?.length > 0 &&
+      useCourseStore.getState?.().courseDto?.modules?.some((mod) => mod.lessons && mod.lessons.length > 0)
+    );
+  },
   loading: false,
   error: "",
   setLoading: (value: boolean) => {
@@ -171,8 +175,6 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
       set((state) => ({
         courseDto: { ...state.courseDto, modules: updatedModules },
-        canCourseBeSaved:
-          updatedModules.length > 0 && updatedModules.some((mod) => mod.lessons && mod.lessons.length > 0),
       }));
     } catch (error) {
       set({ error: error.message });
@@ -184,32 +186,40 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     set({ videoUploadPercentage: value });
   },
   updateModule: async (module: IModuleDto) => {
-    const courseDto = useCourseStore.getState?.().courseDto;
-    const updatedModule = await updateModule(courseDto?.id!, module.id!, module);
+    try {
+      const courseDto = useCourseStore.getState?.().courseDto;
+      const updatedModule = await updateModule(courseDto?.id!, module.id!, module);
 
-    const updatedModules = Array.isArray(courseDto?.modules)
-      ? courseDto?.modules.map((m) => (m.id === updatedModule.id ? { ...updatedModule, lessons: m.lessons } : m))
-      : [];
+      const updatedModules = Array.isArray(courseDto?.modules)
+        ? courseDto?.modules.map((m) => (m.id === updatedModule.id ? { ...updatedModule, lessons: m.lessons } : m))
+        : [];
 
-    set({
-      courseDto: { ...courseDto, modules: updatedModules },
-      canCourseBeSaved:
-        updatedModules?.length > 0 && updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
-    });
+      set({
+        courseDto: { ...courseDto, modules: updatedModules },
+      });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      set({ loading: false });
+    }
   },
   removeModule: async (moduleId: string) => {
-    const courseDto = useCourseStore.getState?.().courseDto;
+    try {
+      const courseDto = useCourseStore.getState?.().courseDto;
 
-    await deleteModule(courseDto?.id!, moduleId);
-    const updatedModules = Array.isArray(courseDto?.modules)
-      ? courseDto?.modules.filter((module) => module.id !== moduleId)
-      : [];
+      await deleteModule(courseDto?.id!, moduleId);
+      const updatedModules = Array.isArray(courseDto?.modules)
+        ? courseDto?.modules.filter((module) => module.id !== moduleId)
+        : [];
 
-    set({
-      courseDto: { ...courseDto, modules: updatedModules },
-      canCourseBeSaved:
-        updatedModules?.length > 0 && updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
-    });
+      set({
+        courseDto: { ...courseDto, modules: updatedModules },
+      });
+    } catch (e) {
+      console.log(e);
+    } finally {
+      set({ loading: false });
+    }
   },
   addLesson: async (lesson: ILessonDto) => {
     try {
@@ -248,7 +258,6 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
         courseDto: { ...courseDto, modules: updatedModules },
         progress: 0,
         videoUploadPercentage: 0,
-        canCourseBeSaved: updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
       });
     } catch (error) {
       set({ error: error.message });
@@ -257,67 +266,82 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     }
   },
   updateLesson: async (newLessonData: ILessonDto) => {
-    set({ loading: true });
-    const courseDto = useCourseStore.getState?.().courseDto;
-    const currentModule = courseDto?.modules?.find((mod) => mod.id === newLessonData.moduleId);
-    const currentLesson = currentModule?.lessons?.find((lesson) => lesson.id === newLessonData.id);
-    newLessonData.materialUrl = currentLesson?.materialUrl || "";
-    let uploadedVideo: IUploadResponse = {
-      videoId: currentLesson.promoVideoRef || 0,
-      thumbnailUrl: currentLesson.promoVideoThumbnail || "",
-    };
+    try {
+      set({ loading: true });
+      const courseDto = useCourseStore.getState?.().courseDto;
+      const currentModule = courseDto?.modules?.find((mod) => mod.id === newLessonData.moduleId);
+      const currentLesson = currentModule?.lessons?.find((lesson) => lesson.id === newLessonData.id);
+      newLessonData.materialUrl = currentLesson?.materialUrl || "";
+      let uploadedVideo: IUploadResponse = {
+        videoId: currentLesson.promoVideoRef || 0,
+        thumbnailUrl: currentLesson.promoVideoThumbnail || "",
+      };
 
-    if (newLessonData.videoFile instanceof File) {
-      uploadedVideo = await VideoManager.uploadVideoFile(
-        newLessonData.videoFile!,
-        (percentage) => {
-          useCourseStore.getState?.().setVideoUploadPercentage(percentage);
-        },
-        newLessonData.title,
-      );
-      await VideoManager.deleteVideoById(currentLesson.videoRef);
-    }
-    newLessonData.videoRef = uploadedVideo.videoId;
-    newLessonData.thumbnailUrl = uploadedVideo.thumbnailUrl;
-
-    if (newLessonData.materialFile instanceof File) {
-      newLessonData.materialUrl = await FirebaseClientService.uploadFile(newLessonData.materialFile);
-    }
-
-    const plainLesson = JSON.parse(JSON.stringify(newLessonData)) as ILessonDto;
-    const updatedLesson = await updateLesson(courseDto?.id!, newLessonData.moduleId, newLessonData.id, plainLesson);
-
-    const updatedModules = courseDto?.modules?.map((module) => {
-      if (module.id === updatedLesson.moduleId) {
-        const updatedLessons = module.lessons?.map((l) => (l.id === updatedLesson.id ? updatedLesson : l));
-        return { ...module, lessons: updatedLessons };
+      if (newLessonData.videoFile instanceof File) {
+        uploadedVideo = await VideoManager.uploadVideoFile(
+          newLessonData.videoFile!,
+          (percentage) => {
+            useCourseStore.getState?.().setVideoUploadPercentage(percentage);
+          },
+          newLessonData.title,
+        );
+        try {
+          await VideoManager.deleteVideoById(currentLesson.videoRef);
+        } catch (videoError) {
+          console.log("Erro ao deletar o vídeo:", videoError);
+        }
       }
-      return module;
-    });
+      newLessonData.videoRef = uploadedVideo.videoId;
+      newLessonData.thumbnailUrl = uploadedVideo.thumbnailUrl;
 
-    set({
-      courseDto: { ...courseDto, modules: updatedModules },
-      loading: false,
-      canCourseBeSaved: updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
-    });
+      if (newLessonData.materialFile instanceof File) {
+        newLessonData.materialUrl = await FirebaseClientService.uploadFile(newLessonData.materialFile);
+      }
+
+      const plainLesson = JSON.parse(JSON.stringify(newLessonData)) as ILessonDto;
+      const updatedLesson = await updateLesson(courseDto?.id!, newLessonData.moduleId, newLessonData.id, plainLesson);
+
+      const updatedModules = courseDto?.modules?.map((module) => {
+        if (module.id === updatedLesson.moduleId) {
+          const updatedLessons = module.lessons?.map((l) => (l.id === updatedLesson.id ? updatedLesson : l));
+          return { ...module, lessons: updatedLessons };
+        }
+        return module;
+      });
+
+      set({
+        courseDto: { ...courseDto, modules: updatedModules },
+        loading: false,
+      });
+    } catch (e) {
+      console.log(e);
+      set({ loading: false });
+    }
   },
   removeLesson: async (lesson: ILesson, moduleId: string) => {
     const courseDto = useCourseStore.getState?.().courseDto;
 
-    await deleteLesson(courseDto?.id!, moduleId, lesson.id);
-    await VideoManager.deleteVideoById(lesson.videoRef);
-
-    const updatedModules = courseDto?.modules?.map((module) => {
-      if (module.id === moduleId) {
-        const updatedLessons = module.lessons?.filter((l) => l.id !== lesson.id);
-        return { ...module, lessons: updatedLessons };
+    try {
+      await deleteLesson(courseDto?.id!, moduleId, lesson.id);
+      try {
+        await VideoManager.deleteVideoById(lesson.videoRef);
+      } catch (videoError) {
+        console.log("Erro ao deletar o vídeo:", videoError);
       }
-      return module;
-    });
-    set({
-      courseDto: { ...courseDto, modules: updatedModules },
-      canCourseBeSaved: updatedModules?.some((mod) => mod.lessons && mod.lessons.length > 0),
-    });
+
+      const updatedModules = courseDto?.modules?.map((module) => {
+        if (module.id === moduleId) {
+          const updatedLessons = module.lessons?.filter((l) => l.id !== lesson.id);
+          return { ...module, lessons: updatedLessons };
+        }
+        return module;
+      });
+      set({
+        courseDto: { ...courseDto, modules: updatedModules },
+      });
+    } catch (e) {
+      console.log(e);
+    }
   },
   goToNextStep: () => {
     set((state) => {
@@ -511,11 +535,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
     const course = await getCourseById(id);
 
-    set((state) => ({ ...state, courseDto: course, loading: false, canCourseBeSaved: true }));
-  },
-
-  setCanCourseBeSaved: (value: boolean) => {
-    set({ canCourseBeSaved: value });
+    set((state) => ({ ...state, courseDto: course, loading: false }));
   },
 }));
 

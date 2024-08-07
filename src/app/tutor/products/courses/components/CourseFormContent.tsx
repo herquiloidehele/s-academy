@@ -1,10 +1,9 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Accordion } from "@/components/ui/accordion";
 import useCourseStore from "@/app/tutor/products/courses/courseStore";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 import { PlusIcon } from "@heroicons/react/24/outline";
-import { useRouter } from "next/navigation";
 import { ModuleFormDialog } from "@/app/tutor/products/courses/components/ModuleFormDialog";
 import ModuleItemList from "@/app/tutor/products/courses/components/ModuleItemList";
 import EmptyAnimation from "@/assets/animation/empty.json";
@@ -12,9 +11,14 @@ import EmptyState from "@/components/empty-list/EmptyState";
 
 function CourseFormContent() {
   const courseDto = useCourseStore((state) => state.courseDto);
-  const canCourseBeSaved = useCourseStore((state) => state.canCourseBeSaved);
-  const router = useRouter();
+  const canCourseBePublished = useCourseStore((state) => state.canCourseBePublished);
   const goToNextStep = useCourseStore((state) => state.goToNextStep);
+
+  const [canGoNextStep, setCanGoNextStep] = React.useState<boolean>(false);
+
+  useEffect(() => {
+    setCanGoNextStep(canCourseBePublished());
+  }, [canCourseBePublished, courseDto]);
 
   if (!courseDto || !courseDto.modules || courseDto.modules.length === 0) {
     return (
@@ -89,7 +93,7 @@ function CourseFormContent() {
           size={ButtonSize.SMALL}
           fillType={FillType.FILLED}
           type={ButtonType.PRIMARY}
-          disabled={!canCourseBeSaved}
+          disabled={!canGoNextStep}
           onClick={() => goToNextStep()}
         >
           <span>Próximo</span>

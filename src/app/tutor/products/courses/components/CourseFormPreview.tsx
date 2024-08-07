@@ -11,7 +11,7 @@ import VideoPlayer from "@/components/course/video-player/VideoPlayer";
 function CourseFormPreview() {
   const courseDto = useCourseStore((state) => state.courseDto);
   const setCurrentStepIndex = useCourseStore((state) => state.setCurrentStepIndex);
-  const canCourseBeSaved = useCourseStore((state) => state.canCourseBeSaved);
+  const canCourseBePublished = useCourseStore((state) => state.canCourseBePublished);
   const publishCourse = useCourseStore((state) => state.publishCourse);
   const loading = useCourseStore((state) => state.loading);
   const router = useRouter();
@@ -79,7 +79,7 @@ function CourseFormPreview() {
           shape={ButtonShape.SQUARE}
           size={ButtonSize.MEDIUM}
           type={ButtonType.PRIMARY}
-          disabled={!canCourseBeSaved || loading}
+          disabled={!canCourseBePublished() || loading}
           onClick={() => handleSaveCourse()}
         >
           {loading ? (

@@ -1,40 +1,81 @@
 "use client";
-
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import SummaryCard from "@/app/tutor/summary/components/SummaryCard";
+import { SubscriptionsResumeTable } from "@/app/tutor/summary/components/SubscriptionsResumeTable";
+import { CheckSquareIcon, DollarSignIcon, TrendingUpIcon, UsersIcon } from "lucide-react";
+import { ICourseStats, ICourseSummary, useSummaryStore } from "@/app/tutor/summary/summaryStore";
+import useTutorStore from "@/app/tutor/tutorStore";
 
 function TeacherSummary() {
+  const fetchCourseStatsByCurrentTutorId = useSummaryStore((state) => state.fetchCourseStatsByCurrentTutorId);
+  const courseStats = useSummaryStore((state) => state.courseStats);
+  const [courseStatsData, setCourseStatsData] = useState<ICourseStats[]>([]);
+  const [totalStudents, totalRevenue, currentRevenue, totalCourses] = useMemo(() => {
+    const totalStudents = courseStatsData.reduce((acc, { students }) => acc + students, 0);
+    const totalRevenue = courseStatsData.reduce((acc, { revenue }) => acc + revenue, 0);
+    const currentRevenue = courseStatsData.reduce((acc, { revenue }) => acc + revenue, 0);
+    const totalCourses = courseStatsData.length;
+    return [totalStudents, totalRevenue, currentRevenue, totalCourses];
+  }, [courseStatsData]);
+
+  const coursesStatsData: ICourseSummary[] = useMemo(() => {
+    return courseStatsData.map(
+      (course) =>
+        ({
+          id: course.course.id,
+          name: course.course.title,
+          students: course.students,
+          price: course.course.price,
+          totalRevenue: course.revenue,
+        }) as ICourseSummary,
+    );
+  }, [courseStatsData]);
+
+  useEffect(() => {
+    const fetchCourseStats = async () => {
+      await useTutorStore.getState?.().setLoggedTutor();
+      await fetchCourseStatsByCurrentTutorId();
+    };
+    fetchCourseStats();
+  }, []);
+
+  useEffect(() => {
+    setCourseStatsData(courseStats);
+  }, [courseStats]);
+
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-2 mx-auto ">
-        <span className="text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
-          Trusted by creators worldwide
-        </span>
-        <span className="text-base leading-7 text-gray-600 mx-auto">
-          Transforme seu conhecimento em sucesso com a nossa ajuda.
-        </span>
+    <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto flex flex-col gap-6">
+      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+        <SummaryCard
+          icon={<UsersIcon className="shrink-0 w-5 h-5 text-blue-500" />}
+          title="Total Alunos"
+          value={totalStudents}
+          tooltip="O número total de alunos"
+          iconBgColor="bg-blue-100"
+        />
+        <SummaryCard
+          icon={<DollarSignIcon className="shrink-0 w-5 h-5 text-green-500" />}
+          title="Receita Total"
+          value={`$${totalRevenue}`}
+          tooltip="Receita total acumulada"
+          iconBgColor="bg-green-100"
+        />
+        <SummaryCard
+          icon={<TrendingUpIcon className="shrink-0 w-5 h-5 text-orange-500" />}
+          title="Receita Corrente"
+          value={`$${currentRevenue}`}
+          tooltip="Receita gerada no mês corrente"
+          iconBgColor="bg-orange-100"
+        />
+        <SummaryCard
+          icon={<CheckSquareIcon className="shrink-0 w-5 h-5 text-purple-500" />}
+          title="Cursos Concluídos"
+          value={totalCourses}
+          tooltip="Número de cursos concluídos produzidos por si"
+          iconBgColor="bg-purple-100"
+        />
       </div>
-      <div className="py-24 sm:py-32">
-        <div className="mx-auto max-w-7xl px-6 lg:px-8">
-          <dl className="grid grid-cols-1 gap-x-8 gap-y-16 text-center lg:grid-cols-3">
-            <div className="mx-auto flex max-w-xs flex-col gap-y-4">
-              <dt className="text-base leading-7 text-gray-600">Transactions every 24 hours</dt>
-              <dd className="order-first text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
-                44 million
-              </dd>
-            </div>
-            <div className="mx-auto flex max-w-xs flex-col gap-y-4">
-              <dt className="text-base leading-7 text-gray-600">Assets under holding</dt>
-              <dd className="order-first text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl">
-                $119 trillion
-              </dd>
-            </div>
-            <div className="mx-auto flex max-w-xs flex-col gap-y-4">
-              <dt className="text-base leading-7 text-gray-600">New users annually</dt>
-              <dd className="order-first text-3xl font-semibold tracking-tight text-gray-900 sm:text-5xl">46,000</dd>
-            </div>
-          </dl>
-        </div>
-      </div>
+      <SubscriptionsResumeTable coursesStatsData={coursesStatsData} />
     </div>
   );
 }

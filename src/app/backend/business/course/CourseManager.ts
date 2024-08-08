@@ -17,6 +17,7 @@ import { firestore } from "firebase-admin";
 import { undefined } from "zod";
 import { IQuery } from "@/app/backend/services/ServiceDaos";
 import VideoManager from "@/app/backend/business/course/VideoManager";
+import { ICourseStats } from "@/app/tutor/summary/summaryStore";
 import FieldPath = firestore.FieldPath;
 
 class CourseManager {
@@ -522,6 +523,42 @@ class CourseManager {
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error unpublishing course: ${courseId}`, error);
       return Promise.reject(error);
+    }
+  }
+
+  public async getTutorSubscriptionsByTutorId(tutorId: string): Promise<ICourseStats[]> {
+    Logger.debug(this.LOG_TAG, `Getting tutor subscriptions by tutor ID: ${tutorId}`);
+
+    try {
+      const tutorCourses = await this.getCoursesByTutorsId(tutorId);
+
+      if (!tutorCourses.length) {
+        Logger.debug(this.LOG_TAG, `No courses found for tutor ID: ${tutorId}`);
+        return [];
+      }
+
+      let courseStatsList: ICourseStats[] = [];
+
+      for (const course of tutorCourses) {
+        let courseStats: ICourseStats;
+
+        const courseSubscriptions = await SubscriptionManager.getSubscriptionByCourseId(course.id!);
+
+        courseStats = {
+          course: course,
+          students: courseSubscriptions.length,
+          revenue: courseSubscriptions.reduce((acc, sub) => acc + sub.amountPaid, 0),
+        };
+
+        courseStatsList.push(courseStats);
+      }
+
+      Logger.debug(this.LOG_TAG, `Subscriptions found for tutor ID: ${tutorId}`, [courseStatsList]);
+
+      return courseStatsList;
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error getting tutor subscriptions by tutor ID: ${tutorId}`, error);
+      return [];
     }
   }
 }

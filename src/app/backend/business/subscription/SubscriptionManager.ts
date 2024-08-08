@@ -97,6 +97,31 @@ class SubscriptionManager {
       return false;
     }
   }
+  public async getSubscriptionByCourseId(courseId: string): Promise<ISubscription[]> {
+    Logger.debug(this.LOG_TAG, `Getting subscriptions for course: ${courseId}`);
+
+    try {
+      const subscriptions = await FirestoreService.getDocumentsByQuery<ISubscription>(
+        FirebaseCollections.SUBSCRIPTIONS,
+        {
+          field: "courseId",
+          operator: "==",
+          value: courseId,
+        },
+      );
+
+      Logger.debug(this.LOG_TAG, `Subscriptions found for course`, [subscriptions]);
+
+      if (!subscriptions?.length) {
+        return [];
+      }
+
+      return subscriptions as ISubscription[];
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error getting subscriptions by course`, error);
+      return Promise.reject(error);
+    }
+  }
 }
 
 export default new SubscriptionManager();

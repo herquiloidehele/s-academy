@@ -69,3 +69,7 @@ export async function deleteLesson(courseId: string, moduleId: string, lessonId:
 export async function unpublishCourse(courseId: string): Promise<void> {
   return CourseManager.unpublishCourse(courseId);
 }
+
+export async function getTutorSubscriptionsByTutorId(tutorId: string) {
+  return CourseManager.getTutorSubscriptionsByTutorId(tutorId);
+}

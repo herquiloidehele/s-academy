@@ -1,5 +1,5 @@
 import { Button } from "@headlessui/react";
-import React, { useMemo } from "react";
+import React, { forwardRef, useMemo } from "react";
 import { clsx } from "clsx";
 import SpinnerIcon from "@/assets/icons/spinner-icon.svg";
 
@@ -41,7 +41,7 @@ interface ButtonProps {
   inputType?: "button" | "submit" | "reset";
 }
 
-export default function ButtonElement({ inputType = "button", ...props }: ButtonProps) {
+const ButtonElement = forwardRef<HTMLButtonElement, ButtonProps>(({ inputType = "button", ...props }, ref) => {
   const buttonTypeClass: Record<ButtonType, string> = {
     [ButtonType.SUBMIT]: "bg-green-400",
     [ButtonType.PRIMARY]: "bg-green-400",
@@ -81,6 +81,7 @@ export default function ButtonElement({ inputType = "button", ...props }: Button
 
   return (
     <Button
+      ref={ref}
       onClick={props.onClick}
       className={clsx(
         `${buttonBaseClasses} ${buttonSizeClass[props.size]} ${buttonShapeClass[props.shape]} ${props.className} font-bold`,
@@ -104,4 +105,6 @@ export default function ButtonElement({ inputType = "button", ...props }: Button
       )}
     </Button>
   );
-}
+});
+
+export default ButtonElement;

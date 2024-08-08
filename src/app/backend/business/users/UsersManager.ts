@@ -24,7 +24,7 @@ class UsersManager {
 
       Logger.info(this.LOG_TAG, `Tutor found by user id`, [userId, tutor]);
 
-      return tutor[0];
+      return JSON.parse(JSON.stringify(tutor[0]));
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error getting tutor by user id`, [userId, error]);
       return;

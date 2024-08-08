@@ -1,6 +1,7 @@
 import Logger from "@/utils/Logger";
 import VimeoService from "@/app/backend/services/VimeoService";
 import { sleep } from "@/lib/utils";
+import { v4 as uuidV4 } from "uuid";
 
 export interface IUploadResponse {
   videoId: number;
@@ -10,12 +11,16 @@ export interface IUploadResponse {
 class VideoManager {
   private readonly LOG_TAG = "VideoManager";
 
-  public async uploadVideoFile(file: File, onProgress: (percentage: number) => void): Promise<IUploadResponse> {
+  public async uploadVideoFile(
+    file: File,
+    onProgress: (percentage: number) => void,
+    title?: string,
+  ): Promise<IUploadResponse> {
     Logger.log(this.LOG_TAG, "Start uploading video file", [file]);
 
     try {
       onProgress(0);
-      const uploadResponse = await VimeoService.createVideo(file.size);
+      const uploadResponse = await VimeoService.createVideo(file.size, title || uuidV4());
       await VimeoService.uploadVideoFile(uploadResponse.uploadLink, file, onProgress);
       const isUploadComplete = await VimeoService.verifyVideoUpload(uploadResponse.uploadLink);
 
@@ -25,6 +30,7 @@ class VideoManager {
 
       const videoThumbnail = await this.getVideoThumbnail(uploadResponse.videoId);
 
+      onProgress(100);
       return { videoId: uploadResponse.videoId, thumbnailUrl: videoThumbnail };
     } catch (error) {
       Logger.error(this.LOG_TAG, "uploadVideoFile", error);
@@ -64,6 +70,17 @@ class VideoManager {
       return videoDetails.pictures.base_link;
     } catch (error) {
       Logger.error(this.LOG_TAG, "getVideoThumbnail", error);
+      return Promise.reject(error);
+    }
+  }
+  public async deleteVideoById(videoId: number): Promise<void> {
+    Logger.log(this.LOG_TAG, "Start deleting video", videoId);
+
+    try {
+      await VimeoService.deleteVideoById(videoId);
+      Logger.log(this.LOG_TAG, "Video deleted successfully", videoId);
+    } catch (error) {
+      Logger.error(this.LOG_TAG, "deleteVideoById", error);
       return Promise.reject(error);
     }
   }

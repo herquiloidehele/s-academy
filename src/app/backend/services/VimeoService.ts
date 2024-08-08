@@ -18,9 +18,10 @@ class VimeoService {
   /**
    * Create video upload intent on Vimeo
    * @param videoSize
+   * @param title
    * @private
    */
-  public async createVideo(videoSize: number): Promise<IUploadResponse> {
+  public async createVideo(videoSize: number, title: string): Promise<IUploadResponse> {
     Logger.log(this.LOG_TAG, "Start creating video", videoSize);
 
     try {
@@ -37,6 +38,7 @@ class VimeoService {
             approach: this.UPLOAD_APPROACH,
             size: videoSize,
           },
+          name: title,
         },
       };
 
@@ -81,7 +83,7 @@ class VimeoService {
             reject(error);
           },
           onProgress: function (bytesUploaded, bytesTotal) {
-            const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+            const percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2) - 1 || 0;
             Logger.log(this.LOG_TAG, "Upload progress", percentage);
             onProgress(Number(percentage));
           },
@@ -161,6 +163,33 @@ class VimeoService {
       return response.data;
     } catch (error) {
       Logger.error(this.LOG_TAG, "Error getting video details", error);
+      return Promise.reject(error);
+    }
+  }
+
+  public async deleteVideoById(videoId: number): Promise<void> {
+    Logger.log(this.LOG_TAG, "Start deleting video", videoId);
+
+    try {
+      const request: IHttpRequestConfig = {
+        url: `${this.VIMEO_API_URL}/videos/${videoId}`,
+        httpMethod: HttpMethods.DELETE,
+        headers: {
+          Authorization: `bearer ${Constants.EXTERNAL_CONFIGS.VIMEO_ACCESS_TOKEN}`,
+          Accept: "application/vnd.vimeo.*+json;version=3.4",
+        },
+      };
+
+      const response = await ApiInterface.send(request);
+      Logger.log(this.LOG_TAG, "Delete video response", response);
+
+      if (!response || response.status !== HttpStatus.NO_CONTENT) {
+        return Promise.reject("Failed to delete video");
+      }
+
+      Logger.log(this.LOG_TAG, "Video deleted successfully", videoId);
+    } catch (error) {
+      Logger.error(this.LOG_TAG, "deleteVideoById", error);
       return Promise.reject(error);
     }
   }

@@ -3,6 +3,13 @@ import { SignupType } from "@/utils/interfaces";
 const EXTERNAL_CONFIGS = {
   API_REQUEST_TIMEOUT: 60000,
   VIMEO_ACCESS_TOKEN: process.env.NEXT_PUBLIC_VIMEO_ACCESS_TOKEN,
+  FIREBASE_API_KEY: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+  FIREBASE_AUTH_DOMAIN: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+  FIREBASE_PROJECT_ID: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+  FIREBASE_STORAGE_BUCKET: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+  FIREBASE_MESSAGING_SENDER_ID: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+  FIREBASE_APP_ID: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+  FIREBASE_MEASUREMENT_ID: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
 export const Constants = {
@@ -45,20 +52,21 @@ export const Constants = {
     COURSE_DETAILS: (courseId: string) => `/courses/${courseId}`,
     LESSON: (courseId: string, moduleId: string, lessonId: string) => `/courses/${courseId}/${moduleId}/${lessonId}`,
     TEACHER: {
-      HOME: "/teacher/summary",
-      PRODUCTS: "/teacher/products",
-      COURSES: "/teacher/products/courses",
-      NEW_COURSES: "/teacher/products/courses/form",
-      EBOOKS: "/teacher/products/ebooks",
+      HOME: "/tutor/summary",
+      PRODUCTS: "/tutor/products",
+      COURSES: "/tutor/products/courses",
+      NEW_COURSES: "/tutor/products/courses/form",
+      EDIT_COURSES: (courseId: string) => `/tutor/products/courses/form/${courseId}`,
+      EBOOKS: "/tutor/products/ebooks",
       COURSE: (courseId: string) => `/teacher/courses/${courseId}`,
       MODULE: (courseId: string, moduleId: string) => `/teacher/courses/${courseId}/${moduleId}`,
       LESSON: (courseId: string, moduleId: string, lessonId: string) =>
         `/teacher/courses/${courseId}/${moduleId}/${lessonId}`,
       WALLET: {
-        HOME: "/teacher/wallet",
-        WITHDRAW: "/teacher/wallet/withdraw",
-        HISTORY: "/teacher/wallet/history",
-        BALANCE: "/teacher/wallet/balance",
+        HOME: "/tutor/wallet",
+        WITHDRAW: "/tutor/wallet/withdraw",
+        HISTORY: "/tutor/wallet/history",
+        BALANCE: "/tutor/wallet/balance",
       },
     },
   },

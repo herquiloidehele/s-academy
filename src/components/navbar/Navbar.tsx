@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import UserMenu, { IUserMenuItem } from "@/components/navbar/UserMenu";
 import { User2Icon } from "lucide-react";
 import { authSelectors, useAuthStore } from "@/app/store/authStore";
+import { Constants } from "@/utils/Constants";
 
 function Navbar() {
   const isOpened = useMenuStore((state) => state.isOpened);
@@ -48,9 +49,9 @@ function Navbar() {
           <Bars3Icon className="w-4 h-4 md:w-8 md:h-8" onClick={() => setIsOpen(true)} />
         )}
       </div>
-      <div className="flex items-center justify-center w-32 h-16 rounded-l">
+      <a className="flex items-center justify-center w-32 h-16 rounded-l" href={Constants.APP_ROUTES.HOME}>
         <AppLogo className="h-12 lg:h-7 w-auto" />
-      </div>
+      </a>
 
       <div className="ml-auto self-center">
         <UserMenu menuItems={userMenuItems} email={loggedUser?.email || ""} userName={loggedUser?.email || ""}>

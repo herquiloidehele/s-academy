@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { Loader2Icon, XIcon } from "lucide-react";
+import { XIcon } from "lucide-react";
+import { DocumentIcon } from "@heroicons/react/24/outline";
+import VideoPlayer from "@/components/course/video-player/VideoPlayer";
 
 function FileUploader({
   id,
@@ -7,15 +9,15 @@ function FileUploader({
   label = "Clique para fazer upload",
   instructions = "ou arraste e solte um arquivo",
   mimeType,
-  fileTypes = "SVG, PNG, JPG or MP4 (MAX. 800x400px)",
+  fileTypes = "PDF, DOCX, PPTX",
+  defaultFile,
 }) {
-  const [file, setFile] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [file, setFile] = useState(defaultFile);
   const inputRef = useRef(null);
 
   useEffect(() => {
-    setFile(null);
-  }, [mimeType]);
+    setFile(defaultFile);
+  }, [defaultFile]);
 
   const handleDragOver = (event) => {
     event.preventDefault();
@@ -32,10 +34,8 @@ function FileUploader({
   };
 
   const handleFileUpload = (file) => {
-    setLoading(true);
     setFile(file);
     onFileChange(file);
-    setLoading(false); // Simulating the end of the upload process
   };
 
   const handleRemoveFile = () => {
@@ -46,19 +46,44 @@ function FileUploader({
     onFileChange(null);
   };
 
-  const fileUrl = file ? URL.createObjectURL(file) : null;
+  const isFileObject = (file) => file instanceof File;
 
   return (
-    <div id={id} className="flex items-center justify-center w-full" onDragOver={handleDragOver} onDrop={handleDrop}>
+    <div
+      id={id}
+      className="flex flex-col items-center justify-center w-full"
+      onDragOver={handleDragOver}
+      onDrop={handleDrop}
+    >
       {file ? (
         <div className="relative w-full h-64 border-2 border-gray-300 rounded-lg overflow-hidden">
-          {file.type.startsWith("image/") ? (
-            <img src={fileUrl} alt="Preview" className="w-full h-full object-contain rounded-lg" />
-          ) : file.type.startsWith("video/") ? (
-            <video controls src={fileUrl} className="w-full h-full object-contain rounded-lg">
-              Your browser does not support the video tag.
-            </video>
-          ) : null}
+          {mimeType.startsWith("image/") ? (
+            <img
+              src={isFileObject(file) ? URL.createObjectURL(file) : file}
+              alt="Preview"
+              className="w-full h-full object-contain rounded-lg"
+            />
+          ) : mimeType.startsWith("video/") ? (
+            isFileObject(file) ? (
+              <video controls src={URL.createObjectURL(file)} className="w-full h-full object-contain rounded-lg">
+                Your browser does not support the video tag.
+              </video>
+            ) : (
+              <VideoPlayer videoId={file} />
+            )
+          ) : (
+            <a
+              href={isFileObject(file) ? URL.createObjectURL(file) : file}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex flex-col items-center justify-center w-full h-full bg-gray-100"
+            >
+              <div className="flex flex-col items-center justify-center w-full h-full bg-gray-100">
+                <DocumentIcon className="h-16 w-16 text-blue-600" />
+                <p className="text-sm text-blue-600 mt-2">{isFileObject(file) ? file.name : "Arquivo"}</p>
+              </div>
+            </a>
+          )}
           <button onClick={handleRemoveFile} className="absolute top-2 right-2 rounded-full p-1 hover:bg-gray-200">
             <XIcon className="h-6 w-6 text-red-600" />
           </button>
@@ -68,45 +93,39 @@ function FileUploader({
           htmlFor={`dropzone-file-${id}`}
           className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-700 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500"
         >
-          {loading ? (
-            <div className="flex flex-col items-center justify-center">
-              <div className="loader"></div>
-              {/* Replace with a spinner or animation */}
-              <p className="text-sm flex flex-grow gap-2 text-gray-500 dark:text-gray-400">
-                <Loader2Icon className="animate-spin" />
-                Uploading...
-              </p>
-            </div>
-          ) : (
-            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-              <svg
-                className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 16"
-              >
-                <path
-                  stroke="currentColor"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
-                />
-              </svg>
-              <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
-                <span className="font-semibold">{label}</span> {instructions}
-              </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400">{fileTypes}</p>
-            </div>
-          )}
+          <div className="flex flex-col items-center justify-center pt-5 pb-6">
+            <svg
+              className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 20 16"
+            >
+              <path
+                stroke="currentColor"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"
+              />
+            </svg>
+            <p className="mb-2 text-sm text-gray-500 dark:text-gray-400">
+              <span className="font-semibold">{label}</span> {instructions}
+            </p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">{fileTypes}</p>
+          </div>
           <input
             id={`dropzone-file-${id}`}
             type="file"
             accept={mimeType}
             className="hidden"
             ref={inputRef}
-            onChange={(e) => handleFileUpload(e.target.files?.[0])}
+            onChange={(e) => {
+              const selectedFile = e.target.files?.[0];
+              if (selectedFile) {
+                handleFileUpload(selectedFile);
+              }
+            }}
           />
         </label>
       )}
@@ -114,4 +133,4 @@ function FileUploader({
   );
 }
 
-export default FileUploader;
+export default React.memo(FileUploader);

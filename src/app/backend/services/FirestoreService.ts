@@ -72,7 +72,10 @@ class FirestoreService {
         return [];
       }
 
-      return querySnapshot.docs.map((doc) => doc.data()) as T[];
+      return querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      })) as T[];
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error getting documents by query: ${query}`, error);
       return [];
@@ -152,6 +155,7 @@ class FirestoreService {
       });
 
       Logger.debug(this.LOG_TAG, `Document saved to collection: ${collection}`);
+      return { ...data, id: documentId };
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error saving document to collection: ${collection}`, error);
       return Promise.reject(error);
@@ -171,6 +175,7 @@ class FirestoreService {
       });
 
       Logger.debug(this.LOG_TAG, `Document updated in collection: ${collection}`);
+      return { ...data, id: id };
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error updating document in collection: ${collection}`, error);
       return Promise.reject(error);
@@ -191,6 +196,44 @@ class FirestoreService {
     } catch (error) {
       Logger.error(this.LOG_TAG, `Error getting document reference by id: ${id}`, error);
       return null;
+    }
+  }
+
+  public async deleteDocument(collection: FirebaseCollections | string, id: string) {
+    await this.waitForFirestore();
+    Logger.debug(this.LOG_TAG, `Deleting document from collection: ${collection}, id: ${id}`);
+
+    try {
+      const collectionReference = FirebaseConfig.firestoreDB.collection(collection);
+      await collectionReference.doc(id).delete();
+
+      Logger.debug(this.LOG_TAG, `Document deleted from collection: ${collection}, id: ${id}`);
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error deleting document from collection: ${collection}, id: ${id}`, error);
+      return Promise.reject(error);
+    }
+  }
+
+  public async deleteDocumentByQuery(collection: FirebaseCollections, query: IQuery) {
+    await this.waitForFirestore();
+    Logger.debug(this.LOG_TAG, `Deleting documents by query:`, [query]);
+
+    try {
+      const collectionReference = FirebaseConfig.firestoreDB.collection(collection);
+      const querySnapshot = await collectionReference.where(query.field, query.operator, query.value).get();
+
+      if (querySnapshot.empty) {
+        Logger.warn(this.LOG_TAG, `No documents found for query:`, [query]);
+        return;
+      }
+
+      const deletePromises = querySnapshot.docs.map((doc) => doc.ref.delete());
+      await Promise.all(deletePromises);
+
+      Logger.debug(this.LOG_TAG, `Documents deleted by query:`, [query]);
+    } catch (error) {
+      Logger.error(this.LOG_TAG, `Error deleting documents by query: ${query}`, error);
+      return Promise.reject(error);
     }
   }
 

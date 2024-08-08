@@ -68,11 +68,11 @@ function CoursePage() {
 
   return (
     <div className="h-full">
-      <div className="flex flex-row w-full items-center justify-between gap-6 mb-8">
-        <div className="flex flex-row gap-2 w-full">
+      <div className="flex flex-row w-full items-center justify-between gap-6 mb-8 flex-wrap">
+        <div className="flex flex-row grow gap-2 sm:flex-nowrap flex-wrap">
           <div className="relative w-full">
             <div className="absolute inset-y-0 start-0 flex items-center ps-3.5 pointer-events-none">
-              <SearchIcon className="size-6" />
+              <SearchIcon className="size-6 text-gray-400" />
             </div>
             <input
               type="text"
@@ -80,15 +80,15 @@ function CoursePage() {
               onChange={(e) => setSearchValue(e.target.value)}
               id="email-address-icon"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              placeholder="procura por nome"
+              placeholder="procura por nome ou descrição"
             />
           </div>
           <div>
             <Select value={statusFilter} onValueChange={(newValue) => setStatusFilter(newValue)}>
               <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Estado" />
+                <SelectValue className="text-gray-400" placeholder="Estado" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent className="text-gray-400">
                 <SelectItem value="ALL">Todos</SelectItem>
                 <SelectItem value={COURSE_STATUS.PUBLISHED.toString()}>Publicado</SelectItem>
                 <SelectItem value={COURSE_STATUS.DRAFT.toString()}>Rascunho</SelectItem>
@@ -96,8 +96,8 @@ function CoursePage() {
             </Select>
           </div>
         </div>
-        {courses.length > 0 && (
-          <div className="w-full flex flex-row justify-end">
+        <div className="w-fit">
+          {courses.length > 0 && (
             <ButtonElement
               shape={ButtonShape.SQUARE}
               size={ButtonSize.SMALL}
@@ -110,11 +110,11 @@ function CoursePage() {
                 <span>Adicionar Curso</span>
               </div>
             </ButtonElement>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
-      <div className="grid lg:grid-cols-4 h-full md:grid-cols-3 grid-cols-1 gap-3 mb-8">
+      <div className="grid lg:grid-cols-3 xl:grid-cols-4 h-full md:grid-cols-2 grid-cols-1 gap-3 mb-8">
         {filteredCourses.length > 0 ? (
           filteredCourses.map((course, index) => (
             <motion.div

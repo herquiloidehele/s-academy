@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Textarea } from "@/components/ui/textarea";
-import useCourseStore from "@/app/tutor/products/courses/courseStore";
+import useCourseStore, { courseSelectors } from "@/app/tutor/products/courses/courseStore";
 import FileUploader from "@/components/file-uploader/FileUploader";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
@@ -20,7 +20,7 @@ import { v4 as uuidv4 } from "uuid";
 import { ILessonDto } from "@/app/backend/business/course/CourseData";
 import { toast } from "sonner";
 import FormButtonWithLoader from "@/components/FormButton/FormButtonWithLoader";
-import ProgressBar from "@/components/progress-bar/ProgressBar";
+import ProgressbarWrapper from "@/app/tutor/products/courses/components/ProgressbarWrapper";
 
 export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: string; moduleId: string }) {
   const [open, setOpen] = useState(false);
@@ -31,7 +31,6 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
   const modules = courseDto?.modules || [];
   const [lessonData, setLessonData] = useState<ILessonDto | undefined>({} as ILessonDto);
   const loading = useCourseStore((state) => state.loading);
-  const videoUploadPercentage = useCourseStore((state) => state.videoUploadPercentage);
 
   const [oldData, setOldData] = useState<ILessonDto | undefined>(undefined);
 
@@ -216,7 +215,7 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
                               field.onChange(file);
                             }}
                           />
-                          <ProgressBar percentage={videoUploadPercentage} />
+                          <ProgressbarWrapper selector={courseSelectors.progressPercentage} />
                         </div>
                       </FormControl>
                       <FormMessage />

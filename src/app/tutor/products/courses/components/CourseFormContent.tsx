@@ -8,15 +8,19 @@ import { ModuleFormDialog } from "@/app/tutor/products/courses/components/Module
 import ModuleItemList from "@/app/tutor/products/courses/components/ModuleItemList";
 import EmptyAnimation from "@/assets/animation/empty.json";
 import EmptyState from "@/components/empty-list/EmptyState";
+import { useGlobalStore } from "@/app/globalStore";
 
 function CourseFormContent() {
   const courseDto = useCourseStore((state) => state.courseDto);
   const canCourseBePublished = useCourseStore((state) => state.canCourseBePublished);
   const goToNextStep = useCourseStore((state) => state.goToNextStep);
-  const loading = useCourseStore((state) => state.loading);
+  const loading = useGlobalStore((state) => state.loading);
 
   const [canGoNextStep, setCanGoNextStep] = React.useState<boolean>(false);
 
+  useEffect(() => {
+    useGlobalStore.getState?.()?.setLoading(false);
+  }, []);
   useEffect(() => {
     setCanGoNextStep(canCourseBePublished());
   }, [canCourseBePublished, courseDto]);

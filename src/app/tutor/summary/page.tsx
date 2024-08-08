@@ -5,6 +5,7 @@ import { SubscriptionsResumeTable } from "@/app/tutor/summary/components/Subscri
 import { CheckSquareIcon, DollarSignIcon, TrendingUpIcon, UsersIcon } from "lucide-react";
 import { ICourseStats, ICourseSummary, useSummaryStore } from "@/app/tutor/summary/summaryStore";
 import useTutorStore from "@/app/tutor/tutorStore";
+import Loading from "@/components/loading/Loading";
 
 function TeacherSummary() {
   const fetchCourseStatsByCurrentTutorId = useSummaryStore((state) => state.fetchCourseStatsByCurrentTutorId);
@@ -17,6 +18,7 @@ function TeacherSummary() {
     const totalCourses = courseStatsData.length;
     return [totalStudents, totalRevenue, currentRevenue, totalCourses];
   }, [courseStatsData]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const coursesStatsData: ICourseSummary[] = useMemo(() => {
     return courseStatsData.map(
@@ -32,9 +34,11 @@ function TeacherSummary() {
   }, [courseStatsData]);
 
   useEffect(() => {
+    setIsLoading(true);
     const fetchCourseStats = async () => {
       await useTutorStore.getState?.().setLoggedTutor();
       await fetchCourseStatsByCurrentTutorId();
+      setIsLoading(false);
     };
     fetchCourseStats();
   }, []);
@@ -42,6 +46,9 @@ function TeacherSummary() {
   useEffect(() => {
     setCourseStatsData(courseStats);
   }, [courseStats]);
+  if (isLoading) {
+    return <Loading />;
+  }
 
   return (
     <div className="max-w-[85rem] px-4 py-10 sm:px-6 lg:px-8 lg:py-14 mx-auto flex flex-col gap-6">

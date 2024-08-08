@@ -22,7 +22,7 @@ export function SubscriptionsResumeTable({ coursesStatsData }: { coursesStatsDat
         {coursesStatsData.map((data, index) => (
           <TableRow key={data.id} className="hover:bg-gray-50">
             <TableCell className="font-medium">{index + 1}</TableCell>
-            <TableCell className="font-bold ">{data.name}</TableCell>
+            <TableCell className="font-medium">{data.name}</TableCell>
             <TableCell>
               <div className="flex items-center gap-2">
                 <Users className="w-4 h-4 text-blue-500" />

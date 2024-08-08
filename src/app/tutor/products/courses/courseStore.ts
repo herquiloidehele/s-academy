@@ -26,6 +26,7 @@ import { IOptionType } from "@/components/multi-selector/MultiSelect";
 import FirebaseClientService from "@/app/backend/services/FirebaseClientService";
 import VideoManager, { IUploadResponse } from "@/app/backend/business/course/VideoManager";
 import useTutorStore from "@/app/tutor/tutorStore";
+import { useGlobalStore } from "@/app/globalStore";
 
 const moduleList = [
   // ... (seu conteúdo de moduleList aqui)
@@ -80,12 +81,10 @@ interface ICourseStoreState {
   lessons: ILesson[];
   modules: IModule[];
   selectedCategories: IOptionType[];
-  loading: boolean;
   pageLoading: boolean;
   error: string;
   videoUploadPercentage: number;
   setVideoUploadPercentage: (value: number) => void;
-  setLoading: (value: boolean) => void;
   setPageLoading: (value: boolean) => void;
   setError: (value: string) => void;
   setSelectedCategories: (categories: IOptionType[]) => void;
@@ -126,41 +125,33 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       useCourseStore.getState?.().courseDto?.modules?.some((mod) => mod.lessons && mod.lessons.length > 0)
     );
   },
-  loading: false,
-  error: "",
-  setLoading: (value: boolean) => {
-    set({ loading: value });
-  },
   setPageLoading: (value: boolean) => {
     set({ pageLoading: value });
   },
-  setError: (value: string) => {
-    set({ error: value });
-  },
   removeCourse: async (courseId: string) => {
-    set({ loading: true });
+    useGlobalStore.getState?.().setLoading(true);
     try {
       await deleteCourse(courseId);
-      set({ loading: false });
+      useGlobalStore.getState?.().setLoading(false);
     } catch (error) {
-      set({ error: error.message });
+      useGlobalStore.getState?.().setError(error.message);
     } finally {
-      set({ loading: false });
+      useGlobalStore.getState?.().setLoading(false);
     }
   },
   unpublishCourse: async (courseId: string) => {
-    set({ loading: true });
+    useGlobalStore.getState?.().setLoading(true);
     try {
       await unpublishCourse(courseId);
-      set({ loading: false });
+      useGlobalStore.getState?.().setLoading(false);
     } catch (error) {
-      set({ error: error.message });
+      useGlobalStore.getState?.().setError(error.message);
     } finally {
-      set({ loading: false });
+      useGlobalStore.getState?.().setLoading(false);
     }
   },
   addModule: async (module: IModuleDto) => {
-    set({ loading: true });
+    useGlobalStore.getState?.().setLoading(true);
     try {
       const courseDto = useCourseStore.getState?.().courseDto;
       if (!courseDto) throw new Error("No courseDto found");
@@ -178,9 +169,9 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
         courseDto: { ...state.courseDto, modules: updatedModules },
       }));
     } catch (error) {
-      set({ error: error.message });
+      useGlobalStore.getState?.().setError(error.message);
     } finally {
-      set({ loading: false });
+      useGlobalStore.getState?.().setLoading(false);
     }
   },
   setVideoUploadPercentage: (value: number) => {
@@ -199,9 +190,10 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
         courseDto: { ...courseDto, modules: updatedModules },
       });
     } catch (error) {
-      set({ error: error.message });
+      useGlobalStore.getState?.().setError(error.message);
     } finally {
-      set({ loading: false });
+      useGlobalStore.getState?.().setLoading(false);
+      useGlobalStore.getState?.().setLoading(false);
     }
   },
   removeModule: async (moduleId: string) => {
@@ -217,13 +209,13 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
         courseDto: { ...courseDto, modules: updatedModules },
       });
     } catch (error) {
-      set({ error: error.message });
+      useGlobalStore.getState?.().setError(error.message);
     } finally {
-      set({ loading: false });
+      useGlobalStore.getState?.().setLoading(false);
     }
   },
   updateLessonWithNewModule: async (newLessonData: ILessonDto) => {
-    set({ loading: true });
+    useGlobalStore.getState?.().setLoading(true);
 
     const courseDto = useCourseStore.getState?.().courseDto;
 
@@ -265,14 +257,14 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
         videoUploadPercentage: 0,
       });
     } catch (error) {
-      set({ error: error.message });
+      useGlobalStore.getState?.().setError(error.message);
     } finally {
-      set({ loading: false });
+      useGlobalStore.getState?.().setLoading(false);
     }
   },
   addLesson: async (lesson: ILessonDto) => {
     try {
-      set({ loading: true });
+      useGlobalStore.getState?.().setLoading(true);
 
       const courseDto = useCourseStore.getState?.().courseDto;
 
@@ -300,18 +292,17 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
       set({
         courseDto: { ...updatedCourse },
-        loading: false,
         progress: 0,
         videoUploadPercentage: 0,
       });
     } catch (error) {
-      set({ error: error.message });
+      useGlobalStore.getState?.().setError(error.message);
     } finally {
-      set({ loading: false });
+      useGlobalStore.getState?.().setLoading(false);
     }
   },
   updateLesson: async (newLessonData: ILessonDto, oldData: ILesson) => {
-    set({ loading: true });
+    useGlobalStore.getState?.().setLoading(true);
 
     if (newLessonData.moduleId !== oldData.moduleId) {
       let removeVideo = newLessonData.videoFile instanceof File;
@@ -360,17 +351,16 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
         set({
           courseDto: { ...updatedCourse },
-          loading: false,
         });
       } catch (error) {
-        set({ error: error.message });
+        useGlobalStore.getState?.().setError(error.message);
       } finally {
-        set({ loading: false });
+        useGlobalStore.getState?.().setLoading(false);
       }
     }
   },
   removeLesson: async (lesson: ILesson, moduleId: string, removeVideoData = true, removeMaterialData = true) => {
-    set({ loading: false });
+    useGlobalStore.getState?.().setLoading(false);
 
     const courseDto = useCourseStore.getState?.().courseDto;
 
@@ -392,9 +382,9 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
         courseDto: { ...courseDto, modules: updatedModules },
       });
     } catch (error) {
-      set({ error: error.message });
+      useGlobalStore.getState?.().setError(error.message);
     } finally {
-      set({ loading: false });
+      useGlobalStore.getState?.().setLoading(false);
     }
   },
   goToNextStep: () => {
@@ -421,7 +411,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     set({ currentFormStep: step });
   },
   fetchLoggedTutorCourses: async () => {
-    set({ loading: true });
+    useGlobalStore.getState?.().setLoading(true);
     try {
       await useTutorStore.getState?.().setLoggedTutor();
       const loggedTutor = useTutorStore.getState?.().loggedTutor;
@@ -429,9 +419,9 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       const courses = response as ICourse[];
       set((state) => ({ ...state, courses: courses || [] }));
     } catch (error) {
-      set({ error: error.message });
+      useGlobalStore.getState?.().setError(error.message);
     } finally {
-      set({ loading: false });
+      useGlobalStore.getState?.().setLoading(false);
     }
   },
   saveCourse: async (courseNewData: ICourseDto) => {
@@ -442,7 +432,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       if (!loggedTutor) {
         throw new Error("Tutor data is missing");
       }
-      set((state) => ({ ...state, loading: true }));
+      useGlobalStore.getState?.().setLoading(true);
 
       const courseDto = useCourseStore.getState?.().courseDto;
       courseNewData = {
@@ -487,17 +477,17 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
       const response = await saveCourse(plainCourseDto);
 
-      set({ courseDto: response, loading: false, videoUploadPercentage: 0 });
+      set({ courseDto: response, videoUploadPercentage: 0 });
     } catch (error) {
-      set({ error: error.message });
+      useGlobalStore.getState?.().setError(error.message);
     } finally {
-      set({ loading: false });
+      useGlobalStore.getState?.().setLoading(false);
     }
   },
 
   updateCourse: async (newCourseData: ICourseDto) => {
     try {
-      set({ loading: true });
+      useGlobalStore.getState?.().setLoading(true);
       await useTutorStore.getState?.().setLoggedTutor();
       const loggedTutor = useTutorStore.getState?.().loggedTutor;
 
@@ -550,19 +540,18 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       set({
         courseDto: { ...plainCourseDto, id: response.id, modules: oldCourseData.modules },
         videoUploadPercentage: 0,
-        loading: false,
       });
     } catch (error) {
-      set({ error: error.message });
+      useGlobalStore.getState?.().setError(error.message);
     } finally {
-      set({ loading: false });
+      useGlobalStore.getState?.().setLoading(false);
     }
   },
 
   publishCourse: async () => {
-    set({ loading: true });
+    useGlobalStore.getState?.().setLoading(true);
     try {
-      set({ loading: true });
+      useGlobalStore.getState?.().setLoading(true);
       const courseDto = useCourseStore.getState?.().courseDto;
 
       if (!courseDto) {
@@ -571,11 +560,11 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
       const response = await updateCourse({ ...courseDto, status: COURSE_STATUS.PUBLISHED });
 
-      set({ courseDto: response, loading: false });
+      set({ courseDto: response });
     } catch (error) {
-      set({ error: error.message });
+      useGlobalStore.getState?.().setError(error.message);
     } finally {
-      set({ loading: false });
+      useGlobalStore.getState?.().setLoading(false);
     }
   },
   resetCourseFormData: () => {
@@ -584,11 +573,11 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     });
   },
   setCourseDtoData: async (id: string) => {
-    set({ loading: true });
+    useGlobalStore.getState?.().setLoading(true);
 
     const course = await getCourseById(id);
 
-    set((state) => ({ ...state, courseDto: course, loading: false }));
+    set((state) => ({ ...state, courseDto: course }));
   },
 }));
 

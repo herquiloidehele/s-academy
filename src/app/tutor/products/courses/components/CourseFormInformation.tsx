@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import FormButtonWithLoader from "@/components/FormButton/FormButtonWithLoader";
 import { getCategoryOptions } from "@/utils/functions";
 import ProgressbarWrapper from "@/app/tutor/products/courses/components/ProgressbarWrapper";
+import { useGlobalStore } from "@/app/globalStore";
 
 function CourseFormInformation() {
   const saveCourseDtoInfo = useCourseStore((state) => state.saveCourse);
@@ -24,7 +25,7 @@ function CourseFormInformation() {
   const selectedCategories = useCourseStore((state) => state.selectedCategories);
   const setSelectedCategories = useCourseStore((state) => state.setSelectedCategories);
   const goToNextStep = useCourseStore((state) => state.goToNextStep);
-  const loading = useCourseStore((state) => state.loading);
+  const loading = useGlobalStore((state) => state.loading);
 
   const [isLoading, setIsLoading] = React.useState(false);
 
@@ -40,6 +41,9 @@ function CourseFormInformation() {
       promoVideoFile: courseDto?.promoVideoRef || 0,
     },
   });
+  useEffect(() => {
+    useGlobalStore.getState?.()?.setLoading(false);
+  }, []);
 
   useEffect(() => {
     setIsLoading(loading);

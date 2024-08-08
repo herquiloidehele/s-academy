@@ -21,6 +21,7 @@ import { ILessonDto } from "@/app/backend/business/course/CourseData";
 import { toast } from "sonner";
 import FormButtonWithLoader from "@/components/FormButton/FormButtonWithLoader";
 import ProgressbarWrapper from "@/app/tutor/products/courses/components/ProgressbarWrapper";
+import { useGlobalStore } from "@/app/globalStore";
 
 export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: string; moduleId: string }) {
   const [open, setOpen] = useState(false);
@@ -30,10 +31,13 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
   const courseDto = useCourseStore((state) => state.courseDto);
   const modules = courseDto?.modules || [];
   const [lessonData, setLessonData] = useState<ILessonDto | undefined>({} as ILessonDto);
-  const loading = useCourseStore((state) => state.loading);
+  const loading = useGlobalStore((state) => state.loading);
 
   const [oldData, setOldData] = useState<ILessonDto | undefined>(undefined);
 
+  useEffect(() => {
+    useGlobalStore.getState?.()?.setLoading(false);
+  }, []);
   const form = useForm<z.infer<typeof ILessonSchema>>({
     resolver: zodResolver(ILessonSchema),
     defaultValues: {

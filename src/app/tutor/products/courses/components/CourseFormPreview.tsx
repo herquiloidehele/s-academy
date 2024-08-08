@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import ButtonElement, { ButtonShape, ButtonSize, ButtonType, FillType } from "@/components/shared/Button";
 import useCourseStore from "@/app/tutor/products/courses/courseStore";
 import { Loader2Icon } from "lucide-react";
@@ -7,15 +7,19 @@ import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { Constants } from "@/utils/Constants";
 import VideoPlayer from "@/components/course/video-player/VideoPlayer";
+import { useGlobalStore } from "@/app/globalStore";
 
 function CourseFormPreview() {
   const courseDto = useCourseStore((state) => state.courseDto);
   const setCurrentStepIndex = useCourseStore((state) => state.setCurrentStepIndex);
   const canCourseBePublished = useCourseStore((state) => state.canCourseBePublished);
   const publishCourse = useCourseStore((state) => state.publishCourse);
-  const loading = useCourseStore((state) => state.loading);
+  const loading = useGlobalStore((state) => state.loading);
   const router = useRouter();
 
+  useEffect(() => {
+    useGlobalStore.getState?.()?.setLoading(false);
+  }, []);
   const handleEdit = () => {
     setCurrentStepIndex(0);
   };

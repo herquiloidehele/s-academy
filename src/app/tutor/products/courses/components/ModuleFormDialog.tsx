@@ -12,6 +12,7 @@ import { IModuleDto } from "@/app/backend/business/course/CourseData";
 import { IModuleSchema } from "@/app/tutor/products/courses/components/CourseSchemas";
 import { toast } from "sonner";
 import FormButtonWithLoader from "@/components/FormButton/FormButtonWithLoader";
+import { useGlobalStore } from "@/app/globalStore";
 
 export function ModuleFormDialog(props: { children: React.ReactNode; moduleId?: string }) {
   const [open, setOpen] = useState(false);
@@ -19,7 +20,7 @@ export function ModuleFormDialog(props: { children: React.ReactNode; moduleId?: 
   const updateModule = useCourseStore((state) => state.updateModule);
   const courseDto = useCourseStore((state) => state.courseDto);
   const [moduleData, setModuleData] = useState<IModuleDto | undefined>({} as IModuleDto);
-  const loading = useCourseStore((state) => state.loading);
+  const loading = useGlobalStore((state) => state.loading);
 
   const form = useForm<z.infer<typeof IModuleSchema>>({
     resolver: zodResolver(IModuleSchema),
@@ -29,7 +30,9 @@ export function ModuleFormDialog(props: { children: React.ReactNode; moduleId?: 
       description: moduleData?.description || "",
     },
   });
-
+  useEffect(() => {
+    useGlobalStore.getState?.()?.setLoading(false);
+  }, []);
   async function onSubmit(values) {
     const moduleValues = {
       id: props.moduleId,

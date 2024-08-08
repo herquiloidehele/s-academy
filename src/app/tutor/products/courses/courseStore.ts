@@ -198,8 +198,8 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       set({
         courseDto: { ...courseDto, modules: updatedModules },
       });
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      set({ error: error.message });
     } finally {
       set({ loading: false });
     }
@@ -216,8 +216,8 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       set({
         courseDto: { ...courseDto, modules: updatedModules },
       });
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      set({ error: error.message });
     } finally {
       set({ loading: false });
     }
@@ -264,8 +264,8 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
         progress: 0,
         videoUploadPercentage: 0,
       });
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      set({ error: error.message });
     } finally {
       set({ loading: false });
     }
@@ -342,8 +342,8 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
           );
           try {
             await VideoManager.deleteVideoById(oldData.videoRef);
-          } catch (videoError) {
-            console.log("Erro ao deletar o vídeo:", videoError);
+          } catch (error) {
+            set({ error: `Erro ao apagar o video: ${error.message}` });
           }
         }
         newLessonData.videoRef = uploadedVideo.videoId;
@@ -362,8 +362,8 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
           courseDto: { ...updatedCourse },
           loading: false,
         });
-      } catch (e) {
-        console.log(e);
+      } catch (error) {
+        set({ error: error.message });
       } finally {
         set({ loading: false });
       }
@@ -378,10 +378,9 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       await deleteLesson(courseDto?.id!, moduleId, lesson.id);
       try {
         if (removeVideoData) await VideoManager.deleteVideoById(lesson.videoRef);
-      } catch (videoError) {
-        console.log("Erro ao deletar o vídeo:", videoError);
+      } catch (error) {
+        set({ error: `Erro ao apagar o video: ${error.message}` });
       }
-
       const updatedModules = courseDto?.modules?.map((module) => {
         if (module.id === moduleId) {
           const updatedLessons = module.lessons?.filter((l) => l.id !== lesson.id);
@@ -392,8 +391,8 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       set({
         courseDto: { ...courseDto, modules: updatedModules },
       });
-    } catch (e) {
-      console.log(e);
+    } catch (error) {
+      set({ error: error.message });
     } finally {
       set({ loading: false });
     }
@@ -432,7 +431,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     } catch (error) {
       set({ error: error.message });
     } finally {
-      set((state) => ({ ...state, loading: false }));
+      set({ loading: false });
     }
   },
   saveCourse: async (courseNewData: ICourseDto) => {
@@ -488,11 +487,11 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
       const response = await saveCourse(plainCourseDto);
 
-      set({ courseDto: response, loading: false, videoUploadPercentage: 0, isLoading: false });
+      set({ courseDto: response, loading: false, videoUploadPercentage: 0 });
     } catch (error) {
       set({ error: error.message });
     } finally {
-      set((state) => ({ ...state, isLoading: false }));
+      set({ loading: false });
     }
   },
 
@@ -556,7 +555,7 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     } catch (error) {
       set({ error: error.message });
     } finally {
-      set((state) => ({ ...state, loading: false }));
+      set({ loading: false });
     }
   },
 
@@ -575,7 +574,6 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       set({ courseDto: response, loading: false });
     } catch (error) {
       set({ error: error.message });
-      set({ loading: false });
     } finally {
       set({ loading: false });
     }

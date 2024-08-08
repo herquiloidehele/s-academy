@@ -7,6 +7,7 @@ import { Toaster } from "@/components/ui/sonner";
 import PrelineScript from "@/components/preline/PrelineScript";
 import { ReactNode } from "react";
 import AuthProvider from "@/components/auth-provider/AuthProvider";
+import ErrorNotifier from "@/components/error-notifier/ErrorNotifier";
 
 const font = Inter({ subsets: ["latin"] });
 
@@ -25,6 +26,7 @@ export default async function RootLayout({
   return (
     <html className={"scroll-smooth"} lang="en">
       <body className={font.className}>
+        <ErrorNotifier />
         <QueryClientWrapper>
           <AuthProvider>{children}</AuthProvider>
         </QueryClientWrapper>

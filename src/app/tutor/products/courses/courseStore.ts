@@ -223,6 +223,8 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     }
   },
   updateLessonWithNewModule: async (newLessonData: ILessonDto) => {
+    set({ loading: true });
+
     const courseDto = useCourseStore.getState?.().courseDto;
 
     try {
@@ -259,12 +261,12 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
 
       set({
         courseDto: { ...updatedCourse },
-        loading: false,
         progress: 0,
         videoUploadPercentage: 0,
       });
     } catch (e) {
       console.log(e);
+    } finally {
       set({ loading: false });
     }
   },
@@ -309,6 +311,8 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
     }
   },
   updateLesson: async (newLessonData: ILessonDto, oldData: ILesson) => {
+    set({ loading: true });
+
     if (newLessonData.moduleId !== oldData.moduleId) {
       let removeVideo = newLessonData.videoFile instanceof File;
       let removeMaterial = newLessonData.materialFile instanceof File;
@@ -320,7 +324,6 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       });
     } else {
       try {
-        set({ loading: true });
         const courseDto = useCourseStore.getState?.().courseDto;
         newLessonData.materialUrl = oldData?.materialUrl || "";
 
@@ -361,11 +364,14 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
         });
       } catch (e) {
         console.log(e);
+      } finally {
         set({ loading: false });
       }
     }
   },
   removeLesson: async (lesson: ILesson, moduleId: string, removeVideoData = true, removeMaterialData = true) => {
+    set({ loading: false });
+
     const courseDto = useCourseStore.getState?.().courseDto;
 
     try {
@@ -388,6 +394,8 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       });
     } catch (e) {
       console.log(e);
+    } finally {
+      set({ loading: false });
     }
   },
   goToNextStep: () => {

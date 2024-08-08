@@ -13,6 +13,7 @@ function CourseFormContent() {
   const courseDto = useCourseStore((state) => state.courseDto);
   const canCourseBePublished = useCourseStore((state) => state.canCourseBePublished);
   const goToNextStep = useCourseStore((state) => state.goToNextStep);
+  const loading = useCourseStore((state) => state.loading);
 
   const [canGoNextStep, setCanGoNextStep] = React.useState<boolean>(false);
 
@@ -94,6 +95,7 @@ function CourseFormContent() {
           fillType={FillType.FILLED}
           type={ButtonType.PRIMARY}
           disabled={!canGoNextStep}
+          isLoading={loading}
           onClick={() => goToNextStep()}
         >
           <span>Próximo</span>

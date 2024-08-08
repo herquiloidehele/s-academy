@@ -26,7 +26,7 @@ export default function TutorLayoutContent(props: LayoutProps) {
         >
           <Sidebar menuItems={getMenuItemsByRole(USER_ROLES.TUTOR, [])}></Sidebar>
         </div>
-        <div className="overflow-y-auto bg-smoothBackground text-smoothForeground items-center w-full p-12">
+        <div className="overflow-y-auto bg-smoothBackground text-smoothForeground items-center w-full p-12 pb-24">
           {props.children}
         </div>
       </div>

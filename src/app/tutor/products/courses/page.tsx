@@ -114,7 +114,7 @@ function CoursePage() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-3 xl:grid-cols-4 h-full md:grid-cols-2 grid-cols-1 gap-3 mb-8">
+      <div className="grid lg:grid-cols-3 xl:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-3 mb-8">
         {filteredCourses.length > 0 ? (
           filteredCourses.map((course, index) => (
             <motion.div
@@ -136,6 +136,7 @@ function CoursePage() {
               animationData={EmptyAnimation}
               title={"Nenhum curso encontrado"}
               description={"Crie um novo curso ou explore outras categorias"}
+              className={"col-span-full"}
             >
               <ButtonElement
                 shape={ButtonShape.SQUARE}

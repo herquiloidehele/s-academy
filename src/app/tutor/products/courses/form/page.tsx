@@ -55,7 +55,7 @@ function FormPage() {
         }}
       />
 
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full pb-5">
         <span className="text-3xl font-bold mb-5 text-gray-800">{currentFormStep.title}</span>
         <hr className="w-full h-2 text-primary" />
         <div className="w-full">{currentFormStep.page}</div>

@@ -102,8 +102,9 @@ interface ICourseStoreState {
   removeModule: (module: IModuleDto) => void;
   updateModule: (module: IModuleDto) => void;
   addLesson: (lesson: ILessonDto) => void;
-  removeLesson: (lessonId: ILesson, moduleId: string) => void;
-  updateLesson: (lesson: ILessonDto) => void;
+  updateLessonWithNewModule: (lesson: ILessonDto) => void;
+  removeLesson: (lesson: ILesson, moduleId: string, removeVideoData?: boolean, removeMaterialData?: boolean) => void;
+  updateLesson: (lesson: ILessonDto, oldData: ILessonDto) => void;
   resetCourseFormData: () => void;
   canCourseBePublished: () => boolean;
   unpublishCourse: (courseId: string) => void;
@@ -221,6 +222,52 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       set({ loading: false });
     }
   },
+  updateLessonWithNewModule: async (newLessonData: ILessonDto) => {
+    const courseDto = useCourseStore.getState?.().courseDto;
+
+    try {
+      let uploadedVideo = {
+        videoId: !(newLessonData.videoFile instanceof File) ? newLessonData.videoFile || 0 : 0,
+        thumbnailUrl: newLessonData.thumbnailUrl,
+      };
+
+      if (newLessonData.videoFile instanceof File) {
+        uploadedVideo = await VideoManager.uploadVideoFile(
+          newLessonData.videoFile!,
+          (percentage) => {
+            useCourseStore.getState?.().setVideoUploadPercentage(percentage);
+          },
+          newLessonData.title,
+        );
+      }
+
+      newLessonData.videoRef = uploadedVideo.videoId;
+      newLessonData.thumbnailUrl = uploadedVideo.thumbnailUrl;
+
+      if (newLessonData.materialFile instanceof File) {
+        newLessonData.materialUrl = await FirebaseClientService.uploadFile(newLessonData.materialFile);
+      } else {
+        newLessonData.materialUrl = newLessonData.materialUrl || "";
+      }
+      const plainLesson = JSON.parse(
+        JSON.stringify({
+          ...newLessonData,
+        }),
+      ) as ILessonDto;
+      await saveLesson(courseDto?.id!, newLessonData.moduleId, plainLesson);
+      const updatedCourse = await getCourseById(courseDto?.id!);
+
+      set({
+        courseDto: { ...updatedCourse },
+        loading: false,
+        progress: 0,
+        videoUploadPercentage: 0,
+      });
+    } catch (e) {
+      console.log(e);
+      set({ loading: false });
+    }
+  },
   addLesson: async (lesson: ILessonDto) => {
     try {
       set({ loading: true });
@@ -247,15 +294,11 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       ) as ILessonDto;
       const savedLesson = await saveLesson(courseDto?.id!, lesson.moduleId, plainLesson);
 
-      const updatedModules = courseDto?.modules?.map((module) => {
-        if (module.id === savedLesson.moduleId) {
-          const updatedLessons = Array.isArray(module.lessons) ? [...module.lessons, savedLesson] : [savedLesson];
-          return { ...module, lessons: updatedLessons };
-        }
-        return module;
-      });
+      const updatedCourse = await getCourseById(courseDto?.id!);
+
       set({
-        courseDto: { ...courseDto, modules: updatedModules },
+        courseDto: { ...updatedCourse },
+        loading: false,
         progress: 0,
         videoUploadPercentage: 0,
       });
@@ -265,66 +308,70 @@ const useCourseStore = create<ICourseStoreState>((set) => ({
       set({ loading: false });
     }
   },
-  updateLesson: async (newLessonData: ILessonDto) => {
-    try {
-      set({ loading: true });
-      const courseDto = useCourseStore.getState?.().courseDto;
-      const currentModule = courseDto?.modules?.find((mod) => mod.id === newLessonData.moduleId);
-      const currentLesson = currentModule?.lessons?.find((lesson) => lesson.id === newLessonData.id);
-      newLessonData.materialUrl = currentLesson?.materialUrl || "";
-      let uploadedVideo: IUploadResponse = {
-        videoId: currentLesson.promoVideoRef || 0,
-        thumbnailUrl: currentLesson.promoVideoThumbnail || "",
-      };
-
-      if (newLessonData.videoFile instanceof File) {
-        uploadedVideo = await VideoManager.uploadVideoFile(
-          newLessonData.videoFile!,
-          (percentage) => {
-            useCourseStore.getState?.().setVideoUploadPercentage(percentage);
-          },
-          newLessonData.title,
-        );
-        try {
-          await VideoManager.deleteVideoById(currentLesson.videoRef);
-        } catch (videoError) {
-          console.log("Erro ao deletar o vídeo:", videoError);
-        }
-      }
-      newLessonData.videoRef = uploadedVideo.videoId;
-      newLessonData.thumbnailUrl = uploadedVideo.thumbnailUrl;
-
-      if (newLessonData.materialFile instanceof File) {
-        newLessonData.materialUrl = await FirebaseClientService.uploadFile(newLessonData.materialFile);
-      }
-
-      const plainLesson = JSON.parse(JSON.stringify(newLessonData)) as ILessonDto;
-      const updatedLesson = await updateLesson(courseDto?.id!, newLessonData.moduleId, newLessonData.id, plainLesson);
-
-      const updatedModules = courseDto?.modules?.map((module) => {
-        if (module.id === updatedLesson.moduleId) {
-          const updatedLessons = module.lessons?.map((l) => (l.id === updatedLesson.id ? updatedLesson : l));
-          return { ...module, lessons: updatedLessons };
-        }
-        return module;
+  updateLesson: async (newLessonData: ILessonDto, oldData: ILesson) => {
+    if (newLessonData.moduleId !== oldData.moduleId) {
+      let removeVideo = newLessonData.videoFile instanceof File;
+      let removeMaterial = newLessonData.materialFile instanceof File;
+      await useCourseStore.getState?.().removeLesson(oldData, oldData.moduleId, removeVideo, removeMaterial);
+      await useCourseStore.getState?.().updateLessonWithNewModule({
+        ...newLessonData,
+        thumbnailUrl: oldData.thumbnailUrl,
+        materialUrl: oldData.materialUrl,
       });
+    } else {
+      try {
+        set({ loading: true });
+        const courseDto = useCourseStore.getState?.().courseDto;
+        newLessonData.materialUrl = oldData?.materialUrl || "";
 
-      set({
-        courseDto: { ...courseDto, modules: updatedModules },
-        loading: false,
-      });
-    } catch (e) {
-      console.log(e);
-      set({ loading: false });
+        let uploadedVideo: IUploadResponse = {
+          videoId: oldData.videoRef || 0,
+          thumbnailUrl: oldData.thumbnailUrl || "",
+        };
+
+        if (newLessonData.videoFile instanceof File) {
+          uploadedVideo = await VideoManager.uploadVideoFile(
+            newLessonData.videoFile!,
+            (percentage) => {
+              useCourseStore.getState?.().setVideoUploadPercentage(percentage);
+            },
+            newLessonData.title,
+          );
+          try {
+            await VideoManager.deleteVideoById(oldData.videoRef);
+          } catch (videoError) {
+            console.log("Erro ao deletar o vídeo:", videoError);
+          }
+        }
+        newLessonData.videoRef = uploadedVideo.videoId;
+        newLessonData.thumbnailUrl = uploadedVideo.thumbnailUrl;
+
+        if (newLessonData.materialFile instanceof File) {
+          newLessonData.materialUrl = await FirebaseClientService.uploadFile(newLessonData.materialFile);
+        }
+
+        const plainLesson = JSON.parse(JSON.stringify(newLessonData)) as ILessonDto;
+        const updatedLesson = await updateLesson(courseDto?.id!, newLessonData.moduleId, newLessonData.id, plainLesson);
+
+        const updatedCourse = await getCourseById(courseDto?.id!);
+
+        set({
+          courseDto: { ...updatedCourse },
+          loading: false,
+        });
+      } catch (e) {
+        console.log(e);
+        set({ loading: false });
+      }
     }
   },
-  removeLesson: async (lesson: ILesson, moduleId: string) => {
+  removeLesson: async (lesson: ILesson, moduleId: string, removeVideoData = true, removeMaterialData = true) => {
     const courseDto = useCourseStore.getState?.().courseDto;
 
     try {
       await deleteLesson(courseDto?.id!, moduleId, lesson.id);
       try {
-        await VideoManager.deleteVideoById(lesson.videoRef);
+        if (removeVideoData) await VideoManager.deleteVideoById(lesson.videoRef);
       } catch (videoError) {
         console.log("Erro ao deletar o vídeo:", videoError);
       }

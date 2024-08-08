@@ -33,6 +33,8 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
   const loading = useCourseStore((state) => state.loading);
   const videoUploadPercentage = useCourseStore((state) => state.videoUploadPercentage);
 
+  const [oldData, setOldData] = useState<ILessonDto | undefined>(undefined);
+
   const form = useForm<z.infer<typeof ILessonSchema>>({
     resolver: zodResolver(ILessonSchema),
     defaultValues: {
@@ -58,6 +60,7 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
       const lessonData = moduleData?.lessons?.find((lesson) => lesson.id === props.lessonId);
       if (lessonData) {
         setLessonData(lessonData);
+        setOldData(lessonData);
         form.reset({
           order: lessonData.order,
           title: lessonData.title,
@@ -82,7 +85,7 @@ export function LessonFormDialog(props: { children: React.ReactNode; lessonId?: 
     };
 
     if (props.lessonId) {
-      await updateLesson(lessonValues as ILessonDto);
+      await updateLesson(lessonValues as ILessonDto, oldData as ILessonDto);
       toast.success("Aula atualizada com sucesso!");
     } else {
       await addLesson(lessonValues as ILessonDto);

@@ -1,7 +1,6 @@
 "use client";
 import { useEffect } from "react";
 import { toast } from "sonner";
-import useCourseStore from "@/app/tutor/products/courses/courseStore";
 import { useGlobalStore } from "@/app/globalStore";
 
 const ErrorNotifier = () => {
@@ -12,7 +11,7 @@ const ErrorNotifier = () => {
   useEffect(() => {
     if (error) {
       toast.error(error);
-      useCourseStore.getState?.()?.setError("");
+      useGlobalStore.getState?.()?.setError("");
     }
   }, [error]);
 

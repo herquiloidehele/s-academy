@@ -11,6 +11,7 @@ const fileSchema = z.instanceof(File).refine(
       "image/png",
       "video/mp4",
       "video/quicktime",
+      "video/x-matroska", // mkv
       "application/vnd.openxmlformats-officedocument.wordprocessingml.document", // docx
       "application/pdf", // pdf
       "application/vnd.openxmlformats-officedocument.presentationml.presentation", // pptx
